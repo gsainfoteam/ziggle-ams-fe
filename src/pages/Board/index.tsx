@@ -1,5 +1,5 @@
-const Board = () => {
+const BoardPage = () => {
   return <>board page</>;
 };
 
-export default Board;
+export default BoardPage;
