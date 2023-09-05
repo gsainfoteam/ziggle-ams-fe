@@ -1,4 +1,5 @@
 import { Outlet } from "react-router";
+import Footer from "src/components/Footer";
 import Header from "src/components/Header";
 import styled from "styled-components";
 
@@ -19,6 +20,7 @@ const MainLayout = () => {
       <Main>
         <Outlet />
       </Main>
+      <Footer />
     </Container>
   );
 };
