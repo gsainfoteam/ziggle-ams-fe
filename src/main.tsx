@@ -1,5 +1,4 @@
-import "./index.css";
-import "./locales/index.ts";
+import "./locales";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
