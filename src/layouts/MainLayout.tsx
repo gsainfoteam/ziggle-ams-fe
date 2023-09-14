@@ -11,6 +11,7 @@ const Container = styled.div`
 
 const Main = styled.main`
   flex: 1;
+  background-color: #F5F5F5;
 `;
 
 const MainLayout = () => {
