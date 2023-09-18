@@ -5,7 +5,7 @@ import {
   MdOutlineVisibilityOff,
   MdStarOutline,
 } from "react-icons/md";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import CircularButton from "../CircularButton";
 import AddProjectCard from "./AddProjectCard";
@@ -34,11 +34,12 @@ const SlidesSection = styled.section`
   padding: 20px 0 20px 0;
 `;
 
-const SlidesContainer = styled.div<{
+interface SlidesContainerProps {
   index: number;
   CarouselWidth: string;
   ProjectCardWidth: string;
-}>`
+}
+const SlidesContainer = styled.div<SlidesContainerProps>`
   --gap: 20px;
   display: flex;
   flex-direction: row;
@@ -57,37 +58,20 @@ const ControlsSection = styled.section`
   width: 100%;
   height: 50px;
 `;
-const SlideShiftButton = styled.button<{ direction: "right" | "left" }>`
+interface SlideShiftButtonProps {
+  direction: "right" | "left";
+}
+const SlideShiftButton = styled(CircularButton)<SlideShiftButtonProps>`
   position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  ${({ direction }) =>
-    direction === "right"
-      ? css`
-          right: 20px;
-        `
-      : css`
-          left: 20px;
-        `}
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 0 10px;
-  &:hover {
-    box-shadow: 0 0 15px;
-    cursor: pointer;
-  }
-  &:active {
-    box-shadow: 0 0 5px;
-  }
+  right: ${({ direction }) => direction === "right" && "20px"};
+  left: ${({ direction }) => direction === "left" && "20px"};
 `;
 
 function Carousel() {
   const { projectsData, focusIndex, nextSlide, previousSlide, deleteProject } =
     useCarousel();
+
+  const isNotEnd = focusIndex < projectsData.length;
 
   return (
     <div>
@@ -109,7 +93,7 @@ function Carousel() {
               projectData={projectData}
             />
           ))}
-          <AddProjectCard focused={projectsData.length == focusIndex} />
+          <AddProjectCard focused={projectsData.length === focusIndex} />
         </SlidesContainer>
         <SlideShiftButton direction="right" onClick={nextSlide}>
           <MdChevronRight size={50} />
@@ -119,7 +103,7 @@ function Carousel() {
         </SlideShiftButton>
       </SlidesSection>
       <ControlsSection>
-        {focusIndex < projectsData.length && (
+        {isNotEnd && (
           <>
             <CircularButton>
               <MdOutlineVisibilityOff size={25} />

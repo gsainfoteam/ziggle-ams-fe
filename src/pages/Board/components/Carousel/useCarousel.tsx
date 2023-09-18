@@ -1,16 +1,21 @@
+import dayjs from "dayjs";
 import { useState } from "react";
 
-import ProjectsData from "../../ProjectData";
+import ProjectsData from "../../ProjectsDataFromDB";
 
 function useCarousel() {
   const [focusIndex, setFocusIndex] = useState(0);
-  const [projectsData, setProjectData] = useState(ProjectsData); // TODO: fetch from DB later
+  const [projectsData, setProjectData] = useState(
+    ProjectsData.map((projectData) => ({
+      ...projectData,
+      start_date: dayjs(projectData.start_date),
+      end_date: dayjs(projectData.end_date),
+    })),
+  ); // TODO: fetch from DB later
 
   const nextSlide = () => {
     setFocusIndex((currentFocusIndex) =>
-      currentFocusIndex < projectsData.length
-        ? currentFocusIndex + 1
-        : projectsData.length,
+      Math.min(currentFocusIndex + 1, projectsData.length),
     );
   };
   const previousSlide = () => {

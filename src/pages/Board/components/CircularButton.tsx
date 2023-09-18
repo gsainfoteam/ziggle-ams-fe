@@ -1,27 +1,18 @@
+import { ButtonHTMLAttributes } from "react";
 import styled, { css } from "styled-components";
 
 export interface CircularButtonProps {
   color?: string;
   shadow?: boolean;
   size?: number;
-  onClick?: () => void;
-  children?: React.ReactNode;
 }
 
 const Button = styled.button<CircularButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  ${({ size }) =>
-    size
-      ? css`
-          width: ${size}px;
-          height: ${size}px;
-        `
-      : css`
-          width: 50px;
-          height: 50px;
-        `}
+  width: ${({ size }) => size ?? 50}px;
+  height: ${({ size }) => size ?? 50}px;
   border-radius: 50%;
   border: none;
   background-color: ${({ color }) => color || "white"};
@@ -48,14 +39,9 @@ function CircularButton({
   color,
   shadow,
   size,
-  onClick,
-  children,
-}: CircularButtonProps) {
-  return (
-    <Button color={color} shadow={shadow} size={size} onClick={onClick}>
-      {children}
-    </Button>
-  );
+  ...props
+}: CircularButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
+  return <Button color={color} shadow={shadow} size={size} {...props} />;
 }
 
 export default CircularButton;
