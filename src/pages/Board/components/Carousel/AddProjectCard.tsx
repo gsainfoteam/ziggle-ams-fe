@@ -1,6 +1,7 @@
+import { MdOutlineAdd } from "react-icons/md";
 import styled, { css } from "styled-components";
 
-import CircularButton from "./CircularButton";
+import CircularButton from "../CircularButton";
 import { ProjectCardWidth } from "./cssConst";
 
 const Paper = styled.div<{ ProjectCardWidth: string; focused: boolean }>`
@@ -38,7 +39,9 @@ function AddProjectCard({ focused }: { focused: boolean }) {
     <Paper ProjectCardWidth={ProjectCardWidth} focused={focused}>
       <>
         <h1>새 모집 프로젝트 시작하기</h1>
-        <CircularButton color={"lightgray"} shadow={false} />
+        <CircularButton color={"lightgray"} shadow={false}>
+          <MdOutlineAdd size={50} />
+        </CircularButton>
       </>
     </Paper>
   );
