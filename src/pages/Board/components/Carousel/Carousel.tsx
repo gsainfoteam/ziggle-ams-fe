@@ -1,12 +1,18 @@
-import { useState } from "react";
+import {
+  MdChevronLeft,
+  MdChevronRight,
+  MdDeleteOutline,
+  MdOutlineVisibilityOff,
+  MdStarOutline,
+} from "react-icons/md";
 import styled, { css } from "styled-components";
 
-import ProjectsData, { ProjectData } from "../../ProjectData";
+import CircularButton from "../CircularButton";
 import AddProjectCard from "./AddProjectCard";
-import CircularButton from "./CircularButton";
 import { CarouselWidth, ProjectCardWidth } from "./cssConst";
 import ProjectCard from "./ProjectCard";
 import Title from "./Title";
+import useCarousel from "./useCarousel";
 
 const TitleSection = styled.section`
   display: flex;
@@ -39,7 +45,6 @@ const SlidesContainer = styled.div<{
   gap: var(--gap);
   transform: ${({ index, CarouselWidth, ProjectCardWidth }) =>
     `translateX(calc(${CarouselWidth} / 2 - ${ProjectCardWidth} / 2 - (${ProjectCardWidth} + var(--gap)) * ${index}))`};
-  // (width of SlidesSections) / 2 - (width of ProjectCard) / 2 - ((width of ProjectCard) + (gap of Slides Container)) * index
   transition: all 1s ease;
 `;
 const ControlsSection = styled.section`
@@ -54,6 +59,9 @@ const ControlsSection = styled.section`
 `;
 const SlideShiftButton = styled.button<{ direction: "right" | "left" }>`
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   ${({ direction }) =>
     direction === "right"
       ? css`
@@ -66,6 +74,7 @@ const SlideShiftButton = styled.button<{ direction: "right" | "left" }>`
   height: 50px;
   border-radius: 50%;
   border: none;
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 0 10px;
   &:hover {
     box-shadow: 0 0 15px;
@@ -74,24 +83,12 @@ const SlideShiftButton = styled.button<{ direction: "right" | "left" }>`
   &:active {
     box-shadow: 0 0 5px;
   }
-  opacity: 0.6;
 `;
 
-function Carousel({ projectsData }: { projectsData: ProjectData[] }) {
-  const [focusIndex, setFocusIndex] = useState(0);
+function Carousel() {
+  const { projectsData, focusIndex, nextSlide, previousSlide, deleteProject } =
+    useCarousel();
 
-  const nextSlide = () => {
-    setFocusIndex((currentFocusIndex) =>
-      currentFocusIndex < projectsData.length
-        ? currentFocusIndex + 1
-        : projectsData.length,
-    );
-  };
-  const previousSlide = () => {
-    setFocusIndex((currentFocusIndex) =>
-      currentFocusIndex > 0 ? currentFocusIndex - 1 : 0,
-    );
-  };
   return (
     <div>
       <TitleSection>
@@ -114,15 +111,25 @@ function Carousel({ projectsData }: { projectsData: ProjectData[] }) {
           ))}
           <AddProjectCard focused={projectsData.length == focusIndex} />
         </SlidesContainer>
-        <SlideShiftButton direction="right" onClick={nextSlide} />
-        <SlideShiftButton direction="left" onClick={previousSlide} />
+        <SlideShiftButton direction="right" onClick={nextSlide}>
+          <MdChevronRight size={50} />
+        </SlideShiftButton>
+        <SlideShiftButton direction="left" onClick={previousSlide}>
+          <MdChevronLeft size={50} />
+        </SlideShiftButton>
       </SlidesSection>
       <ControlsSection>
-        {focusIndex < ProjectsData.length && (
+        {focusIndex < projectsData.length && (
           <>
-            <CircularButton />
-            <CircularButton />
-            <CircularButton />
+            <CircularButton>
+              <MdOutlineVisibilityOff size={25} />
+            </CircularButton>
+            <CircularButton>
+              <MdStarOutline size={25} />
+            </CircularButton>
+            <CircularButton onClick={deleteProject}>
+              <MdDeleteOutline size={25} color={"red"} />
+            </CircularButton>
           </>
         )}
       </ControlsSection>

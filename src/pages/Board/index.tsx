@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 import Carousel from "./components/Carousel/Carousel";
 import { CarouselWidth } from "./components/Carousel/cssConst";
-import ProjectsData from "./ProjectData";
 
 const BoardLayout = styled.div`
   display: flex;
@@ -21,7 +20,7 @@ const BoardPage = () => {
     <>
       <BoardLayout>
         <CarouselSection CarouselWidth={CarouselWidth}>
-          <Carousel projectsData={ProjectsData} />
+          <Carousel />
         </CarouselSection>
       </BoardLayout>
     </>
