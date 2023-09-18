@@ -1,3 +1,3 @@
-export const CarouselWidth = "2000px";
+export const CarouselWidth = "80vw";
 
 export const ProjectCardWidth = "420px";
