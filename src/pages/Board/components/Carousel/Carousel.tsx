@@ -34,18 +34,15 @@ const SlidesSection = styled.section`
   padding: 20px 0 20px 0;
 `;
 
-interface SlidesContainerProps {
-  index: number;
-  CarouselWidth: string;
-  ProjectCardWidth: string;
-}
-const SlidesContainer = styled.div<SlidesContainerProps>`
+const SlidesContainer = styled.div<{ focusIndex: number }>`
   --gap: 20px;
+  --ProjectCardWidth: ${ProjectCardWidth};
+  --CarouselWidth: ${CarouselWidth};
   display: flex;
   flex-direction: row;
   gap: var(--gap);
-  transform: ${({ index, CarouselWidth, ProjectCardWidth }) =>
-    `translateX(calc(${CarouselWidth} / 2 - ${ProjectCardWidth} / 2 - (${ProjectCardWidth} + var(--gap)) * ${index}))`};
+  transform: ${({ focusIndex }) =>
+    `translateX(calc(var(--CarouselWidth) / 2 - var(--ProjectCardWidth) / 2 - (var(--ProjectCardWidth) + var(--gap)) * ${focusIndex}))`};
   transition: all 1s ease;
 `;
 const ControlsSection = styled.section`
@@ -65,31 +62,25 @@ const SlideShiftButton = styled(CircularButton)<SlideShiftButtonProps>`
   position: absolute;
   right: ${({ direction }) => direction === "right" && "20px"};
   left: ${({ direction }) => direction === "left" && "20px"};
+  background-color: rgba(255, 255, 255, 0.7);
 `;
 
 function Carousel() {
   const { projectsData, focusIndex, nextSlide, previousSlide, deleteProject } =
     useCarousel();
-
   const isNotEnd = focusIndex < projectsData.length;
 
   return (
     <div>
       <TitleSection>
-        {focusIndex < projectsData.length && (
-          <Title title={projectsData[focusIndex].title} />
-        )}
+        {isNotEnd && <Title title={projectsData[focusIndex].title} />}
       </TitleSection>
       <SlidesSection>
-        <SlidesContainer
-          index={focusIndex}
-          CarouselWidth={CarouselWidth}
-          ProjectCardWidth={ProjectCardWidth}
-        >
+        <SlidesContainer focusIndex={focusIndex}>
           {projectsData.map((projectData, i) => (
             <ProjectCard
               key={projectData.project_uuid}
-              focused={i == focusIndex}
+              focused={i === focusIndex}
               projectData={projectData}
             />
           ))}

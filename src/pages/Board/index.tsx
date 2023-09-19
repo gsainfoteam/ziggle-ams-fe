@@ -11,15 +11,15 @@ const BoardLayout = styled.div`
   width: 100%;
   height: 100%;
 `;
-const CarouselSection = styled.div<{ CarouselWidth: string }>`
-  ${({ CarouselWidth }) => `width: ${CarouselWidth}`}
+const CarouselSection = styled.div`
+  width: ${CarouselWidth};
 `;
 
 const BoardPage = () => {
   return (
     <>
       <BoardLayout>
-        <CarouselSection CarouselWidth={CarouselWidth}>
+        <CarouselSection>
           <Carousel />
         </CarouselSection>
       </BoardLayout>

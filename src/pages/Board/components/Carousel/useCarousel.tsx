@@ -1,17 +1,20 @@
-import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import ProjectsData from "../../ProjectsDataFromDB";
+import FetchProjectsDataFromDB, {
+  ProjectData,
+} from "../../FetchProjectsDataFromDB";
 
 function useCarousel() {
   const [focusIndex, setFocusIndex] = useState(0);
-  const [projectsData, setProjectData] = useState(
-    ProjectsData.map((projectData) => ({
-      ...projectData,
-      start_date: dayjs(projectData.start_date),
-      end_date: dayjs(projectData.end_date),
-    })),
-  ); // TODO: fetch from DB later
+  const [projectsData, setProjectsData] = useState<ProjectData[]>([]);
+
+  useEffect(() => {
+    const fetchProjectData = async () => {
+      const response = await FetchProjectsDataFromDB();
+      setProjectsData(response);
+    };
+    fetchProjectData();
+  }, []);
 
   const nextSlide = () => {
     setFocusIndex((currentFocusIndex) =>
@@ -19,18 +22,16 @@ function useCarousel() {
     );
   };
   const previousSlide = () => {
-    setFocusIndex((currentFocusIndex) =>
-      currentFocusIndex > 0 ? currentFocusIndex - 1 : 0,
-    );
+    setFocusIndex((currentFocusIndex) => Math.max(currentFocusIndex - 1, 0));
   };
 
   const deleteProject = () => {
     const targetProjectUUID = projectsData[focusIndex].project_uuid;
-    setProjectData((currentProjectData) =>
+    setProjectsData((currentProjectData) =>
       currentProjectData.filter(
         (projectData) => projectData.project_uuid !== targetProjectUUID,
       ),
-    ); // TODO: remove from DB later
+    ); // TODO: remove from actual DB later
   };
 
   return { projectsData, focusIndex, nextSlide, previousSlide, deleteProject };

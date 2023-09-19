@@ -23,13 +23,15 @@ const TitleElement = () => {
   );
 };
 
+interface RecruitStat {
+  current_applicants_num: number;
+  target_recruit_num: number;
+}
+
 const ProgressBarElement = ({
   current_applicants_num,
   target_recruit_num,
-}: {
-  current_applicants_num: number;
-  target_recruit_num: number;
-}) => {
+}: RecruitStat) => {
   const WidgetElement = styled.div`
     display: flex;
     flex: 1.4;
@@ -77,10 +79,7 @@ const ProgressBarElement = ({
 const RecruitRatioElement = ({
   current_applicants_num,
   target_recruit_num,
-}: {
-  current_applicants_num: number;
-  target_recruit_num: number;
-}) => {
+}: RecruitStat) => {
   const WidgetElement = styled.div`
     display: flex;
     flex: 0.9;
@@ -107,12 +106,21 @@ const RecruitRatioElement = ({
   );
 };
 
-function MiniRecruitStatWidget() {
+function MiniRecruitStatWidget({
+  current_applicants_num,
+  target_recruit_num,
+}: RecruitStat) {
   return (
     <Widget>
       <TitleElement />
-      <ProgressBarElement current_applicants_num={20} target_recruit_num={6} />
-      <RecruitRatioElement current_applicants_num={20} target_recruit_num={6} />
+      <ProgressBarElement
+        current_applicants_num={current_applicants_num}
+        target_recruit_num={target_recruit_num}
+      />
+      <RecruitRatioElement
+        current_applicants_num={current_applicants_num}
+        target_recruit_num={target_recruit_num}
+      />
     </Widget>
   );
 }
