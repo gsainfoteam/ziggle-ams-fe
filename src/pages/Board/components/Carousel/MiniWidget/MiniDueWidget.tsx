@@ -46,9 +46,9 @@ const DdayElement = ({ endDate }: { endDate: dayjs.Dayjs }) => {
   const { dateDiff, isNotOverDue } = dDayCalc(endDate);
   return (
     <CenterWidgetElement>
-      <h3 style={{ color: isNotOverDue ? "green" : "#eb6263" }}>{`D${
-        isNotOverDue ? "" : "+"
-      }${dateDiff}`}</h3>
+      <h3 style={{ color: isNotOverDue ? "green" : "#eb6263" }}>
+        {`D${isNotOverDue ? "" : "+"}${dateDiff}`}
+      </h3>
     </CenterWidgetElement>
   );
 };
