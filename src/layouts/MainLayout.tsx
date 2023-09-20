@@ -8,18 +8,27 @@ const Container = styled.div`
   flex-direction: column;
   min-height: 100vh;
 `;
-
-const Main = styled.main`
+const Wrapper = styled.div`
+  display: flex;
   flex: 1;
+  background-color: #f5f5f5;
+  justify-content: center;
+`;
+const Main = styled.main`
+  width: 100vw;
+  max-width: 1340px;
+  padding: 0 20px;
 `;
 
 const MainLayout = () => {
   return (
     <Container>
       <Header />
-      <Main>
-        <Outlet />
-      </Main>
+      <Wrapper>
+        <Main>
+          <Outlet />
+        </Main>
+      </Wrapper>
       <Footer />
     </Container>
   );
