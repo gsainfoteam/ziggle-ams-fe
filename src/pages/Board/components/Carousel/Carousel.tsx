@@ -79,7 +79,7 @@ function Carousel() {
         <SlidesContainer focusIndex={focusIndex}>
           {projectsData.map((projectData, i) => (
             <ProjectCard
-              key={projectData.project_uuid}
+              key={projectData.projectUuid}
               focused={i === focusIndex}
               projectData={projectData}
             />

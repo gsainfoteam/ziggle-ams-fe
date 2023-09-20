@@ -3,24 +3,32 @@ import dayjs from "dayjs";
 import ProjectsDataFromDB from "./ProjectsDataFromDB";
 
 async function FetchProjectsDataFromDB() {
-  const ProjectsData = await ProjectsDataFromDB.map((projectData) => ({
-    ...projectData,
-    start_date: dayjs(projectData.start_date),
-    end_date: dayjs(projectData.end_date),
-  })); // TODO: Replace with actual fetch function later
+  const ProjectsData = await ProjectsDataFromDB.map<ProjectData>(
+    (projectData) => ({
+      startDate: dayjs(projectData.start_date),
+      endDate: dayjs(projectData.end_date),
+      projectUuid: projectData.project_uuid,
+      title: projectData.title,
+      imageUrl: projectData.image_url,
+      recruitNum: projectData.recruit_num,
+      state: projectData.state,
+      applicationUuid: projectData.application_uuid,
+      adminUuid: projectData.admin_uuid,
+    }),
+  ); // TODO: Replace with actual fetch function later
   return ProjectsData;
 }
 
 export default FetchProjectsDataFromDB;
 
 export interface ProjectData {
-  start_date: dayjs.Dayjs;
-  end_date: dayjs.Dayjs;
-  project_uuid: string;
+  startDate: dayjs.Dayjs;
+  endDate: dayjs.Dayjs;
+  projectUuid: string;
   title: string;
-  image_url: string;
-  recruit_num: number;
+  imageUrl: string;
+  recruitNum: number;
   state: boolean;
-  application_uuid: string;
-  admin_uuid: string[];
+  applicationUuid: string;
+  adminUuid: string[];
 }

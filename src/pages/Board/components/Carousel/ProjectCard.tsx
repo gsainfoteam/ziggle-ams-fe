@@ -29,16 +29,16 @@ function ProjectCard({
   projectData: ProjectData;
   focused: boolean;
 }) {
-  const { start_date, end_date } = projectData; // TODO: get recruit stat from DB
+  const { startDate, endDate } = projectData; // TODO: get recruit stat from DB
 
   return (
     <Paper focused={focused}>
       <Thumbnail src={thumbnailUrl} />
       <WidgetSection>
-        <MiniDueWidget start_date={start_date} end_date={end_date} />
+        <MiniDueWidget startDate={startDate} endDate={endDate} />
         <MiniRecruitStatWidget // TODO: put values from DB
-          current_applicants_num={20}
-          target_recruit_num={6}
+          currentApplicantsNum={20}
+          targetRecruitNum={6}
         />
       </WidgetSection>
     </Paper>

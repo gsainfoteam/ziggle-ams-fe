@@ -26,10 +26,10 @@ function useCarousel() {
   };
 
   const deleteProject = () => {
-    const targetProjectUUID = projectsData[focusIndex].project_uuid;
+    const targetProjectUUID = projectsData[focusIndex].projectUuid;
     setProjectsData((currentProjectData) =>
       currentProjectData.filter(
-        (projectData) => projectData.project_uuid !== targetProjectUUID,
+        (projectData) => projectData.projectUuid !== targetProjectUUID,
       ),
     ); // TODO: remove from actual DB later
   };

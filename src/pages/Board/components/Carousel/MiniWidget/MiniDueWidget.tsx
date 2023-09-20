@@ -25,8 +25,8 @@ const TitleElement = () => {
   );
 };
 
-const DdayElement = ({ end_date }: { end_date: dayjs.Dayjs }) => {
-  const dateDiff = dayjs().diff(end_date, "day");
+const DdayElement = ({ endDate }: { endDate: dayjs.Dayjs }) => {
+  const dateDiff = dayjs().diff(endDate, "day");
   const WidgetElement = styled.div`
     display: flex;
     flex: 1.4;
@@ -45,13 +45,12 @@ const DdayElement = ({ end_date }: { end_date: dayjs.Dayjs }) => {
   );
 };
 
-const StartEndDateElement = ({
-  start_date,
-  end_date,
-}: {
-  start_date: dayjs.Dayjs;
-  end_date: dayjs.Dayjs;
-}) => {
+interface DueProps {
+  startDate: dayjs.Dayjs;
+  endDate: dayjs.Dayjs;
+}
+
+const StartEndDateElement = ({ startDate, endDate }: DueProps) => {
   const WidgetElement = styled.div`
     display: flex;
     flex: 0.9;
@@ -67,25 +66,19 @@ const StartEndDateElement = ({
   return (
     <WidgetElement>
       <div>
-        <p>모집 시작 {start_date.format("YYYY.MM.DD")}</p>
-        <p>모집 마감 {end_date.format("YYYY.MM.DD")}</p>
+        <p>모집 시작 {startDate.format("YYYY.MM.DD")}</p>
+        <p>모집 마감 {endDate.format("YYYY.MM.DD")}</p>
       </div>
     </WidgetElement>
   );
 };
 
-function MiniDueWidget({
-  start_date,
-  end_date,
-}: {
-  start_date: dayjs.Dayjs;
-  end_date: dayjs.Dayjs;
-}) {
+function MiniDueWidget({ startDate, endDate }: DueProps) {
   return (
     <Widget>
       <TitleElement />
-      <DdayElement end_date={end_date} />
-      <StartEndDateElement start_date={start_date} end_date={end_date} />
+      <DdayElement endDate={endDate} />
+      <StartEndDateElement startDate={startDate} endDate={endDate} />
     </Widget>
   );
 }

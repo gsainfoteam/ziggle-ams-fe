@@ -24,13 +24,13 @@ const TitleElement = () => {
 };
 
 interface RecruitStat {
-  current_applicants_num: number;
-  target_recruit_num: number;
+  currentApplicantsNum: number;
+  targetRecruitNum: number;
 }
 
 const ProgressBarElement = ({
-  current_applicants_num,
-  target_recruit_num,
+  currentApplicantsNum,
+  targetRecruitNum,
 }: RecruitStat) => {
   const WidgetElement = styled.div`
     display: flex;
@@ -62,13 +62,13 @@ const ProgressBarElement = ({
           style={{
             position: "absolute",
             width: `${Math.min(
-              (100 * current_applicants_num) / target_recruit_num,
+              (100 * currentApplicantsNum) / targetRecruitNum,
               100,
             )}%`,
             height: "10px",
             borderRadius: "5px",
             backgroundColor:
-              current_applicants_num > target_recruit_num ? "green" : "#eb6263",
+              currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
           }}
         />
       </div>
@@ -77,8 +77,8 @@ const ProgressBarElement = ({
 };
 
 const RecruitRatioElement = ({
-  current_applicants_num,
-  target_recruit_num,
+  currentApplicantsNum,
+  targetRecruitNum,
 }: RecruitStat) => {
   const WidgetElement = styled.div`
     display: flex;
@@ -95,31 +95,31 @@ const RecruitRatioElement = ({
         <h3
           style={{
             color:
-              current_applicants_num > target_recruit_num ? "green" : "#eb6263",
+              currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
           }}
         >
-          {current_applicants_num}
+          {currentApplicantsNum}
         </h3>
-        <h3 style={{ color: "darkgray" }}>/{target_recruit_num}</h3>
+        <h3 style={{ color: "darkgray" }}>/{targetRecruitNum}</h3>
       </div>
     </WidgetElement>
   );
 };
 
 function MiniRecruitStatWidget({
-  current_applicants_num,
-  target_recruit_num,
+  currentApplicantsNum,
+  targetRecruitNum,
 }: RecruitStat) {
   return (
     <Widget>
       <TitleElement />
       <ProgressBarElement
-        current_applicants_num={current_applicants_num}
-        target_recruit_num={target_recruit_num}
+        currentApplicantsNum={currentApplicantsNum}
+        targetRecruitNum={targetRecruitNum}
       />
       <RecruitRatioElement
-        current_applicants_num={current_applicants_num}
-        target_recruit_num={target_recruit_num}
+        currentApplicantsNum={currentApplicantsNum}
+        targetRecruitNum={targetRecruitNum}
       />
     </Widget>
   );
