@@ -1,8 +1,8 @@
-interface TitleProps {
+interface titleProps {
   title: string;
 }
 
-function Title(props: TitleProps) {
+function Title(props: titleProps) {
   return <h1>{props.title}</h1>;
 }
 

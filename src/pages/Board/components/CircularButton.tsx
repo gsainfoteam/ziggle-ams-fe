@@ -1,14 +1,14 @@
 import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
-interface CircularButtonProps {
+interface circularButtonProps {
   color?: string;
   shadow?: boolean;
   outline?: boolean;
   size?: number;
 }
 
-const Button = styled.button<CircularButtonProps>`
+const Button = styled.button<circularButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,7 +33,7 @@ function CircularButton({
   shadow,
   size,
   ...props
-}: CircularButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
+}: circularButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
   return <Button color={color} shadow={shadow} size={size} {...props} />;
 }
 

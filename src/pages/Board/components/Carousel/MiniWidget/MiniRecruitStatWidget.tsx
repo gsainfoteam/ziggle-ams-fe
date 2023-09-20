@@ -23,7 +23,7 @@ const TitleElement = () => {
   );
 };
 
-interface RecruitStat {
+interface recruitStat {
   current_applicants_num: number;
   target_recruit_num: number;
 }
@@ -31,7 +31,7 @@ interface RecruitStat {
 const ProgressBarElement = ({
   current_applicants_num,
   target_recruit_num,
-}: RecruitStat) => {
+}: recruitStat) => {
   const WidgetElement = styled.div`
     display: flex;
     flex: 1.4;
@@ -79,7 +79,7 @@ const ProgressBarElement = ({
 const RecruitRatioElement = ({
   current_applicants_num,
   target_recruit_num,
-}: RecruitStat) => {
+}: recruitStat) => {
   const WidgetElement = styled.div`
     display: flex;
     flex: 0.9;
@@ -109,7 +109,7 @@ const RecruitRatioElement = ({
 function MiniRecruitStatWidget({
   current_applicants_num,
   target_recruit_num,
-}: RecruitStat) {
+}: recruitStat) {
   return (
     <Widget>
       <TitleElement />

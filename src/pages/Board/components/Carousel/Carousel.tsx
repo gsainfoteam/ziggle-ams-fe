@@ -55,10 +55,10 @@ const ControlsSection = styled.section`
   width: 100%;
   height: 50px;
 `;
-interface SlideShiftButtonProps {
+interface slideShiftButtonProps {
   direction: "right" | "left";
 }
-const SlideShiftButton = styled(CircularButton)<SlideShiftButtonProps>`
+const SlideShiftButton = styled(CircularButton)<slideShiftButtonProps>`
   position: absolute;
   right: ${({ direction }) => direction === "right" && "20px"};
   left: ${({ direction }) => direction === "left" && "20px"};

@@ -13,7 +13,7 @@ async function FetchProjectsDataFromDB() {
 
 export default FetchProjectsDataFromDB;
 
-export interface ProjectData {
+export interface projectData {
   start_date: dayjs.Dayjs;
   end_date: dayjs.Dayjs;
   project_uuid: string;

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 import FetchProjectsDataFromDB, {
-  ProjectData,
+  projectData,
 } from "../../FetchProjectsDataFromDB";
 
 function useCarousel() {
   const [focusIndex, setFocusIndex] = useState(0);
-  const [projectsData, setProjectsData] = useState<ProjectData[]>([]);
+  const [projectsData, setProjectsData] = useState<projectData[]>([]);
 
   useEffect(() => {
     const fetchProjectData = async () => {
