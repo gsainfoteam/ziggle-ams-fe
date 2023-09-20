@@ -11,7 +11,6 @@ import CircularButton from "../CircularButton";
 import AddProjectCard from "./AddProjectCard";
 import { CarouselWidth, ProjectCardWidth } from "./cssConst";
 import ProjectCard from "./ProjectCard";
-import Title from "./Title";
 import useCarousel from "./useCarousel";
 
 const TitleSection = styled.section`
@@ -73,7 +72,7 @@ function Carousel() {
   return (
     <div>
       <TitleSection>
-        {isNotEnd && <Title title={projectsData[focusIndex].title} />}
+        {isNotEnd && <h1>{projectsData[focusIndex].title}</h1>}
       </TitleSection>
       <SlidesSection>
         <SlidesContainer focusIndex={focusIndex}>
