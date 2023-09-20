@@ -6,20 +6,21 @@ const Widget = styled.div`
   margin: 0 15px 0 15px;
   align-items: center;
 `;
+
+const LeftWidgetElement = styled.div`
+  display: flex;
+  flex: 8;
+  justify-content: start;
+  align-items: center;
+  h3 {
+    margin: 0;
+  }
+`;
 const TitleElement = () => {
-  const WidgetElement = styled.div`
-    display: flex;
-    flex: 0.8;
-    justify-content: start;
-    align-items: center;
-    h3 {
-      margin: 0;
-    }
-  `;
   return (
-    <WidgetElement>
+    <LeftWidgetElement>
       <h3>지원 인원</h3>
-    </WidgetElement>
+    </LeftWidgetElement>
   );
 };
 
@@ -28,19 +29,19 @@ interface RecruitStat {
   targetRecruitNum: number;
 }
 
+const CenterWidgetElement = styled.div`
+  display: flex;
+  flex: 14;
+  justify-content: start;
+  align-items: center;
+`;
+
 const ProgressBarElement = ({
   currentApplicantsNum,
   targetRecruitNum,
 }: RecruitStat) => {
-  const WidgetElement = styled.div`
-    display: flex;
-    flex: 1.4;
-    justify-content: start;
-    align-items: center;
-  `;
-
   return (
-    <WidgetElement>
+    <CenterWidgetElement>
       <div
         style={{
           display: "flex",
@@ -72,25 +73,26 @@ const ProgressBarElement = ({
           }}
         />
       </div>
-    </WidgetElement>
+    </CenterWidgetElement>
   );
 };
+
+const RightWidgetElement = styled.div`
+  display: flex;
+  flex: 9;
+  justify-content: center;
+  align-items: center;
+  h3 {
+    margin: 0;
+  }
+`;
 
 const RecruitRatioElement = ({
   currentApplicantsNum,
   targetRecruitNum,
 }: RecruitStat) => {
-  const WidgetElement = styled.div`
-    display: flex;
-    flex: 0.9;
-    justify-content: center;
-    align-items: center;
-    h3 {
-      margin: 0;
-    }
-  `;
   return (
-    <WidgetElement>
+    <RightWidgetElement>
       <div style={{ display: "flex", alignItems: "center" }}>
         <h3
           style={{
@@ -102,7 +104,7 @@ const RecruitRatioElement = ({
         </h3>
         <h3 style={{ color: "darkgray" }}>/{targetRecruitNum}</h3>
       </div>
-    </WidgetElement>
+    </RightWidgetElement>
   );
 };
 
