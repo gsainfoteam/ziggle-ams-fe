@@ -13,7 +13,13 @@ const Manager = styled.div`
     flex: 1;
   }
 `;
-
+const ManagerList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+`;
 const ManagerInfoCard = styled.li`
   display: flex;
   align-items: center;
@@ -37,7 +43,7 @@ const ManagerInfo = () => {
           <img src={manager} alt="manager icon" />
           <h3>관리자 정보</h3>
         </Logo>
-        <ul>
+        <ManagerList>
           <ManagerInfoCard>
             <Logo>
               <img src={profileGrey} alt="grey profile icon" />
@@ -52,7 +58,7 @@ const ManagerInfo = () => {
             </Logo>
             <h4>email</h4>
           </ManagerInfoCard>
-        </ul>
+        </ManagerList>
       </Section>
     </Manager>
   );
