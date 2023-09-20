@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import thumbnailUrl from "/src/assets/dummy_thumbnail.jpg";
 
-import { projectData } from "../../FetchProjectsDataFromDB";
+import { ProjectData } from "../../FetchProjectsDataFromDB";
 import MiniDueWidget from "./MiniWidget/MiniDueWidget";
 import MiniRecruitStatWidget from "./MiniWidget/MiniRecruitStatWidget";
 import Paper from "./Paper";
@@ -26,7 +26,7 @@ function ProjectCard({
   projectData,
   focused,
 }: {
-  projectData: projectData;
+  projectData: ProjectData;
   focused: boolean;
 }) {
   const { start_date, end_date } = projectData; // TODO: get recruit stat from DB

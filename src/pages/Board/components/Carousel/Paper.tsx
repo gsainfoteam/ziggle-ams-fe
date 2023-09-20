@@ -2,13 +2,13 @@ import styled from "styled-components";
 
 import { ProjectCardWidth } from "./cssConst";
 
-interface paperProps {
+interface PaperProps {
   focused?: boolean;
   shadow?: boolean;
   outline?: boolean;
 }
 
-const Paper = styled.div<paperProps>`
+const Paper = styled.div<PaperProps>`
   --ProjectCardWidth: ${ProjectCardWidth};
   display: flex;
   flex-direction: column;
