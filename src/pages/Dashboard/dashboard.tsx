@@ -4,7 +4,7 @@ import styled from "styled-components";
 import exclamation from "./assets/exclamation.png";
 import ApplicantTrend from "./components/ApplicantTrend";
 import { Logo, Section } from "./components/Common";
-import ManagementBar from "./components/managementBar";
+import ManagementBar from "./components/ManagementBar";
 import ManagerInfo from "./components/ManagerInfo";
 
 const Container = styled.div`

@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
-import caution from "./assets/caution.png";
-import doughnut from "./assets/doughnut.png";
-import plus from "./assets/plus.png";
-import profile from "./assets/profile.png";
+import caution from "../assets/caution.png";
+import doughnut from "../assets/doughnut.png";
+import plus from "../assets/plus.png";
+import profile from "../assets/profile.png";
 import { Logo } from "./Common";
 
 const Management = styled.div`

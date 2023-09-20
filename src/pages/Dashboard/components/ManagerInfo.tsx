@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
-import manager from "./assets/manager.png";
-import profileGrey from "./assets/profileGrey.png";
+import manager from "../assets/manager.png";
+import profileGrey from "../assets/profileGrey.png";
 import { Logo, Section } from "./Common";
 
 const Manager = styled.div`
