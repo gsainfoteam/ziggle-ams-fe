@@ -1,7 +1,8 @@
 import "../initChartJS";
 
+import dayjs from "dayjs";
 // import { SubTitle } from "chart.js";
-import { Line } from "react-chartjs-2";
+import { Bar, Chart } from "react-chartjs-2";
 import styled from "styled-components";
 
 // import { Link } from "react-router-dom";
@@ -16,40 +17,21 @@ const Trend = styled.div`
     flex: 1;
   }
 `;
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "Chart.js Line Chart",
-    },
-  },
-};
+const ChartContainer = styled.div`
+  position: relative;
 
-const labels = ["January", "February", "March", "April", "May", "June"];
-
-const data = {
-  labels: labels,
-  datasets: [
-    {
-      label: "dataset 1",
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgb(255, 99, 132)",
-      data: [0, 10, 5, 2, 20, 30, 45],
-    },
-  ],
-};
-
-// const config = {
-//   type: "line",
-//   data: data,
-//   options: {},
-// };
-
+  canvas {
+    height: 300px;
+  }
+`;
 const ApplicantTrend = () => {
+  const label = [...Array(7)].map((element, index) => {
+    return dayjs()
+      .subtract(index + 1, "days")
+      .format("MMM DD");
+  });
+  const data = [9, 9, 2, 14, 7, 9, 2];
+
   return (
     <Trend>
       <Section>
@@ -57,9 +39,39 @@ const ApplicantTrend = () => {
           <img src={chart} alt="chart icon" />
           <h3>지원자 추이</h3>
         </Logo>
-        <div style={{ alignSelf: "center" }}>
-          <Line options={options} data={data} />
-        </div>
+        <ChartContainer>
+          <Chart
+            type="bar"
+            options={{
+              responsive: true,
+              scales: {
+                x: { grid: { display: false } },
+                y: { position: "right" },
+              },
+              maintainAspectRatio: false,
+            }}
+            data={{
+              labels: label,
+              datasets: [
+                {
+                  type: "line" as const,
+                  label: "dataset 1",
+                  backgroundColor: "#e99d9d",
+                  borderColor: "#e99d9d",
+                  data: data,
+                },
+                {
+                  type: "bar" as const,
+                  label: "dataset 2",
+                  backgroundColor: "#FCD2D2",
+                  borderColor: "#FCD2D2",
+                  hoverBackgroundColor: "#eb6263",
+                  data: data,
+                },
+              ],
+            }}
+          />
+        </ChartContainer>
       </Section>
     </Trend>
   );
