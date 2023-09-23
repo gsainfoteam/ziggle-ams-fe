@@ -29,6 +29,7 @@ const ManagerInfoCard = styled.li`
   background: #f2f2f2;
   margin-left: auto;
   width: 100%;
+  padding: 5px 8px;
 
   & h4 {
     color: grey;
