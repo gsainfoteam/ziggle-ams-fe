@@ -5,6 +5,7 @@ import ApplicantInfo from "./components/ApplicantInfo";
 import ApplicantTrend from "./components/ApplicantTrend";
 import ManagementBar from "./components/ManagementBar";
 import ManagerInfo from "./components/ManagerInfo";
+import ScheduleManagement from "./components/ScheduleManagement";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -35,6 +36,7 @@ const Dashboard = () => {
         <ManagerInfo></ManagerInfo>
       </Flex>
       <ApplicantInfo></ApplicantInfo>
+      <ScheduleManagement></ScheduleManagement>
     </Container>
   );
 };
