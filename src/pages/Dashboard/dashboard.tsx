@@ -12,9 +12,17 @@ const Container = styled.div`
   align-items: stretch;
   gap: 20px;
 `;
-const Title = styled.div`
-  display: flex;
-  justify-content: left;
+const Title = styled.h2`
+  margin-top: 60px;
+  gap: 10px;
+  font-size: 30px;
+
+  h3 {
+    display: inline;
+    color: gray;
+    margin: 0;
+    font-size: 0.8em;
+  }
 `;
 
 const Flex = styled.div`
@@ -27,8 +35,7 @@ const Dashboard = () => {
   return (
     <Container>
       <Title>
-        <h2>프로젝트 관리</h2>
-        <h3>DEMO EVENT</h3>
+        프로젝트 관리 <h3>Project Name</h3>
       </Title>
       <ManagementBar></ManagementBar>
       <Flex>
