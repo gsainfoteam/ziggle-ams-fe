@@ -19,6 +19,7 @@ const ManagerList = styled.ul`
   gap: 10px;
   margin: 0;
   padding: 0;
+  overflow: auto;
 `;
 const ManagerInfoCard = styled.li`
   display: flex;
@@ -29,6 +30,7 @@ const ManagerInfoCard = styled.li`
   background: #f2f2f2;
   margin-left: auto;
   width: 100%;
+  box-sizing: border-box;
   padding: 5px 8px;
 
   & h4 {
@@ -48,14 +50,14 @@ const ManagerInfo = () => {
           <ManagerInfoCard>
             <Logo>
               <img src={profileGrey} alt="grey profile icon" />
-              <h3>박미솔</h3>
+              <h3>Name</h3>
             </Logo>
             <h4>email</h4>
           </ManagerInfoCard>
           <ManagerInfoCard>
             <Logo>
               <img src={profileGrey} alt="grey profile icon" />
-              <h3>박미솔</h3>
+              <h3>Name</h3>
             </Logo>
             <h4>email</h4>
           </ManagerInfoCard>
