@@ -14,7 +14,7 @@ const Container = styled.header`
   border-bottom: 1px solid #eb6263;
 `;
 
-const HomeLogo = styled.div`
+const HomeLogo = styled(Link)`
   display: flex;
   align-items: center;
 
@@ -41,14 +41,15 @@ const Actions = styled.div`
   }
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled(Link)`
   border: 1px solid #eb6263;
   border-radius: 8px;
   background-color: white;
   padding: 0.5em 0.8em;
   font-weight: 500;
   font-size: 1rem;
-  color: inherit;
+  color: #eb6263;
+  text-decoration: none;
 
   &:hover {
     cursor: pointer;
@@ -60,12 +61,14 @@ const LoginButton = styled.button`
   }
 `;
 
-const AccountButton = styled.div`
+const AccountButton = styled(Link)`
   font-size: 1.2rem;
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #eb6263;
+  text-decoration: none;
 
   &:hover {
     cursor: pointer;
@@ -86,11 +89,9 @@ const Header = () => {
   return (
     <Container>
       <Actions>
-        <Link to="/">
-          <HomeLogo>
-            <img src={iconTextLogo} alt="ams icon and text logo" />
-          </HomeLogo>
-        </Link>
+        <HomeLogo to="/">
+          <img src={iconTextLogo} alt="ams icon and text logo" />
+        </HomeLogo>
         <nav>
           <ul>
             <li>
@@ -103,9 +104,11 @@ const Header = () => {
         </nav>
       </Actions>
       {isLoggedIn ? (
-        <LoginButton onClick={toggleLoginState}>로그인</LoginButton>
+        <LoginButton to="/" onClick={toggleLoginState}>
+          로그인
+        </LoginButton>
       ) : (
-        <AccountButton onClick={toggleLoginState}>
+        <AccountButton to="/" onClick={toggleLoginState}>
           crowntheking
           <img src={accountIcon} alt="account icon" />
         </AccountButton>
