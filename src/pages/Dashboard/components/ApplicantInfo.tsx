@@ -10,27 +10,32 @@ const Flex = styled.div`
   justify-content: space-between;
   gap: 35px;
 `;
+
+const Scroll = styled.div`
+  border-radius: 6px;
+  background: #f2f2f2;
+  height: 377px;
+
+  flex: 1;
+  padding: 25px 10px;
+  gap: 10px;
+  overflow: hidden;
+`;
 const ApplicationSection = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border-radius: 6px;
-  background: #f2f2f2;
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25) inset;
-  height: 377px;
-  flex: 1;
-  padding: 25px 30px;
+  height: 100%;
   overflow: auto;
-  gap: 10px;
+  padding: 0 20px;
+  gap: 0.5rem;
 `;
 const ApplicantCard = styled.li`
   display: flex;
   background-color: white;
-  height: 54px;
+  flex: 1 0 54px;
   width: 100%;
   border-radius: 5px;
   justify-content: space-between;
-  padding: 16px;
 
   & div {
     font-size: 20px;
@@ -62,32 +67,36 @@ const ApplicantInfo = () => {
         <h3>지원자 정보</h3>
       </Logo>
       <Flex>
-        <ApplicationSection>
-          {[...Array(100)].map((_, index) => {
-            return (
-              <ApplicantCard key={index}>
-                <Logo>
-                  <img src={paper} alt="paper icon" />
-                  <div>학번</div>
-                  <div>이름</div>
-                </Logo>
-                <Logo>
-                  <Date>날짜</Date>
-                  <img src={chat} alt="chat icon" />
-                </Logo>
-              </ApplicantCard>
-            );
-          })}
-        </ApplicationSection>
-        <GroupSection>
-          {[...Array(50)].map((_, index) => {
-            return (
-              <Group key={index}>
-                <h2>그룹 {index + 1}</h2>
-              </Group>
-            );
-          })}
-        </GroupSection>
+        <Scroll>
+          <ApplicationSection>
+            {[...Array(100)].map((_, index) => {
+              return (
+                <ApplicantCard key={index}>
+                  <Logo>
+                    <img src={paper} alt="paper icon" />
+                    <div>학번</div>
+                    <div>이름</div>
+                  </Logo>
+                  <Logo>
+                    <Date>날짜</Date>
+                    <img src={chat} alt="chat icon" />
+                  </Logo>
+                </ApplicantCard>
+              );
+            })}
+          </ApplicationSection>
+        </Scroll>
+        <Scroll>
+          <GroupSection>
+            {[...Array(50)].map((_, index) => {
+              return (
+                <Group key={index}>
+                  <h2>그룹 {index + 1}</h2>
+                </Group>
+              );
+            })}
+          </GroupSection>
+        </Scroll>
       </Flex>
     </Section>
   );
