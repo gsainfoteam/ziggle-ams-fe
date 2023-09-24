@@ -50,11 +50,12 @@ const LoginButton = styled(Link)`
   font-size: 1rem;
   color: #eb6263;
   text-decoration: none;
-
+  transition: 0.2s ease-in-out;
   &:hover {
     cursor: pointer;
     background-color: #eb6263;
     color: white;
+    transition: 0.2s ease-in-out;
   }
   &:active {
     box-shadow: none;
