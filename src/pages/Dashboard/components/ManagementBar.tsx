@@ -16,7 +16,7 @@ const StatusContainer = styled.div`
   border-style: solid;
   border-color: lightgray;
   justify-content: space-around;
-  padding: 30px 80px;
+  padding: 30px 0;
 `;
 
 const Flex = styled.div`
@@ -29,7 +29,7 @@ const Management = styled.section`
   flex-direction: column;
   align-items: center;
   padding: 0px 10px;
-  gap: 10px;
+  gap: 1.5em;
 `;
 
 const Status = styled.div`
