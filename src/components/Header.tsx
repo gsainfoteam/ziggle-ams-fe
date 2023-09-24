@@ -3,16 +3,14 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import accountIcon from "../assets/accountIcon.svg";
-import iconInverted from "../assets/iconInverted.svg";
-import textLogo from "../assets/textLogo.svg";
+import iconTextLogo from "../assets/iconTextLogo.svg";
 
 const Container = styled.header`
   display: flex;
-  padding: 0.5rem 1rem;
+  padding: 0.2em 0.5em;
   color: #eb6263;
   justify-content: space-between;
   align-items: center;
-  height: 50px;
   border-bottom: 1px solid #eb6263;
 `;
 
@@ -21,7 +19,7 @@ const HomeLogo = styled.div`
   align-items: center;
 
   img {
-    width: 4.5rem;
+    width: 7rem;
   }
 `;
 
@@ -32,13 +30,13 @@ const Actions = styled.div`
   ul {
     list-style: none;
     display: flex;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     gap: 2rem;
 
     a {
       color: inherit;
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 500;
     }
   }
 `;
@@ -47,17 +45,15 @@ const LoginButton = styled.button`
   border: 1px solid #eb6263;
   border-radius: 8px;
   background-color: white;
-  width: 70px;
-  height: 35px;
-  font-weight: 700;
+  padding: 0.5em 0.8em;
+  font-weight: 500;
   font-size: 1rem;
-  color: #eb6263;
+  color: inherit;
 
   &:hover {
     cursor: pointer;
     background-color: #eb6263;
     color: white;
-    box-shadow: 0 0 3px black;
   }
   &:active {
     box-shadow: none;
@@ -65,11 +61,11 @@ const LoginButton = styled.button`
 `;
 
 const AccountButton = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.5rem;
 
   &:hover {
     cursor: pointer;
@@ -92,8 +88,7 @@ const Header = () => {
       <Actions>
         <Link to="/">
           <HomeLogo>
-            <img src={iconInverted} alt="ams icon" />
-            <img src={textLogo} alt="ams text HomeLogo" />
+            <img src={iconTextLogo} alt="ams icon and text logo" />
           </HomeLogo>
         </Link>
         <nav>
