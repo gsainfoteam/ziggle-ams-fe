@@ -9,6 +9,7 @@ export const Section = styled.article`
   border-color: lightgray;
   justify-content: space-around;
   padding: 12px 20px;
+  gap: 1em;
 `;
 
 export const Logo = styled.div`
