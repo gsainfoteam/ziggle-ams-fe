@@ -20,9 +20,10 @@ const Trend = styled.div`
 `;
 const ChartContainer = styled.div`
   position: relative;
+  height: 200px;
 
   canvas {
-    height: 200px;
+    position: absolute;
   }
 `;
 const ApplicantTrend = () => {
