@@ -45,17 +45,16 @@ const LoginButton = styled(Link)`
   border: 1px solid #eb6263;
   border-radius: 8px;
   background-color: white;
-  padding: 0.5em 0.8em;
+  padding: 0.2em 0.6em;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #eb6263;
   text-decoration: none;
-  transition: 0.2s ease-in-out;
+
   &:hover {
     cursor: pointer;
     background-color: #eb6263;
     color: white;
-    transition: 0.2s ease-in-out;
   }
   &:active {
     box-shadow: none;
