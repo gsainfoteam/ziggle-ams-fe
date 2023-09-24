@@ -14,5 +14,11 @@ export const Section = styled.article`
 export const Logo = styled.div`
   display: flex;
   align-items: center;
+  font-size: 1.3rem;
+  padding: 0 10px;
   gap: 14px;
+
+  h3 {
+    margin: 0;
+  }
 `;
