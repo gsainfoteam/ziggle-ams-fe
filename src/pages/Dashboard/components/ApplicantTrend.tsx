@@ -3,7 +3,7 @@ import "../initChartJS";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 // import { SubTitle } from "chart.js";
-import { Bar, Chart } from "react-chartjs-2";
+import { Chart } from "react-chartjs-2";
 import styled from "styled-components";
 
 // import { Link } from "react-router-dom";

@@ -1,5 +1,3 @@
-import styled from "styled-components";
-
 import calander from "../assets/calander.png";
 import { Logo, Section } from "./Common";
 
