@@ -1,25 +1,27 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import icon from "src/assets/icon.png";
 import styled from "styled-components";
 
+import accountIcon from "../assets/accountIcon.svg";
+import iconInverted from "../assets/iconInverted.svg";
+import textLogo from "../assets/textLogo.svg";
+
 const Container = styled.header`
-  background-color: #eb6263;
   display: flex;
   padding: 0.5rem 1rem;
-  color: white;
+  color: #eb6263;
   justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  border-bottom: 1px solid #eb6263;
 `;
 
-const Logo = styled.div`
+const HomeLogo = styled.div`
   display: flex;
   align-items: center;
 
   img {
-    height: 60px;
-  }
-
-  h1 {
-    margin: 0;
+    width: 4.5rem;
   }
 `;
 
@@ -31,23 +33,69 @@ const Actions = styled.div`
     list-style: none;
     display: flex;
     font-size: 1.5rem;
-    gap: 1.8em;
+    gap: 2rem;
 
     a {
       color: inherit;
       text-decoration: none;
+      font-weight: 700;
     }
   }
 `;
 
+const LoginButton = styled.button`
+  border: 1px solid #eb6263;
+  border-radius: 8px;
+  background-color: white;
+  width: 70px;
+  height: 35px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #eb6263;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #eb6263;
+    color: white;
+    box-shadow: 0 0 3px black;
+  }
+  &:active {
+    box-shadow: none;
+  }
+`;
+
+const AccountButton = styled.div`
+  font-size: 1.5rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  img {
+    width: 40px;
+  }
+`;
+
 const Header = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const toggleLoginState = () => {
+    setIsLoggedIn((loginState) => !loginState);
+  };
+
   return (
     <Container>
-      <Logo>
-        <img src={icon} alt="ams icon" />
-        <h1>GIST AMS</h1>
-      </Logo>
       <Actions>
+        <Link to="/">
+          <HomeLogo>
+            <img src={iconInverted} alt="ams icon" />
+            <img src={textLogo} alt="ams text HomeLogo" />
+          </HomeLogo>
+        </Link>
         <nav>
           <ul>
             <li>
@@ -58,8 +106,15 @@ const Header = () => {
             </li>
           </ul>
         </nav>
-        <button>로그인</button>
       </Actions>
+      {isLoggedIn ? (
+        <LoginButton onClick={toggleLoginState}>로그인</LoginButton>
+      ) : (
+        <AccountButton onClick={toggleLoginState}>
+          crowntheking
+          <img src={accountIcon} alt="account icon" />
+        </AccountButton>
+      )}
     </Container>
   );
 };
