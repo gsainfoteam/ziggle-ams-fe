@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import arrow from "../assets/arrow.png";
 import caution from "../assets/caution.png";
 import doughnut from "../assets/doughnut.png";
 import plus from "../assets/plus.png";
@@ -28,6 +29,7 @@ const Management = styled.section`
   flex-direction: column;
   align-items: center;
   padding: 0px 10px;
+  gap: 10px;
 `;
 
 const Status = styled.div`
@@ -35,6 +37,16 @@ const Status = styled.div`
   justify-content: space-between;
   align-items: center;
   gap: 15px;
+  color: #656565;
+  h2 {
+    margin: 0;
+    font-size: 2.25rem;
+  }
+  span {
+    display: inline;
+    color: #bbb;
+    margin: 0;
+  }
   @media screen and (max-width: 850px) {
     flex-direction: column;
   }
@@ -46,12 +58,21 @@ const Border = styled.div`
 `;
 
 const Change = styled.section`
-  width: 50px;
-  height: 27;
-  background-color: #ffdddd;
   border-radius: 13px;
-  width: 58px;
-  height: 27px;
+  color: #e04141;
+  background-color: #ffdddd;
+  img {
+    width: 18px;
+    height: 18px;
+  }
+
+  ${Logo} {
+    font-size: 0.8rem;
+
+    h3 {
+      margin: 0;
+    }
+  }
 `;
 
 const ManagementBar = () => {
@@ -64,7 +85,7 @@ const ManagementBar = () => {
             <h3>마감기한</h3>
           </Logo>
           <Status>
-            <h2>props</h2>
+            <h2>D - #</h2>
           </Status>
         </Management>
         <Border />
@@ -74,8 +95,15 @@ const ManagementBar = () => {
             <h3>지원자 수</h3>
           </Logo>
           <Status>
-            <h2>props</h2>
-            <Change />
+            <h2>
+              #<span> 명</span>
+            </h2>
+            <Change>
+              <Logo>
+                <h3>####</h3>
+                <img src={arrow} alt="arrow icon" />
+              </Logo>
+            </Change>
           </Status>
         </Management>
         <Border />
@@ -85,8 +113,15 @@ const ManagementBar = () => {
             <h3>경쟁률</h3>
           </Logo>
           <Status>
-            <h2>props</h2>
-            <Change />
+            <h2>
+              #<span> : #</span>
+            </h2>
+            <Change>
+              <Logo>
+                <h3># %</h3>
+                <img src={arrow} alt="arrow icon" />
+              </Logo>
+            </Change>
           </Status>
         </Management>
         <Border />
@@ -96,8 +131,15 @@ const ManagementBar = () => {
             <h3>조회수</h3>
           </Logo>
           <Status>
-            <h2>props</h2>
-            <Change />
+            <h2>
+              #<span> 회</span>
+            </h2>
+            <Change>
+              <Logo>
+                <h3>#</h3>
+                <img src={arrow} alt="arrow icon" />
+              </Logo>
+            </Change>
           </Status>
         </Management>
       </Flex>
