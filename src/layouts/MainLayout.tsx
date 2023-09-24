@@ -10,7 +10,7 @@ const Container = styled.div`
 `;
 
 const Main = styled.main`
-  flex: 1;
+  flex: 1 0 0;
 `;
 
 const MainLayout = () => {
