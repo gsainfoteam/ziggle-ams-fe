@@ -16,7 +16,7 @@ export const Logo = styled.div`
   align-items: center;
   font-size: 1.3rem;
   padding: 0 10px;
-  gap: 14px;
+  gap: 0.7em;
 
   h3 {
     margin: 0;
