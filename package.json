@@ -10,6 +10,7 @@
     "lint": "eslint src/"
   },
   "dependencies": {
+    "babel-plugin-styled-components": "^2.1.4",
     "chart.js": "^4.4.0",
     "dayjs": "^1.11.10",
     "i18next": "^23.2.8",
