@@ -18,20 +18,17 @@ const Paper = styled.div<PaperProps>`
   gap: 30px;
   overflow: hidden;
   width: var(--ProjectCardWidth);
-  height: 350px;
+  height: 640px;
   border-radius: 10px;
   background-color: white;
   ${({ outline = false }) => outline && "border: 1px solid darkgray"};
   ${({ shadow = true }) => shadow && "box-shadow: 0 0 5px"};
-  &:hover {
-    box-shadow: 0 0 10px;
-    cursor: pointer;
-  }
-  &:active {
-    box-shadow: 0 0 3px;
-  }
   transform: ${({ focused = true }) => !focused && "scale(0.8)"};
   transition: transform 1s ease;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 export default Paper;

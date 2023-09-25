@@ -20,12 +20,10 @@ const Button = styled.button<CircularButtonProps>`
   ${({ outline = false }) => outline && "border: 1px solid darkgray"};
   ${({ shadow = true }) => shadow && "box-shadow: 0 0 5px"};
   &:hover {
-    box-shadow: 0 0 10px;
     cursor: pointer;
+    transform: scale(1.05);
   }
-  &:active {
-    box-shadow: 0 0 3px;
-  }
+  transition: transform 0.2s ease;
 `;
 
 function CircularButton({

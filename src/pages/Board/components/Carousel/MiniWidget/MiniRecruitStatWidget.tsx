@@ -2,61 +2,79 @@ import styled from "styled-components";
 
 const Widget = styled.div`
   display: flex;
+  flex-direction: column;
   flex: 1;
-  margin: 0 15px 0 15px;
+  margin: 0 30px;
   align-items: center;
 `;
 
-const LeftWidgetElement = styled.div`
+const TopWidgetElement = styled.div`
   display: flex;
-  flex: 8;
-  justify-content: start;
+  width: 100%;
+  justify-content: space-between;
   align-items: center;
-  h3 {
+  h2,
+  p {
     margin: 0;
   }
 `;
-const TitleElement = () => {
-  return (
-    <LeftWidgetElement>
-      <h3>지원 인원</h3>
-    </LeftWidgetElement>
-  );
-};
 
 interface RecruitStat {
   currentApplicantsNum: number;
   targetRecruitNum: number;
 }
 
-const CenterWidgetElement = styled.div`
-  display: flex;
-  flex: 14;
-  justify-content: start;
-  align-items: center;
-`;
+const RecruitRatioElement = ({
+  currentApplicantsNum,
+  targetRecruitNum,
+}: RecruitStat) => {
+  return (
+    <TopWidgetElement>
+      <h2>지원 현황</h2>
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <h2
+          style={{
+            color:
+              currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
+          }}
+        >
+          {currentApplicantsNum}
+        </h2>
+        <p style={{ color: "gray" }}> / {targetRecruitNum}</p>
+      </div>
+    </TopWidgetElement>
+  );
+};
 
 const ProgressBarElement = ({
   currentApplicantsNum,
   targetRecruitNum,
 }: RecruitStat) => {
   return (
-    <CenterWidgetElement>
+    <div
+      style={{
+        display: "flex",
+        width: "100%",
+        height: "100%",
+        alignItems: "center",
+      }}
+    >
       <div
         style={{
           display: "flex",
           alignItems: "center",
           position: "relative",
           width: "100%",
+          margin: "8px 0",
         }}
       >
         <div
           style={{
             position: "absolute",
             width: "100%",
-            height: "10px",
-            borderRadius: "5px",
-            backgroundColor: "darkgray",
+            height: "25px",
+            borderRadius: "12.5px",
+            backgroundColor: "#E9E9E9",
           }}
         />
         <div
@@ -66,45 +84,14 @@ const ProgressBarElement = ({
               (100 * currentApplicantsNum) / targetRecruitNum,
               100,
             )}%`,
-            height: "10px",
-            borderRadius: "5px",
+            height: "25px",
+            borderRadius: "12.5px",
             backgroundColor:
               currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
           }}
         />
       </div>
-    </CenterWidgetElement>
-  );
-};
-
-const RightWidgetElement = styled.div`
-  display: flex;
-  flex: 9;
-  justify-content: center;
-  align-items: center;
-  h3 {
-    margin: 0;
-  }
-`;
-
-const RecruitRatioElement = ({
-  currentApplicantsNum,
-  targetRecruitNum,
-}: RecruitStat) => {
-  return (
-    <RightWidgetElement>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <h3
-          style={{
-            color:
-              currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
-          }}
-        >
-          {currentApplicantsNum}
-        </h3>
-        <h3 style={{ color: "darkgray" }}>/{targetRecruitNum}</h3>
-      </div>
-    </RightWidgetElement>
+    </div>
   );
 };
 
@@ -114,12 +101,11 @@ function MiniRecruitStatWidget({
 }: RecruitStat) {
   return (
     <Widget>
-      <TitleElement />
-      <ProgressBarElement
+      <RecruitRatioElement
         currentApplicantsNum={currentApplicantsNum}
         targetRecruitNum={targetRecruitNum}
       />
-      <RecruitRatioElement
+      <ProgressBarElement
         currentApplicantsNum={currentApplicantsNum}
         targetRecruitNum={targetRecruitNum}
       />

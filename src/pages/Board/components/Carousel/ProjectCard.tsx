@@ -9,17 +9,24 @@ import Paper from "./Paper";
 
 const Thumbnail = styled.img`
   width: 100%;
+  position: absolute;
+  top: 0;
   object-fit: cover;
+`;
+const ProjectName = styled.h1`
+  color: #eb6263;
+  margin: 20px 30px 0 30px;
 `;
 const WidgetSection = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 80px;
+  height: 215px;
   background-color: white;
-  padding: 10px 0 10px 0;
+  padding: 20px 0;
 `;
 
 function ProjectCard({
@@ -29,15 +36,16 @@ function ProjectCard({
   projectData: ProjectData;
   focused: boolean;
 }) {
-  const { startDate, endDate } = projectData; // TODO: get recruit stat from DB
+  const { startDate, endDate, title } = projectData; // TODO: get recruit stat from DB
 
   return (
-    <Paper focused={focused}>
+    <Paper focused={focused} shadow={false}>
       <Thumbnail src={thumbnailUrl} />
       <WidgetSection>
+        <ProjectName>{title}</ProjectName>
         <MiniDueWidget startDate={startDate} endDate={endDate} />
         <MiniRecruitStatWidget // TODO: put values from DB
-          currentApplicantsNum={20}
+          currentApplicantsNum={5}
           targetRecruitNum={6}
         />
       </WidgetSection>

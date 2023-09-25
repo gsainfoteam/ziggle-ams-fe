@@ -13,16 +13,6 @@ import { CarouselWidth, ProjectCardWidth } from "./cssConst";
 import ProjectCard from "./ProjectCard";
 import useCarousel from "./useCarousel";
 
-const TitleSection = styled.section`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100px;
-  padding: 40px 0 40px 0;
-`;
-
 const SlidesSection = styled.section`
   display: flex;
   flex-direction: row;
@@ -71,9 +61,6 @@ function Carousel() {
 
   return (
     <div>
-      <TitleSection>
-        {isNotEnd && <h1>{projectsData[focusIndex].title}</h1>}
-      </TitleSection>
       <SlidesSection>
         <SlidesContainer focusIndex={focusIndex}>
           {projectsData.map((projectData, i) => (
@@ -85,23 +72,27 @@ function Carousel() {
           ))}
           <AddProjectCard focused={projectsData.length === focusIndex} />
         </SlidesContainer>
-        <SlideShiftButton direction="right" onClick={nextSlide}>
+        <SlideShiftButton direction="right" onClick={nextSlide} shadow={false}>
           <MdChevronRight size={50} />
         </SlideShiftButton>
-        <SlideShiftButton direction="left" onClick={previousSlide}>
+        <SlideShiftButton
+          direction="left"
+          onClick={previousSlide}
+          shadow={false}
+        >
           <MdChevronLeft size={50} />
         </SlideShiftButton>
       </SlidesSection>
       <ControlsSection>
         {isNotEnd && (
           <>
-            <CircularButton>
+            <CircularButton shadow={false}>
               <MdOutlineVisibilityOff size={25} />
             </CircularButton>
-            <CircularButton>
+            <CircularButton shadow={false}>
               <MdStarOutline size={25} />
             </CircularButton>
-            <CircularButton onClick={deleteProject}>
+            <CircularButton onClick={deleteProject} shadow={false}>
               <MdDeleteOutline size={25} color={"red"} />
             </CircularButton>
           </>
