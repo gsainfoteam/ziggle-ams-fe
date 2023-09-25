@@ -12,7 +12,7 @@ const StatusContainer = styled.div`
   flex: 1;
   flex-direction: column;
   background-color: white;
-  border-radius: 3px;
+  border-radius: 8px;
   border-style: solid;
   border-color: lightgray;
   justify-content: space-around;

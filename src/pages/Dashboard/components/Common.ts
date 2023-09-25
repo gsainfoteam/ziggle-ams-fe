@@ -4,7 +4,7 @@ export const Section = styled.article`
   display: flex;
   flex-direction: column;
   background-color: white;
-  border-radius: 3px;
+  border-radius: 8px;
   border-style: solid;
   border-color: lightgray;
   justify-content: space-around;
