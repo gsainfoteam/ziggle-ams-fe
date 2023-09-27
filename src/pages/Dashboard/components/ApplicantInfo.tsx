@@ -3,7 +3,7 @@ import styled from "styled-components";
 import chat from "../assets/chat.png";
 import exclamation from "../assets/exclamation.png";
 import paper from "../assets/paper.png";
-import { Logo, Section } from "./Common";
+import { ButtonContainer, Logo, Plus, Section } from "./Common";
 
 const Flex = styled.div`
   display: flex;
@@ -29,6 +29,7 @@ const ApplicationSection = styled.div`
   padding: 0 20px;
   gap: 0.5rem;
 `;
+
 const ApplicantCard = styled.li`
   display: flex;
   background-color: white;
@@ -39,6 +40,21 @@ const ApplicantCard = styled.li`
 
   & div {
     font-size: 20px;
+  }
+
+  ${Logo} {
+    &:first-of-type div {
+      font-size: 20px;
+      font-weight: 500;
+    }
+    & img {
+      width: 28px;
+      height: 28px;
+    }
+    &:last-of-type img {
+      width: 20px;
+      height: 20px;
+    }
   }
 `;
 
@@ -59,6 +75,14 @@ const Group = styled.div`
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25);
   height: 100%;
 `;
+const AddGroupButton = () => {
+  return (
+    <ButtonContainer>
+      <Plus />
+      <div>그룹 추가하기</div>
+    </ButtonContainer>
+  );
+};
 const ApplicantInfo = () => {
   return (
     <Section>
@@ -69,7 +93,7 @@ const ApplicantInfo = () => {
       <Flex>
         <Scroll>
           <ApplicationSection>
-            {[...Array(100)].map((_, index) => {
+            {[...Array(50)].map((_, index) => {
               return (
                 <ApplicantCard key={index}>
                   <Logo>
@@ -88,13 +112,14 @@ const ApplicantInfo = () => {
         </Scroll>
         <Scroll>
           <GroupSection>
-            {[...Array(50)].map((_, index) => {
+            {[...Array(9)].map((_, index) => {
               return (
                 <Group key={index}>
                   <h2>그룹 {index + 1}</h2>
                 </Group>
               );
             })}
+            <AddGroupButton />
           </GroupSection>
         </Scroll>
       </Flex>

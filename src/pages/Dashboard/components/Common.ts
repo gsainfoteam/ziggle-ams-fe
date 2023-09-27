@@ -22,4 +22,44 @@ export const Logo = styled.div`
   h3 {
     margin: 0;
   }
+
+  img {
+    width: 40px;
+    height: 40px;
+  }
+`;
+
+export const Plus = styled.div`
+  width: 18px;
+  height: 18px;
+  background-color: currentColor;
+  border-radius: 100px;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 2px;
+    background-color: white;
+    border-radius: 1px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  &::after {
+    width: 2px;
+    height: 10px;
+  }
+`;
+export const ButtonContainer = styled.div`
+  display: flex;
+  align-self: center;
+  align-items: center;
+  gap: 5px;
+  color: #e86263;
+  font-size: 15px;
+  font-weight: 700;
 `;
