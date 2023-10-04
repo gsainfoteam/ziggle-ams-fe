@@ -24,7 +24,7 @@ const Paper = styled.div<PaperProps>`
   ${({ outline = false }) => outline && "border: 1px solid darkgray"};
   ${({ shadow = true }) => shadow && "box-shadow: 0 0 5px"};
   transform: ${({ focused = true }) => !focused && "scale(0.8)"};
-  transition: transform 1s ease;
+  transition: transform 0.5s ease;
 
   &:hover {
     cursor: pointer;

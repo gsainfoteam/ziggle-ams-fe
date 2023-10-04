@@ -15,7 +15,7 @@ const Thumbnail = styled.img`
 `;
 const ProjectName = styled.h1`
   color: #eb6263;
-  margin: 20px 30px 0 30px;
+  margin: 0 30px;
 `;
 const WidgetSection = styled.div`
   display: flex;
@@ -26,15 +26,34 @@ const WidgetSection = styled.div`
   width: 100%;
   height: 215px;
   background-color: white;
-  padding: 20px 0;
+  padding: 20px;
+`;
+const ActionSection = styled.div`
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin: 0 30px;
+`;
+const DeleteButton = styled.button`
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 5px;
+  color: darkgray;
+  &:hover {
+    background-color: #eb6263;
+    color: white;
+    cursor: pointer;
+  }
 `;
 
 function ProjectCard({
   projectData,
   focused,
+  deleteProject,
 }: {
   projectData: ProjectData;
   focused: boolean;
+  deleteProject: () => void;
 }) {
   const { startDate, endDate, title } = projectData; // TODO: get recruit stat from DB
 
@@ -42,6 +61,9 @@ function ProjectCard({
     <Paper focused={focused} shadow={false}>
       <Thumbnail src={thumbnailUrl} />
       <WidgetSection>
+        <ActionSection>
+          <DeleteButton onClick={deleteProject}>삭제하기</DeleteButton>
+        </ActionSection>
         <ProjectName>{title}</ProjectName>
         <MiniDueWidget startDate={startDate} endDate={endDate} />
         <MiniRecruitStatWidget // TODO: put values from DB
