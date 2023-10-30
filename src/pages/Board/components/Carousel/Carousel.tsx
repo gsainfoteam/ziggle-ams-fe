@@ -50,11 +50,7 @@ function Carousel() {
   return (
     <div>
       <SlidesSection>
-        <SlidesContainer
-          focusIndex={focusIndex}
-          {...carouselScrollEvents}
-          onKeyDown={carouselScrollEvents.onKeyDown}
-        >
+        <SlidesContainer focusIndex={focusIndex} {...carouselScrollEvents}>
           {projectsData.map((projectData, i) => (
             <ProjectCard
               key={projectData.projectUuid}
@@ -65,14 +61,10 @@ function Carousel() {
           ))}
           <AddProjectCard focused={projectsData.length === focusIndex} />
         </SlidesContainer>
-        <SlideShiftButton direction="right" onClick={nextSlide} shadow={false}>
+        <SlideShiftButton direction="right" onClick={nextSlide}>
           <MdChevronRight size={50} />
         </SlideShiftButton>
-        <SlideShiftButton
-          direction="left"
-          onClick={previousSlide}
-          shadow={false}
-        >
+        <SlideShiftButton direction="left" onClick={previousSlide}>
           <MdChevronLeft size={50} />
         </SlideShiftButton>
       </SlidesSection>

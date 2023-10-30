@@ -9,32 +9,18 @@ const Widget = styled.div`
   justify-content: space-between;
 `;
 
-interface DueProps {
-  startDate: dayjs.Dayjs;
-  endDate: dayjs.Dayjs;
-}
-
-const LeftWidgetElement = styled.div`
+const StartEndDateElement = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: start;
   align-items: center;
-  p {
-    margin: 0;
-    color: gray;
-    font-size: 16px;
-  }
 `;
 
-const StartEndDateElement = ({ startDate, endDate }: DueProps) => {
-  return (
-    <LeftWidgetElement>
-      <div>
-        <p>모집 시작 {startDate.format("YYYY.MM.DD")}</p>
-        <p>모집 마감 {endDate.format("YYYY.MM.DD")}</p>
-      </div>
-    </LeftWidgetElement>
-  );
-};
+const LabeledDate = styled.div`
+  margin: 0;
+  color: gray;
+  font-size: 16px;
+`;
 
 const dDayCalc = (endDate: dayjs.Dayjs) => {
   const dateDiff = dayjs().diff(endDate, "day");
@@ -42,34 +28,52 @@ const dDayCalc = (endDate: dayjs.Dayjs) => {
   return { dateDiff, isNotOverDue };
 };
 
-const RightWidgetElement = styled.div`
+const DdayElement = styled.div`
   display: flex;
   justify-content: end;
   align-items: center;
   gap: 10px;
-  h1,
-  h4 {
+  h1 {
     margin: 0;
     color: #656565;
   }
 `;
 
-const DdayElement = ({ endDate }: { endDate: dayjs.Dayjs }) => {
-  const { dateDiff, isNotOverDue } = dDayCalc(endDate);
-  return (
-    <RightWidgetElement>
-      <h4>모집 마감까지</h4>
-      <h1>{`D ${isNotOverDue ? "-" : "+"}`}</h1>
-      <h1 style={{ color: "#eb6263" }}>{`${Math.abs(dateDiff)}`}</h1>
-    </RightWidgetElement>
-  );
-};
+const UntilDueDate = styled.div`
+  font-size: 1em;
+  font-weight: 700;
+  color: #656565;
+`;
+
+const DPlusMinus = styled.div`
+  font-size: 2em;
+  font-weight: 700;
+  color: #656565;
+`;
+
+const DeltaDays = styled.div`
+  font-size: 2em;
+  font-weight: 700;
+  color: #eb6263;
+`;
+interface DueProps {
+  startDate: dayjs.Dayjs;
+  endDate: dayjs.Dayjs;
+}
 
 function MiniDueWidget({ startDate, endDate }: DueProps) {
+  const { dateDiff, isNotOverDue } = dDayCalc(endDate);
   return (
     <Widget>
-      <StartEndDateElement startDate={startDate} endDate={endDate} />
-      <DdayElement endDate={endDate} />
+      <StartEndDateElement>
+        <LabeledDate>모집 시작 {startDate.format("YYYY.MM.DD")}</LabeledDate>
+        <LabeledDate>모집 마감 {endDate.format("YYYY.MM.DD")}</LabeledDate>
+      </StartEndDateElement>
+      <DdayElement>
+        <UntilDueDate>모집 마감까지</UntilDueDate>
+        <DPlusMinus>{`D ${isNotOverDue ? "-" : "+"}`}</DPlusMinus>
+        <DeltaDays>{`${Math.abs(dateDiff)}`}</DeltaDays>
+      </DdayElement>
     </Widget>
   );
 }

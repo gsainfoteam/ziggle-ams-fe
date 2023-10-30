@@ -26,7 +26,6 @@ function useCarouselScroll({
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    console.log(e.key);
     if (e.key === "ArrowRight") {
       next();
     }

@@ -8,7 +8,12 @@ const Widget = styled.div`
   align-items: center;
 `;
 
-const TopWidgetElement = styled.div`
+interface RecruitStat {
+  currentApplicantsNum: number;
+  targetRecruitNum: number;
+}
+
+const RecruitRatioElement = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -19,81 +24,55 @@ const TopWidgetElement = styled.div`
   }
 `;
 
-interface RecruitStat {
-  currentApplicantsNum: number;
-  targetRecruitNum: number;
-}
+const RatioContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
-const RecruitRatioElement = ({
-  currentApplicantsNum,
-  targetRecruitNum,
-}: RecruitStat) => {
-  return (
-    <TopWidgetElement>
-      <h2>지원 현황</h2>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <h2
-          style={{
-            color:
-              currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
-          }}
-        >
-          {currentApplicantsNum}
-        </h2>
-        <p style={{ color: "gray" }}> / {targetRecruitNum}</p>
-      </div>
-    </TopWidgetElement>
-  );
-};
+const CurrentApplicantsNum = styled.div<RecruitStat>`
+  font-size: 1.5em;
+  font-weight: 700;
+  color: ${({ currentApplicantsNum, targetRecruitNum }) =>
+    currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263"};
+`;
 
-const ProgressBarElement = ({
-  currentApplicantsNum,
-  targetRecruitNum,
-}: RecruitStat) => {
-  return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        alignItems: "center",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-          width: "100%",
-          margin: "8px 0",
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            width: "100%",
-            height: "25px",
-            borderRadius: "12.5px",
-            backgroundColor: "#E9E9E9",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            width: `${Math.min(
-              (100 * currentApplicantsNum) / targetRecruitNum,
-              100,
-            )}%`,
-            height: "25px",
-            borderRadius: "12.5px",
-            backgroundColor:
-              currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263",
-          }}
-        />
-      </div>
-    </div>
-  );
-};
+const PerTargetRecruitNum = styled.div`
+  color: gray;
+`;
+
+const ProgressBarElement = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+`;
+
+const ProgressBarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 8px 0;
+`;
+
+const BackgroundBar = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 25px;
+  border-radius: 12.5px;
+  background-color: #e9e9e9;
+`;
+
+const DataBar = styled.div<RecruitStat>`
+  position: absolute;
+  height: 25px;
+  border-radius: 12.5px;
+  width: ${({ currentApplicantsNum, targetRecruitNum }) =>
+    Math.min((100 * currentApplicantsNum) / targetRecruitNum, 100)}%;
+  background-color: ${({ currentApplicantsNum, targetRecruitNum }) =>
+    currentApplicantsNum > targetRecruitNum ? "green" : "#eb6263"};
+`;
 
 function MiniRecruitStatWidget({
   currentApplicantsNum,
@@ -101,14 +80,27 @@ function MiniRecruitStatWidget({
 }: RecruitStat) {
   return (
     <Widget>
-      <RecruitRatioElement
-        currentApplicantsNum={currentApplicantsNum}
-        targetRecruitNum={targetRecruitNum}
-      />
-      <ProgressBarElement
-        currentApplicantsNum={currentApplicantsNum}
-        targetRecruitNum={targetRecruitNum}
-      />
+      <RecruitRatioElement>
+        <h2>지원 현황</h2>
+        <RatioContainer>
+          <CurrentApplicantsNum
+            currentApplicantsNum={currentApplicantsNum}
+            targetRecruitNum={targetRecruitNum}
+          >
+            {currentApplicantsNum}
+          </CurrentApplicantsNum>
+          <PerTargetRecruitNum>/ {targetRecruitNum}</PerTargetRecruitNum>
+        </RatioContainer>
+      </RecruitRatioElement>
+      <ProgressBarElement>
+        <ProgressBarContainer>
+          <BackgroundBar />
+          <DataBar
+            currentApplicantsNum={currentApplicantsNum}
+            targetRecruitNum={targetRecruitNum}
+          />
+        </ProgressBarContainer>
+      </ProgressBarElement>
     </Widget>
   );
 }

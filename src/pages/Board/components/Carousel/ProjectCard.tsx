@@ -58,11 +58,13 @@ function ProjectCard({
   const { startDate, endDate, title } = projectData; // TODO: get recruit stat from DB
 
   return (
-    <Paper focused={focused} shadow={false}>
+    <Paper focused={focused}>
       <Thumbnail src={thumbnailUrl} />
       <WidgetSection>
         <ActionSection>
-          <DeleteButton onClick={deleteProject}>삭제하기</DeleteButton>
+          {focused && (
+            <DeleteButton onClick={deleteProject}>삭제하기</DeleteButton>
+          )}
         </ActionSection>
         <ProjectName>{title}</ProjectName>
         <MiniDueWidget startDate={startDate} endDate={endDate} />

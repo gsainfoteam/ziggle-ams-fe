@@ -4,7 +4,6 @@ import { ProjectCardWidth } from "./cssConst";
 
 interface PaperProps {
   focused?: boolean;
-  shadow?: boolean;
   outline?: boolean;
 }
 
@@ -22,7 +21,6 @@ const Paper = styled.div<PaperProps>`
   border-radius: 10px;
   background-color: white;
   ${({ outline = false }) => outline && "border: 1px solid darkgray"};
-  ${({ shadow = true }) => shadow && "box-shadow: 0 0 5px"};
   transform: ${({ focused = true }) => !focused && "scale(0.8)"};
   transition: transform 0.5s ease;
 
