@@ -1,14 +1,12 @@
-import { ButtonHTMLAttributes } from "react";
 import styled from "styled-components";
 
 interface CircularButtonProps {
   color?: string;
-  shadow?: boolean;
   outline?: boolean;
   size?: number;
 }
 
-const Button = styled.button<CircularButtonProps>`
+const CircularButton = styled.button<CircularButtonProps>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -18,23 +16,11 @@ const Button = styled.button<CircularButtonProps>`
   border: none;
   background-color: ${({ color }) => color ?? "white"};
   ${({ outline = false }) => outline && "border: 1px solid darkgray"};
-  ${({ shadow = true }) => shadow && "box-shadow: 0 0 5px"};
   &:hover {
-    box-shadow: 0 0 10px;
     cursor: pointer;
+    transform: scale(1.05);
   }
-  &:active {
-    box-shadow: 0 0 3px;
-  }
+  transition: transform 0.2s ease;
 `;
-
-function CircularButton({
-  color,
-  shadow,
-  size,
-  ...props
-}: CircularButtonProps & ButtonHTMLAttributes<HTMLButtonElement>) {
-  return <Button color={color} shadow={shadow} size={size} {...props} />;
-}
 
 export default CircularButton;

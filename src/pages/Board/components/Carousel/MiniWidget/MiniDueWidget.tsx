@@ -4,27 +4,23 @@ import styled from "styled-components";
 const Widget = styled.div`
   display: flex;
   flex: 1;
-  margin: 0 15px;
+  margin: 0 30px;
   align-items: center;
+  justify-content: space-between;
 `;
 
-const LeftWidgetElement = styled.div`
+const StartEndDateElement = styled.div`
   display: flex;
-  flex: 8;
+  flex-direction: column;
   justify-content: start;
   align-items: center;
-  h3 {
-    margin: 0;
-  }
 `;
 
-const TitleElement = () => {
-  return (
-    <LeftWidgetElement>
-      <h3>지원 마감</h3>
-    </LeftWidgetElement>
-  );
-};
+const LabeledDate = styled.div`
+  margin: 0;
+  color: gray;
+  font-size: 16px;
+`;
 
 const dDayCalc = (endDate: dayjs.Dayjs) => {
   const dateDiff = dayjs().diff(endDate, "day");
@@ -32,62 +28,52 @@ const dDayCalc = (endDate: dayjs.Dayjs) => {
   return { dateDiff, isNotOverDue };
 };
 
-const CenterWidgetElement = styled.div`
+const DdayElement = styled.div`
   display: flex;
-  flex: 14;
-  justify-content: start;
+  justify-content: end;
   align-items: center;
-  h3 {
+  gap: 10px;
+  h1 {
     margin: 0;
+    color: #656565;
   }
 `;
 
-const DdayElement = ({ endDate }: { endDate: dayjs.Dayjs }) => {
-  const { dateDiff, isNotOverDue } = dDayCalc(endDate);
-  return (
-    <CenterWidgetElement>
-      <h3 style={{ color: isNotOverDue ? "green" : "#eb6263" }}>
-        {`D${isNotOverDue ? "" : "+"}${dateDiff}`}
-      </h3>
-    </CenterWidgetElement>
-  );
-};
+const UntilDueDate = styled.div`
+  font-size: 1em;
+  font-weight: 700;
+  color: #656565;
+`;
 
+const DPlusMinus = styled.div`
+  font-size: 2em;
+  font-weight: 700;
+  color: #656565;
+`;
+
+const DeltaDays = styled.div`
+  font-size: 2em;
+  font-weight: 700;
+  color: #eb6263;
+`;
 interface DueProps {
   startDate: dayjs.Dayjs;
   endDate: dayjs.Dayjs;
 }
 
-const RightWidgetElement = styled.div`
-  display: flex;
-  flex: 9;
-  justify-content: end;
-  align-items: center;
-  p {
-    margin: 0;
-    color: gray;
-    font-size: 12px;
-    line-height: 15px;
-  }
-`;
-
-const StartEndDateElement = ({ startDate, endDate }: DueProps) => {
-  return (
-    <RightWidgetElement>
-      <div>
-        <p>모집 시작 {startDate.format("YYYY.MM.DD")}</p>
-        <p>모집 마감 {endDate.format("YYYY.MM.DD")}</p>
-      </div>
-    </RightWidgetElement>
-  );
-};
-
 function MiniDueWidget({ startDate, endDate }: DueProps) {
+  const { dateDiff, isNotOverDue } = dDayCalc(endDate);
   return (
     <Widget>
-      <TitleElement />
-      <DdayElement endDate={endDate} />
-      <StartEndDateElement startDate={startDate} endDate={endDate} />
+      <StartEndDateElement>
+        <LabeledDate>모집 시작 {startDate.format("YYYY.MM.DD")}</LabeledDate>
+        <LabeledDate>모집 마감 {endDate.format("YYYY.MM.DD")}</LabeledDate>
+      </StartEndDateElement>
+      <DdayElement>
+        <UntilDueDate>모집 마감까지</UntilDueDate>
+        <DPlusMinus>{`D ${isNotOverDue ? "-" : "+"}`}</DPlusMinus>
+        <DeltaDays>{`${Math.abs(dateDiff)}`}</DeltaDays>
+      </DdayElement>
     </Widget>
   );
 }
