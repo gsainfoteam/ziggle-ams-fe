@@ -3,6 +3,7 @@ import {
   CategoryScale,
   Chart as ChartJS,
   LinearScale,
+  LineController,
   LineElement,
   PointElement,
   Tooltip,
@@ -13,6 +14,7 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  LineController,
   Tooltip,
   BarElement,
 );
