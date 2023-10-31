@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import manager from "../assets/manager.png";
 import profileGrey from "../assets/profileGrey.png";
-import { ButtonContainer, Logo, Plus, Section } from "./Common";
+import { AddButton, Logo, Section } from "./Common";
 
 const Manager = styled.div`
   display: flex;
@@ -47,15 +47,6 @@ const ManagerInfoCard = styled.li`
   }
 `;
 
-const AddManagerButton = () => {
-  return (
-    <ButtonContainer>
-      <Plus />
-      <div>관리자 추가하기</div>
-    </ButtonContainer>
-  );
-};
-
 const ManagerInfo = () => {
   return (
     <Manager>
@@ -79,7 +70,7 @@ const ManagerInfo = () => {
             </Logo>
             <h4>email</h4>
           </ManagerInfoCard>
-          <AddManagerButton />
+          <AddButton title="관리자" color="#eb6263" />
         </ManagerList>
       </Section>
     </Manager>

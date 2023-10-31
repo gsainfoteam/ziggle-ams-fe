@@ -3,7 +3,7 @@ import styled from "styled-components";
 import chat from "../assets/chat.png";
 import exclamation from "../assets/exclamation.png";
 import paper from "../assets/paper.png";
-import { ButtonContainer, Logo, Plus, Section } from "./Common";
+import { AddButton, Logo, Section } from "./Common";
 
 const Flex = styled.div`
   display: flex;
@@ -75,14 +75,15 @@ const Group = styled.div`
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25);
   height: 100%;
 `;
-const AddGroupButton = () => {
-  return (
-    <ButtonContainer>
-      <Plus />
-      <div>그룹 추가하기</div>
-    </ButtonContainer>
-  );
-};
+
+const ButtonBox = styled.div`
+  display: flex;
+  border-radius: 5px;
+  border: 2px dashed #bbb;
+  align-items: center;
+  justify-content: center;
+`;
+
 const ApplicantInfo = () => {
   return (
     <Section>
@@ -119,7 +120,9 @@ const ApplicantInfo = () => {
                 </Group>
               );
             })}
-            <AddGroupButton />
+            <ButtonBox>
+              <AddButton title="그룹" color="#656565" />
+            </ButtonBox>
           </GroupSection>
         </Scroll>
       </Flex>

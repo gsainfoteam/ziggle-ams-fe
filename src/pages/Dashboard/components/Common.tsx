@@ -29,7 +29,7 @@ export const Logo = styled.div`
   }
 `;
 
-export const Plus = styled.div`
+const Plus = styled.div`
   width: 18px;
   height: 18px;
   background-color: currentColor;
@@ -54,12 +54,27 @@ export const Plus = styled.div`
     height: 10px;
   }
 `;
-export const ButtonContainer = styled.div`
+
+const ButtonContainer = styled.div<{ color: string }>`
   display: flex;
   align-self: center;
   align-items: center;
   gap: 5px;
-  color: #e86263;
+  color: ${({ color }) => color};
   font-size: 15px;
   font-weight: 700;
 `;
+
+interface AddButtonProps {
+  title: string;
+  color: string;
+}
+
+export const AddButton = ({ title, color }: AddButtonProps) => {
+  return (
+    <ButtonContainer color={color}>
+      <Plus />
+      <div>{title} 추가하기</div>
+    </ButtonContainer>
+  );
+};
