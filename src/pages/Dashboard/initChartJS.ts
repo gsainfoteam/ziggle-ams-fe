@@ -1,4 +1,5 @@
 import {
+  BarController,
   BarElement,
   CategoryScale,
   Chart as ChartJS,
@@ -15,6 +16,7 @@ ChartJS.register(
   PointElement,
   LineElement,
   LineController,
+  BarController,
   Tooltip,
   BarElement,
 );
