@@ -7,7 +7,7 @@ export const Section = styled.article`
   border-radius: 8px;
   border-style: solid;
   border-color: lightgray;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 12px 20px;
   gap: 1em;
 `;
@@ -63,6 +63,9 @@ const ButtonContainer = styled.div<{ color: string }>`
   color: ${({ color }) => color};
   font-size: 15px;
   font-weight: 700;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 interface AddButtonProps {
