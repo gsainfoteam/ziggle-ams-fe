@@ -69,13 +69,37 @@ const GroupSection = styled(ApplicationSection)`
 `;
 const Group = styled.div`
   display: flex;
+  padding: 0 10px;
   flex-direction: column;
   border-radius: 5px;
   background: white;
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.25);
   height: 100%;
+  overflow: auto;
+  h2 {
+    margin: 0.5rem 0;
+  }
 `;
 
+const AnswerCard = styled.div`
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding: 2px;
+  gap: 0.5em;
+  div {
+    margin: 0;
+    &:hover {
+      border-radius: 3px;
+      background: #e9e9e9;
+    }
+  }
+
+  img {
+    width: 15px;
+    height: 15px;
+  }
+`;
 const ButtonBox = styled.div`
   display: flex;
   border-radius: 5px;
@@ -117,6 +141,14 @@ const ApplicantInfo = () => {
               return (
                 <Group key={index}>
                   <h2>그룹 {index + 1}</h2>
+                  {[...Array(5)].map((_, index) => {
+                    return (
+                      <AnswerCard key={index}>
+                        <img src={paper} alt="paper icon" />
+                        <div>응답 타이틀</div>
+                      </AnswerCard>
+                    );
+                  })}
                 </Group>
               );
             })}
