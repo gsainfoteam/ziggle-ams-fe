@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import useFormInput from "./useFormInput";
+import useCheckInput from "./useCheckInput";
 
 const ModalBackdrop = styled.div`
   position: fixed;
@@ -106,7 +106,7 @@ function Modal({
   closeModal: () => void;
   projectName: string;
 }) {
-  const { onChange, isValid } = useFormInput(projectName);
+  const { onChange, isValid } = useCheckInput(projectName);
   return (
     <ModalBackdrop onClick={closeModal}>
       <ModalContainer
