@@ -1,48 +1,140 @@
 import styled from "styled-components";
 
+import useFormInput from "./useFormInput";
+
 const ModalBackdrop = styled.div`
-  z-index: 9999;
   position: fixed;
-  left: 0;
-  top: 0;
+  z-index: 9999;
+
+  display: flex;
   width: 100vw;
   height: 100vh;
-  display: flex;
+  top: 0;
+  left: 0;
+
   justify-content: center;
   align-items: center;
+
   background-color: rgba(0, 0, 0, 0.5);
-`;
-const ModalContainer = styled.div`
-  display: flex;
-  background-color: white;
-  border-radius: 10px;
-  border: none;
-  padding: 20px;
+  backdrop-filter: blur(4px);
 `;
 
-interface modalProps {
-  onExitModal: () => void;
-  onAcceptModal: () => void;
+const ModalContainer = styled.div`
+  z-index: 10000;
+  width: 400px;
+  height: 400px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 50px;
+
+  background-color: white;
+  border-radius: 15px;
+`;
+
+const ModalTitle = styled.h1`
+  display: flex;
+  font-size: 2.5em;
+`;
+
+const ModalMessage = styled.div`
+  display: flex;
+  font-size: 1.5em;
+  line-height: 1.3em;
+  color: gray;
+  word-wrap: break-word;
+`;
+
+const ModalForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
+`;
+
+const ModalFormTextInput = styled.input`
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.5em;
+  border: 1px solid gray;
+  border-radius: 5px;
+  background-color: lightgray;
+  padding: 0 1em;
+
+  &:focus {
+    outline: 1.5px solid darkgray;
+  }
+`;
+
+interface ActionButtonProps {
+  color: "dangerous" | "normal";
 }
 
-function Modal({ onExitModal, onAcceptModal }: modalProps) {
+const ActionButton = styled.button<ActionButtonProps>`
+  display: flex;
+  width: 100%;
+  height: 2.5em;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+
+  --mainColor: ${({ color }) =>
+    color === "dangerous" ? "#eb6263" : "darkgray"};
+
+  border: 1px solid var(--mainColor);
+  color: var(--mainColor);
+  background-color: white;
+
+  &:hover {
+    color: white;
+    border: none;
+    background-color: var(--mainColor);
+  }
+`;
+
+function Modal({
+  action,
+  closeModal,
+  projectName,
+}: {
+  action: () => void;
+  closeModal: () => void;
+  projectName: string;
+}) {
+  const { onChange, isValid } = useFormInput(projectName);
   return (
-    <ModalBackdrop onClick={onExitModal}>
-      <ModalContainer>
-        <div>
-          <h1>Are you sure that you want to delete the project?</h1>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: "50px",
-            }}
-          >
-            <button onClick={onAcceptModal}>YES</button>
-            <button onClick={onExitModal}>NO</button>
-          </div>
-        </div>
+    <ModalBackdrop onClick={closeModal}>
+      <ModalContainer
+        onClick={(e) => {
+          e.stopPropagation();
+        }}
+      >
+        <ModalTitle>모집 프로젝트 삭제</ModalTitle>
+        <>
+          <ModalMessage>
+            정말로 이 모집 프로젝트({projectName})를 삭제하시겠습니까? 프로젝트
+            삭제는 되돌릴 수 없습니다.
+            <br />
+            프로젝트를 삭제하려면 프로젝트의 이름을 입력해주세요.
+          </ModalMessage>
+        </>
+        <ModalForm>
+          <ModalFormTextInput placeholder={projectName} onChange={onChange} />
+          {isValid ? (
+            <ActionButton color={"dangerous"} onClick={action}>
+              프로젝트 영구 삭제
+            </ActionButton>
+          ) : (
+            <ActionButton color={"normal"} onClick={closeModal}>
+              취소
+            </ActionButton>
+          )}
+        </ModalForm>
       </ModalContainer>
     </ModalBackdrop>
   );
