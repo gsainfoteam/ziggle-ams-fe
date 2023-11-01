@@ -1,8 +1,10 @@
 import styled from "styled-components";
 
 import chat from "../assets/chat.png";
+import emptyBox from "../assets/emptyBox.png";
 import exclamation from "../assets/exclamation.png";
 import paper from "../assets/paper.png";
+import pencil from "../assets/pencil.svg";
 import { AddButton, Logo, Section } from "./Common";
 
 const Flex = styled.div`
@@ -81,12 +83,20 @@ const Group = styled.div`
   }
 `;
 
-const AnswerCard = styled.div`
+const GroupTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const BaseAnswerCard = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
   padding: 2px;
   gap: 0.5em;
+`;
+
+const AnswerCard = styled(BaseAnswerCard)`
   div {
     margin: 0;
     &:hover {
@@ -100,6 +110,19 @@ const AnswerCard = styled.div`
     height: 15px;
   }
 `;
+
+const EmptyAnswerCard = styled(BaseAnswerCard)`
+  flex-direction: column;
+  align-items: center;
+  color: #656565;
+
+  img {
+    width: 25px;
+    height: 25px;
+    opacity: 50%;
+  }
+`;
+
 const ButtonBox = styled.div`
   display: flex;
   border-radius: 5px;
@@ -140,7 +163,10 @@ const ApplicantInfo = () => {
             {[...Array(9)].map((_, index) => {
               return (
                 <Group key={index}>
-                  <h2>그룹 {index + 1}</h2>
+                  <GroupTitle>
+                    <h2>그룹 {index + 1}</h2>
+                    <img src={pencil} alt="pencil icon" />
+                  </GroupTitle>
                   {[...Array(5)].map((_, index) => {
                     return (
                       <AnswerCard key={index}>
@@ -152,6 +178,13 @@ const ApplicantInfo = () => {
                 </Group>
               );
             })}
+            <Group>
+              <h2>그룹</h2>
+              <EmptyAnswerCard>
+                <img src={emptyBox} alt="empty cursor icon" />
+                <div>여기에 지원서 정보를 끌어다 놓으세요</div>
+              </EmptyAnswerCard>
+            </Group>
             <ButtonBox>
               <AddButton title="그룹" color="#656565" />
             </ButtonBox>
