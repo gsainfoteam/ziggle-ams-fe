@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
-import useCheckInput from "./useCheckInput";
-
-const ModalBackdrop = styled.div`
+const DeleteProjectModalBackdrop = styled.div`
   position: fixed;
   z-index: 9999;
 
@@ -19,7 +17,7 @@ const ModalBackdrop = styled.div`
   backdrop-filter: blur(4px);
 `;
 
-const ModalContainer = styled.div`
+const DeleteProjectModalContainer = styled.div`
   z-index: 10000;
   width: 400px;
   height: 400px;
@@ -34,12 +32,12 @@ const ModalContainer = styled.div`
   border-radius: 15px;
 `;
 
-const ModalTitle = styled.h1`
+const DeleteProjectModalTitle = styled.h1`
   display: flex;
   font-size: 2.5em;
 `;
 
-const ModalMessage = styled.div`
+const DeleteProjectModalMessage = styled.div`
   display: flex;
   font-size: 1.5em;
   line-height: 1.3em;
@@ -47,7 +45,7 @@ const ModalMessage = styled.div`
   word-wrap: break-word;
 `;
 
-const ModalForm = styled.form`
+const DeleteProjectModalForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,7 +53,7 @@ const ModalForm = styled.form`
   gap: 20px;
 `;
 
-const ModalFormTextInput = styled.input`
+const DeleteProjectModalFormTextInput = styled.input`
   display: flex;
   box-sizing: border-box;
   width: 100%;
@@ -97,47 +95,53 @@ const ActionButton = styled.button<ActionButtonProps>`
   }
 `;
 
-function Modal({
+function DeleteProjectModal({
   action,
-  closeModal,
+  closeDeleteProjectModal,
   projectName,
+  onChange,
+  isValid,
 }: {
   action: () => void;
-  closeModal: () => void;
+  closeDeleteProjectModal: () => void;
   projectName: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isValid: boolean;
 }) {
-  const { onChange, isValid } = useCheckInput(projectName);
   return (
-    <ModalBackdrop onClick={closeModal}>
-      <ModalContainer
+    <DeleteProjectModalBackdrop onClick={closeDeleteProjectModal}>
+      <DeleteProjectModalContainer
         onClick={(e) => {
           e.stopPropagation();
         }}
       >
-        <ModalTitle>모집 프로젝트 삭제</ModalTitle>
+        <DeleteProjectModalTitle>모집 프로젝트 삭제</DeleteProjectModalTitle>
         <>
-          <ModalMessage>
+          <DeleteProjectModalMessage>
             정말로 이 모집 프로젝트({projectName})를 삭제하시겠습니까? 프로젝트
             삭제는 되돌릴 수 없습니다.
             <br />
             프로젝트를 삭제하려면 프로젝트의 이름을 입력해주세요.
-          </ModalMessage>
+          </DeleteProjectModalMessage>
         </>
-        <ModalForm>
-          <ModalFormTextInput placeholder={projectName} onChange={onChange} />
+        <DeleteProjectModalForm>
+          <DeleteProjectModalFormTextInput
+            placeholder={projectName}
+            onChange={onChange}
+          />
           {isValid ? (
             <ActionButton color={"dangerous"} onClick={action}>
               프로젝트 영구 삭제
             </ActionButton>
           ) : (
-            <ActionButton color={"normal"} onClick={closeModal}>
+            <ActionButton color={"normal"} onClick={closeDeleteProjectModal}>
               취소
             </ActionButton>
           )}
-        </ModalForm>
-      </ModalContainer>
-    </ModalBackdrop>
+        </DeleteProjectModalForm>
+      </DeleteProjectModalContainer>
+    </DeleteProjectModalBackdrop>
   );
 }
 
-export default Modal;
+export default DeleteProjectModal;

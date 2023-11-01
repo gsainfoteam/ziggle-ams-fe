@@ -4,8 +4,8 @@ import styled from "styled-components";
 import thumbnailUrl from "/src/assets/dummy_thumbnail.jpg";
 
 import { ProjectData } from "../../FetchProjectsDataFromDB";
-import Modal from "../Modal/Modal";
-import useModal from "../Modal/useModal";
+import DeleteProjectModal from "../DeleteProjectModal/DeleteProjectModal";
+import useDeleteProjectModal from "../DeleteProjectModal/useDeleteProjectModal";
 import MiniDueWidget from "./MiniWidget/MiniDueWidget";
 import MiniRecruitStatWidget from "./MiniWidget/MiniRecruitStatWidget";
 import Paper from "./Paper";
@@ -59,7 +59,15 @@ function ProjectCard({
   deleteProject: () => void;
 }) {
   const { startDate, endDate, title } = projectData; // TODO: get recruit stat from DB
-  const { modalState, openModal, closeModal } = useModal();
+  const {
+    isDeleteProjectModalOpen,
+    openDeleteProjectModal,
+    closeDeleteProjectModal,
+    onChange,
+    isValid,
+  } = useDeleteProjectModal({
+    projectName: title,
+  });
 
   return (
     <Paper focused={focused}>
@@ -68,13 +76,17 @@ function ProjectCard({
         <ActionSection>
           {focused && (
             <>
-              <DeleteButton onClick={openModal}>삭제하기</DeleteButton>
-              {modalState.isOpen &&
+              <DeleteButton onClick={openDeleteProjectModal}>
+                삭제하기
+              </DeleteButton>
+              {isDeleteProjectModalOpen &&
                 createPortal(
-                  <Modal
+                  <DeleteProjectModal
                     action={deleteProject}
-                    closeModal={closeModal}
+                    closeDeleteProjectModal={closeDeleteProjectModal}
                     projectName={title}
+                    onChange={onChange}
+                    isValid={isValid}
                   />,
                   document.body,
                 )}
