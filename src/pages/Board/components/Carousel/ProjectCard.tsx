@@ -4,8 +4,8 @@ import styled from "styled-components";
 import thumbnailUrl from "/src/assets/dummy_thumbnail.jpg";
 
 import { ProjectData } from "../../FetchProjectsDataFromDB";
-import DeleteProjectModal from "../DeleteProjectModal/DeleteProjectModal";
-import useDeleteProjectModal from "../DeleteProjectModal/useDeleteProjectModal";
+import Modal from "../Modal/Modal";
+import useModal from "../Modal/useModal";
 import MiniDueWidget from "./MiniWidget/MiniDueWidget";
 import MiniRecruitStatWidget from "./MiniWidget/MiniRecruitStatWidget";
 import Paper from "./Paper";
@@ -59,15 +59,7 @@ function ProjectCard({
   deleteProject: () => void;
 }) {
   const { startDate, endDate, title } = projectData; // TODO: get recruit stat from DB
-  const {
-    isDeleteProjectModalOpen,
-    openDeleteProjectModal,
-    closeDeleteProjectModal,
-    onChange,
-    isValid,
-  } = useDeleteProjectModal({
-    projectName: title,
-  });
+  const { isOpen, openModal, closeModal } = useModal();
 
   return (
     <Paper focused={focused}>
@@ -76,17 +68,23 @@ function ProjectCard({
         <ActionSection>
           {focused && (
             <>
-              <DeleteButton onClick={openDeleteProjectModal}>
-                삭제하기
-              </DeleteButton>
-              {isDeleteProjectModalOpen &&
+              <DeleteButton onClick={openModal}>삭제하기</DeleteButton>
+              {isOpen &&
                 createPortal(
-                  <DeleteProjectModal
+                  <Modal
+                    title="모집 프로젝트 삭제"
+                    closeModal={closeModal}
                     action={deleteProject}
-                    closeDeleteProjectModal={closeDeleteProjectModal}
-                    projectName={title}
-                    onChange={onChange}
-                    isValid={isValid}
+                    actionName="삭제하기"
+                    description={`정말로 이 모집 프로젝트(${title})를 삭제하시겠습니까 ? 프로젝트 삭제는 되돌릴 수 없습니다.프로젝트를 삭제하려면 프로젝트의 이름을 입력해주세요.`}
+                    textInputProps={[
+                      {
+                        name: "프로젝트 이름 확인",
+                        showLabel: false,
+                        placeholder: title,
+                        regex: new RegExp(title),
+                      },
+                    ]}
                   />,
                   document.body,
                 )}
