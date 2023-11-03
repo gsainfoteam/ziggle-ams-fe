@@ -37,14 +37,14 @@ const TextInput = styled.input<textInputProps>`
 
 function ModalTextInput({
   name,
-  showLabel,
+  showLabel = true,
   placeholder,
   onChange,
   isValid,
 }: textInputProps) {
   return (
     <FormWidgetContainer>
-      {(showLabel ?? true) && <Label>{name}</Label>}
+      {showLabel && <Label>{name}</Label>}
       <TextInput
         name={name}
         placeholder={placeholder ?? name}

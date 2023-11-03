@@ -130,25 +130,20 @@ function Modal({
   const { inputs, onChange } = useTextInputs(textInputProps);
   return (
     <Backdrop onClick={closeModal}>
-      <Container
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-      >
+      <Container onClick={(e) => e.stopPropagation()}>
         <Title>{title}</Title>
         <WidgetsContainer>
           {description && <Description>{description}</Description>}
           <Form>
-            {textInputProps.map((textInputProp) => (
+            {textInputProps.map(({ name, showLabel, placeholder }) => (
               <ModalTextInput
-                key={textInputProp.name}
-                name={textInputProp.name}
-                showLabel={textInputProp.showLabel}
-                placeholder={textInputProp.placeholder}
+                key={name}
+                name={name}
+                showLabel={showLabel}
+                placeholder={placeholder}
                 onChange={onChange}
                 isValid={
-                  inputs.filter((input) => input.name === textInputProp.name)[0]
-                    .isValid
+                  inputs.filter((input) => input.name === name)[0].isValid
                 }
               />
             ))}

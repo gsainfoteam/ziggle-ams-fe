@@ -6,13 +6,12 @@ export interface useTextInputProps {
   required?: boolean;
 }
 
-function useTextInputs(inputfeildsSettings: useTextInputProps[]) {
+function useTextInputs(inputFeildsSettings: useTextInputProps[]) {
   const [inputs, setInputs] = useState(
-    inputfeildsSettings.map((inputSetting) => ({
+    inputFeildsSettings.map((inputSetting) => ({
       ...inputSetting,
       value: "",
-      regex:
-        inputSetting.regex ?? (inputSetting.required ?? true ? /^.+$/ : /.*/),
+      regex: inputSetting.regex ?? (!inputSetting.required ? /.*/ : /^.+$/),
       isValid: inputSetting.required ?? true ? false : true,
     })),
   );
