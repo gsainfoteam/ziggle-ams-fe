@@ -13,21 +13,20 @@ function useTextInputs(inputfeildsSettings: useTextInputProps[]) {
       value: "",
       regex:
         inputSetting.regex ?? (inputSetting.required ?? true ? /^.+$/ : /.*/),
-      isValid: inputSetting.required === false ? true : false,
+      isValid: inputSetting.required ?? true ? false : true,
     })),
   );
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     setInputs((inputs) => {
-      const targetInputIndex = inputs.findIndex(
-        (input) => input.name === e.target.name,
-      );
+      const targetInputIndex = inputs.findIndex((input) => input.name === name);
       return inputs
-        .filter((input) => input.name !== e.target.name) // TODO:
+        .filter((input) => input.name !== name)
         .concat({
           ...inputs[targetInputIndex],
-          value: e.target.value,
-          isValid: inputs[targetInputIndex].regex.test(e.target.value),
+          value: value,
+          isValid: inputs[targetInputIndex].regex.test(value),
         });
     });
   };
