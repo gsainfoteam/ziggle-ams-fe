@@ -6,9 +6,9 @@ export interface useTextInputProps {
   required?: boolean;
 }
 
-function useTextInputs(inputFeildsSettings: useTextInputProps[]) {
+function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
   const [inputs, setInputs] = useState(
-    inputFeildsSettings.map((inputSetting) => ({
+    inputFieldsSettings.map((inputSetting) => ({
       ...inputSetting,
       value: "",
       regex: inputSetting.regex ?? (!inputSetting.required ? /.*/ : /^.+$/),
