@@ -127,7 +127,13 @@ function Modal({
     required?: boolean;
   }[];
 }) {
-  const { inputs, onChange } = useTextInputs(textInputProps);
+  const { inputs, onChange } = useTextInputs(
+    textInputProps.map(({ name, regex, required }) => ({
+      name,
+      regex,
+      required,
+    })),
+  );
   return (
     <Backdrop onClick={closeModal}>
       <Container onClick={(e) => e.stopPropagation()}>
@@ -142,9 +148,7 @@ function Modal({
                 showLabel={showLabel}
                 placeholder={placeholder}
                 onChange={onChange}
-                isValid={
-                  inputs.filter((input) => input.name === name)[0].isValid
-                }
+                isValid={inputs[name].isValid}
               />
             ))}
             <ButtonContainer>
@@ -152,9 +156,10 @@ function Modal({
               <ActionButton
                 type="submit"
                 onClick={action}
-                disabled={
-                  !inputs.reduce((acc, cur) => acc && cur.isValid, true)
-                }
+                disabled={Object.values(inputs).reduce(
+                  (acc, cur) => acc && cur.isValid,
+                  true,
+                )}
               >
                 {actionName}
               </ActionButton>

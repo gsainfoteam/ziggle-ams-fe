@@ -7,27 +7,43 @@ export interface useTextInputProps {
 }
 
 function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
-  const [inputs, setInputs] = useState(
-    inputFieldsSettings.map((inputSetting) => ({
-      ...inputSetting,
-      value: "",
-      regex: inputSetting.regex ?? (!inputSetting.required ? /.*/ : /^.+$/),
-      isValid: inputSetting.required ?? true ? false : true,
-    })),
+  const nameArray = inputFieldsSettings.map(
+    (inputFieldSetting) => inputFieldSetting.name,
+  );
+  if (Array.from(new Set(nameArray)).length !== nameArray.length) {
+    throw new Error("Duplicate input field name!");
+  }
+
+  const [inputs, setInputs] = useState<{
+    [key: string]: {
+      value: string;
+      regex: RegExp;
+      isValid: boolean;
+    };
+  }>(
+    inputFieldsSettings.reduce(
+      (acc, { name, regex, required = true }) => ({
+        ...acc,
+        [name]: {
+          value: "",
+          regex: regex ?? (required ? /^.+$/ : /.*/),
+          isValid: required ? false : true,
+        },
+      }),
+      {},
+    ),
   );
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInputs((inputs) => {
-      const targetInputIndex = inputs.findIndex((input) => input.name === name);
-      return inputs
-        .filter((input) => input.name !== name)
-        .concat({
-          ...inputs[targetInputIndex],
-          value: value,
-          isValid: inputs[targetInputIndex].regex.test(value),
-        });
-    });
+    setInputs((inputs) => ({
+      ...inputs,
+      [name]: {
+        ...inputs[name],
+        value: value,
+        isValid: inputs[name].regex.test(value),
+      },
+    }));
   };
 
   return { inputs, onChange };
