@@ -27,7 +27,7 @@ function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
         [name]: {
           value: "",
           regex: regex ?? (required ? /^.+$/ : /.*/),
-          isValid: required ? false : true,
+          isValid: !regex && !required,
         },
       }),
       {},
@@ -36,12 +36,12 @@ function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setInputs((inputs) => ({
+    setInputs(({ [name]: input, ...inputs }) => ({
       ...inputs,
       [name]: {
-        ...inputs[name],
+        ...input,
         value: value,
-        isValid: inputs[name].regex.test(value),
+        isValid: input.regex.test(value),
       },
     }));
   };

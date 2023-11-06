@@ -157,7 +157,7 @@ function Modal({
                 type="submit"
                 onClick={action}
                 disabled={Object.values(inputs).reduce(
-                  (acc, cur) => acc && cur.isValid,
+                  (acc, { isValid }) => acc && isValid,
                   true,
                 )}
               >
