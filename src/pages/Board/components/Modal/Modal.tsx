@@ -156,10 +156,12 @@ function Modal({
               <ActionButton
                 type="submit"
                 onClick={action}
-                disabled={Object.values(inputs).reduce(
-                  (acc, { isValid }) => acc && isValid,
-                  true,
-                )}
+                disabled={
+                  !Object.values(inputs).reduce(
+                    (acc, { isValid }) => acc && isValid,
+                    true,
+                  )
+                }
               >
                 {actionName}
               </ActionButton>
