@@ -222,7 +222,7 @@ const timeBlocksData = [
   {
     title: "에잉쯧",
     id: "dfds3984hfj",
-    start: dayjs("2023-11-15 11:10"),
+    start: dayjs("2023-11-15 14:10"),
     end: dayjs("2023-11-15 18:50"),
   },
   {
@@ -296,7 +296,7 @@ function Calendar() {
                 >
                   <TimeBlockTitle color={color.title}>{title}</TimeBlockTitle>
                   <TimeBlockTimeRange color={color.time}>
-                    {start.format("h:mm")}~{end.format("h:mm")}
+                    {start.format("H:mm")}~{end.format("H:mm")}
                   </TimeBlockTimeRange>
                 </TimeBlock>
               ))}
