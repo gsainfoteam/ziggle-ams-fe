@@ -1,10 +1,18 @@
 import dayjs, { Dayjs } from "dayjs";
 import duration from "dayjs/plugin/duration";
+import isBetween from "dayjs/plugin/isBetween";
+import minMax from "dayjs/plugin/minMax";
 import weekday from "dayjs/plugin/weekday";
+import { useState } from "react";
+import { createPortal } from "react-dom";
+import Modal from "src/pages/Board/components/Modal/Modal";
+import useModal from "src/pages/Board/components/Modal/useModal";
 import styled from "styled-components";
 
 dayjs.extend(weekday);
 dayjs.extend(duration);
+dayjs.extend(isBetween);
+dayjs.extend(minMax);
 
 const calendarWidth = "800px";
 const calendarHeight = "800px";
@@ -106,7 +114,49 @@ const TimeLabel = styled.div`
   color: lightgray;
 `;
 
-const TimeBlock = styled.div<{ start: Dayjs; end: Dayjs }>`
+const TimeBlockColors = {
+  pink: {
+    title: "#EB6263",
+    background: "#FCE3E3",
+    time: "#FF797A",
+  },
+  lavendar: {
+    title: "#BF60BC",
+    background: "#FFE4FE",
+    time: "#F38BEF",
+  },
+  sky: {
+    title: "#4F9DB7",
+    background: "#D7F5FF",
+    time: "#66BAD6",
+  },
+  lemon: {
+    title: "#BAB543",
+    background: "#FFFCBB",
+    time: "#C6C275",
+  },
+  lime: {
+    title: "#7AAC48",
+    background: "#E8FFD1",
+    time: "#87CF3E",
+  },
+};
+
+interface TimeBlockColor {
+  title: string;
+  background: string;
+  time: string;
+}
+
+interface TimeBlockProps {
+  start: Dayjs;
+  end: Dayjs;
+  backgroundColor: string;
+  outlineColor: string;
+  hover?: boolean;
+}
+
+const TimeBlock = styled.div<TimeBlockProps>`
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -121,22 +171,24 @@ const TimeBlock = styled.div<{ start: Dayjs; end: Dayjs }>`
       dayjs.duration(end.diff(start)).asMinutes() / 60
     } * ${hourCellHeight} - 2px - 10px)`};
   border-radius: 5px;
-  background-color: #fce3e3;
+  background-color: ${({ backgroundColor }) => backgroundColor};
   padding: 5px;
-  &:hover {
-    cursor: pointer;
-  }
+  /* &:hover { */
+  cursor: ${({ hover }) => hover && "pointer"};
+  outline: 0px solid ${({ outlineColor }) => outlineColor};
+  outline-width: ${({ hover }) => hover && "1px"};
+  /* } */
 `;
 
-const TimeBlockTitle = styled.div`
+const TimeBlockTitle = styled.div<{ color: string }>`
   font-size: 0.8em;
   line-height: 1.3em;
   font-weight: 700;
-  color: #eb6263;
+  color: ${({ color }) => color};
 `;
 
-const TimeBlockTimeRange = styled.div`
-  color: #ff797a;
+const TimeBlockTimeRange = styled.div<{ color: string }>`
+  color: ${({ color }) => color};
   font-size: 0.5em;
   line-height: 1em;
   font-weight: 500;
@@ -144,11 +196,66 @@ const TimeBlockTimeRange = styled.div`
 
 const today = dayjs();
 
-const daysOfWeek = Array(7)
+const daysOfWeek: Dayjs[] = Array(7)
   .fill(today.weekday(0))
   .map((day, i) => day.add(i, "day"));
 
+const timeBlocksData = [
+  {
+    title: "으아악",
+    id: "9d8ysuhfj",
+    start: dayjs("2023-11-13 9:30"),
+    end: dayjs("2023-11-13 11:15"),
+  },
+  {
+    title: "이이잉",
+    id: "9d8sadfdshfj",
+    start: dayjs("2023-11-14 11:20"),
+    end: dayjs("2023-11-14 15:40"),
+  },
+  {
+    title: "우오어",
+    id: "dfdshfj",
+    start: dayjs("2023-11-15 09:10"),
+    end: dayjs("2023-11-15 10:20"),
+  },
+  {
+    title: "에잉쯧",
+    id: "dfds3984hfj",
+    start: dayjs("2023-11-15 11:10"),
+    end: dayjs("2023-11-15 18:50"),
+  },
+  {
+    title: "살려주",
+    id: "dfds39j",
+    start: dayjs("2023-11-15 11:10"),
+    end: dayjs("2023-11-17 14:00"),
+  },
+]
+  .sort(
+    ({ start: start1, end: end1 }, { start: start2, end: end2 }) =>
+      start1.diff(start2) || end2.diff(end1),
+  )
+  .map((data, index) => ({
+    ...data,
+    color:
+      Object.values(TimeBlockColors)[
+        index % Object.keys(TimeBlockColors).length
+      ],
+  }));
+
+interface TimeBlockData {
+  title: string;
+  id: string;
+  start: Dayjs;
+  end: Dayjs;
+  color: TimeBlockColor;
+}
+
 function Calendar() {
+  const { isOpen, openModal, closeModal } = useModal();
+  const [hoverId, setHoverId] = useState<string>();
+
   return (
     <CalendarContainer>
       <DayLabelContainer>
@@ -156,34 +263,66 @@ function Calendar() {
           <DayContainer key={day.date()}>
             <DayLabel>
               <Month>{day.month()}월</Month>
-              <Day isToday={day.date() === 7}>{day.date()}</Day>
+              <Day isToday={day.date() === today.date()}>{day.date()}</Day>
             </DayLabel>
           </DayContainer>
         ))}
       </DayLabelContainer>
       <WeekContainer>
         <TimeLabelsContainer>
-          {Array.from(Array(24).keys()).map((hour) => (
-            <TimeLabel key={hour}>
-              {hour}:00{hour < 12 ? "AM" : "PM"}
-            </TimeLabel>
+          {[...Array(24)].map((_, hour) => (
+            <TimeLabel key={hour}>{hour}:00</TimeLabel>
           ))}
         </TimeLabelsContainer>
         {daysOfWeek.map((day) => (
           <DayContainer key={day.date()}>
-            {Array.from(Array(24).keys()).map((hour) => (
-              <HourCell key={hour} />
+            {[...Array(24)].map((_, hour) => (
+              <HourCell key={hour} onClick={openModal} />
             ))}
-            <TimeBlock
-              start={dayjs("2023-11-07 9:30")}
-              end={dayjs("2023-11-07 9:00").add(150, "minute")}
-            >
-              <TimeBlockTitle>으아악</TimeBlockTitle>
-              <TimeBlockTimeRange>9:30~12:00</TimeBlockTimeRange>
-            </TimeBlock>
+            {timeBlocksData
+              .filter(({ start, end }) =>
+                day.isBetween(start, end, "day", "[]"),
+              )
+              .map(({ id, start, end, color, title }: TimeBlockData) => (
+                <TimeBlock
+                  key={id}
+                  start={dayjs.max(start, day.startOf("day")) ?? day}
+                  end={dayjs.min(end, day.endOf("day")) ?? day}
+                  backgroundColor={color.background}
+                  outlineColor={color.title}
+                  hover={hoverId === id}
+                  onMouseMove={() => setHoverId(id)}
+                  onMouseLeave={() => setHoverId(undefined)}
+                >
+                  <TimeBlockTitle color={color.title}>{title}</TimeBlockTitle>
+                  <TimeBlockTimeRange color={color.time}>
+                    {start.format("h:mm")}~{end.format("h:mm")}
+                  </TimeBlockTimeRange>
+                </TimeBlock>
+              ))}
           </DayContainer>
         ))}
       </WeekContainer>
+      {isOpen &&
+        createPortal(
+          <Modal
+            title="모집 프로젝트 삭제"
+            closeModal={closeModal}
+            action={() => {
+              console.log("Action");
+            }}
+            actionName="삭제하기"
+            description={`이것은 description`}
+            textInputProps={[
+              {
+                name: "이것은 text input",
+                showLabel: true,
+                placeholder: "placeholder",
+              },
+            ]}
+          />,
+          document.body,
+        )}
     </CalendarContainer>
   );
 }
