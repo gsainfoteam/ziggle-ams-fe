@@ -2,11 +2,9 @@ import "../initChartJS";
 
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-// import { SubTitle } from "chart.js";
 import { Chart } from "react-chartjs-2";
 import styled from "styled-components";
 
-// import { Link } from "react-router-dom";
 import chart from "../assets/chart.png";
 import { Logo, Section } from "./Common";
 
@@ -28,11 +26,11 @@ const ChartContainer = styled.div`
 `;
 const ApplicantTrend = () => {
   const label = [...Array(7)]
-    .map((element, index) => {
-      return dayjs()
+    .map((element, index) =>
+      dayjs()
         .subtract(index + 1, "days")
-        .format("MMM DD");
-    })
+        .format("MMM DD"),
+    )
     .reverse();
   const [data, setData] = useState([9, 9, 2, 14, 7, 9, 2]);
 
@@ -74,7 +72,6 @@ const ApplicantTrend = () => {
                   border: { display: false },
                 },
               },
-
               plugins: {
                 tooltip: {
                   yAlign: "bottom",
