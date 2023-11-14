@@ -7,8 +7,6 @@ import { AddButton, Logo, Section } from "./Common";
 const Manager = styled.div`
   display: flex;
   flex: 0 0 378px;
-  width: 378px;
-
   ${Section} {
     flex: 1;
   }
@@ -59,14 +57,14 @@ const ManagerInfo = () => {
           <ManagerInfoCard>
             <Logo>
               <img src={profileGrey} alt="grey profile icon" />
-              <h3>Name</h3>
+              <h3>Name1</h3>
             </Logo>
             <h4>email</h4>
           </ManagerInfoCard>
           <ManagerInfoCard>
             <Logo>
               <img src={profileGrey} alt="grey profile icon" />
-              <h3>Name</h3>
+              <h3>Name2</h3>
             </Logo>
             <h4>email</h4>
           </ManagerInfoCard>
