@@ -9,17 +9,27 @@ const Container = styled.div`
   min-height: 100vh;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  flex: 1;
+  background-color: #f5f5f5;
+  justify-content: center;
+`;
 const Main = styled.main`
-  flex: 1 0 0;
+  width: 100vw;
+  max-width: 1340px;
+  padding: 0 20px;
 `;
 
 const MainLayout = () => {
   return (
     <Container>
       <Header />
-      <Main>
-        <Outlet />
-      </Main>
+      <Wrapper>
+        <Main>
+          <Outlet />
+        </Main>
+      </Wrapper>
       <Footer />
     </Container>
   );
