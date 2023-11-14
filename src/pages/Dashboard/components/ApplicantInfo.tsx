@@ -16,7 +16,7 @@ const Flex = styled.div`
 const Scroll = styled.div`
   border-radius: 6px;
   background: #f2f2f2;
-  height: 377px;
+  height: 320px;
 
   flex: 1;
   padding: 25px 10px;
@@ -28,14 +28,14 @@ const ApplicationSection = styled.div`
   flex-direction: column;
   height: 100%;
   overflow: auto;
-  padding: 0 20px;
   gap: 0.5rem;
 `;
 
 const ApplicantCard = styled.li`
   display: flex;
   background-color: white;
-  flex: 1 0 54px;
+  flex: 1;
+  padding: 10px 0;
   width: 100%;
   border-radius: 5px;
   justify-content: space-between;
@@ -88,7 +88,7 @@ const GroupTitle = styled.div`
   justify-content: space-between;
 `;
 
-const BaseAnswerCard = styled.div`
+const BaseGroupCard = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
@@ -96,7 +96,7 @@ const BaseAnswerCard = styled.div`
   gap: 0.5em;
 `;
 
-const AnswerCard = styled(BaseAnswerCard)`
+const GroupCard = styled(BaseGroupCard)`
   div {
     margin: 0;
     &:hover {
@@ -111,7 +111,7 @@ const AnswerCard = styled(BaseAnswerCard)`
   }
 `;
 
-const EmptyAnswerCard = styled(BaseAnswerCard)`
+const EmptyGroupCard = styled(BaseGroupCard)`
   flex-direction: column;
   align-items: center;
   color: #656565;
@@ -141,21 +141,19 @@ const ApplicantInfo = () => {
       <Flex>
         <Scroll>
           <ApplicationSection>
-            {[...Array(50)].map((_, index) => {
-              return (
-                <ApplicantCard key={index}>
-                  <Logo>
-                    <img src={paper} alt="paper icon" />
-                    <div>학번</div>
-                    <div>이름</div>
-                  </Logo>
-                  <Logo>
-                    <Date>날짜</Date>
-                    <img src={chat} alt="chat icon" />
-                  </Logo>
-                </ApplicantCard>
-              );
-            })}
+            {[...Array(50)].map((_, index) => (
+              <ApplicantCard key={index}>
+                <Logo>
+                  <img src={paper} alt="paper icon" />
+                  <div>학번</div>
+                  <div>이름</div>
+                </Logo>
+                <Logo>
+                  <Date>날짜</Date>
+                  <img src={chat} alt="chat icon" />
+                </Logo>
+              </ApplicantCard>
+            ))}
           </ApplicationSection>
         </Scroll>
         <Scroll>
@@ -169,10 +167,10 @@ const ApplicantInfo = () => {
                   </GroupTitle>
                   {[...Array(5)].map((_, index) => {
                     return (
-                      <AnswerCard key={index}>
+                      <GroupCard key={index}>
                         <img src={paper} alt="paper icon" />
                         <div>응답 타이틀</div>
-                      </AnswerCard>
+                      </GroupCard>
                     );
                   })}
                 </Group>
@@ -180,10 +178,10 @@ const ApplicantInfo = () => {
             })}
             <Group>
               <h2>그룹</h2>
-              <EmptyAnswerCard>
+              <EmptyGroupCard>
                 <img src={emptyBox} alt="empty cursor icon" />
                 <div>여기에 지원서 정보를 끌어다 놓으세요</div>
-              </EmptyAnswerCard>
+              </EmptyGroupCard>
             </Group>
             <ButtonBox>
               <AddButton title="그룹" color="#656565" />
