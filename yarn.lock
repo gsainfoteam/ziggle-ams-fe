@@ -1617,7 +1617,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-
 "dayjs@npm:^1.11.10":
   version: 1.11.10
   resolution: "dayjs@npm:1.11.10"
@@ -4060,11 +4059,9 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.47.1
     "@typescript-eslint/parser": ^5.47.1
     "@vitejs/plugin-react": ^3.0.0
-
     babel-plugin-styled-components: ^2.1.4
     chart.js: ^4.4.0
     dayjs: ^1.11.10
-
     eslint: ^8.30.0
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.2.1

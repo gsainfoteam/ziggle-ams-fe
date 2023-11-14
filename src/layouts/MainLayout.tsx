@@ -19,7 +19,6 @@ const Main = styled.main`
   width: 100vw;
   max-width: 1340px;
   padding: 0 20px;
-
 `;
 
 const MainLayout = () => {
