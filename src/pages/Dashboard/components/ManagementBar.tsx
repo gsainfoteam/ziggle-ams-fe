@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 import arrow from "../assets/arrow.png";
@@ -76,6 +77,10 @@ const Change = styled.section`
 `;
 
 const ManagementBar = () => {
+  const [day, setday] = useState(0);
+  const [applicant, setApplicant] = useState(0);
+  const [rate, setRate] = useState(1);
+  const [view, setView] = useState(0);
   return (
     <StatusContainer>
       <Flex>
@@ -85,7 +90,7 @@ const ManagementBar = () => {
             <h3>마감기한</h3>
           </Logo>
           <Status>
-            <h2>D - #</h2>
+            <h2>D - {day}</h2>
           </Status>
         </Management>
         <Border />
@@ -96,11 +101,12 @@ const ManagementBar = () => {
           </Logo>
           <Status>
             <h2>
-              #<span> 명</span>
+              {applicant}
+              <span> 명</span>
             </h2>
             <Change>
               <Logo>
-                <h3>####</h3>
+                <h3></h3>
                 <img src={arrow} alt="arrow icon" />
               </Logo>
             </Change>
@@ -114,11 +120,12 @@ const ManagementBar = () => {
           </Logo>
           <Status>
             <h2>
-              #<span> : #</span>
+              {rate}
+              <span> : 1</span>
             </h2>
             <Change>
               <Logo>
-                <h3># %</h3>
+                <h3> %</h3>
                 <img src={arrow} alt="arrow icon" />
               </Logo>
             </Change>
@@ -132,11 +139,12 @@ const ManagementBar = () => {
           </Logo>
           <Status>
             <h2>
-              #<span> 회</span>
+              {view}
+              <span> 회</span>
             </h2>
             <Change>
               <Logo>
-                <h3>#</h3>
+                <h3></h3>
                 <img src={arrow} alt="arrow icon" />
               </Logo>
             </Change>
