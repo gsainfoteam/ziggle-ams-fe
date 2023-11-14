@@ -22,6 +22,6 @@
     },
     "typeRoots": ["./node_modules/@types/", "./src/@types/"]
   },
-  "include": ["src", "src/pages/Dashboard/components/.ScheduleManagement.tsx"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
