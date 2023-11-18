@@ -7,16 +7,16 @@ const FormWidgetContainer = styled.div`
 `;
 
 const Label = styled.label`
-  font-size: 1.5em;
+  font-size: 0.8em;
   font-weight: 700;
-  margin-bottom: 10px;
 `;
 
 interface textInputProps {
   name: string;
-  showLabel?: boolean;
+  label?: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
   isValid: boolean;
 }
 
@@ -24,9 +24,10 @@ const TextInput = styled.input<textInputProps>`
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  height: 2.5em;
+  height: 2em;
+  font-size: 0.8em;
   border: 1px solid ${({ isValid }) => (isValid ? "lightgray" : "#eb6263")};
-  border-radius: 10px;
+  border-radius: 5px;
   background-color: white;
   padding: 0 1em;
 
@@ -37,18 +38,20 @@ const TextInput = styled.input<textInputProps>`
 
 function ModalTextInput({
   name,
-  showLabel = true,
+  label,
   placeholder,
   onChange,
+  value,
   isValid,
 }: textInputProps) {
   return (
     <FormWidgetContainer>
-      {showLabel && <Label>{name}</Label>}
+      {label && <Label>{label}</Label>}
       <TextInput
         name={name}
         placeholder={placeholder ?? name}
         onChange={onChange}
+        value={value}
         isValid={isValid}
       />
     </FormWidgetContainer>

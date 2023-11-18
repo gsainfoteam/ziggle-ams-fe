@@ -13,7 +13,7 @@ const BoardLayout = styled.div`
   background-color: #f5f5f5;
 `;
 const CarouselSection = styled.div`
-  width: ${CarouselWidth};
+  width: ${`${CarouselWidth}px`};
 `;
 
 const BoardPage = () => {

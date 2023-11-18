@@ -2,19 +2,22 @@ import styled from "styled-components";
 
 import Calendar from "./components/Calendar";
 
-const TemporaryContainer = styled.div`
+const DashBoardTemporaryLayout = styled.div`
   display: flex;
-  width: 100%;
+  flex-direction: column;
   justify-content: center;
-  border: 1px solid gray;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background-color: #f5f5f5;
 `;
 
 const DashboardPage = () => {
   return (
     <>
-      <TemporaryContainer>
+      <DashBoardTemporaryLayout>
         <Calendar />
-      </TemporaryContainer>
+      </DashBoardTemporaryLayout>
     </>
   );
 };

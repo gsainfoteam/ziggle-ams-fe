@@ -2,8 +2,17 @@ import { useState } from "react";
 
 export interface useTextInputProps {
   name: string;
-  regex?: RegExp;
+  test?: (input: string) => boolean;
   required?: boolean;
+  value?: string;
+}
+
+interface inputs {
+  [key: string]: {
+    value: string;
+    test: (input: string) => boolean;
+    isValid: boolean;
+  };
 }
 
 function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
@@ -14,39 +23,45 @@ function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
     throw new Error("Duplicate input field name!");
   }
 
-  const [inputs, setInputs] = useState<{
-    [key: string]: {
-      value: string;
-      regex: RegExp;
-      isValid: boolean;
-    };
-  }>(
+  const [inputs, setInputs] = useState<inputs>(
     inputFieldsSettings.reduce(
-      (acc, { name, regex, required = true }) => ({
+      (acc, { name, test, required = true, value = "" }) => ({
         ...acc,
         [name]: {
-          value: "",
-          regex: regex ?? (required ? /^.+$/ : /.*/),
-          isValid: !regex && !required,
+          value: value,
+          test:
+            test ??
+            (required
+              ? (input) => /^.+$/.test(input)
+              : (input) => /.*/.test(input)),
+          isValid: !test && !required,
         },
       }),
       {},
     ),
   );
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const validate = (name: string, value: string) => {
     setInputs(({ [name]: input, ...inputs }) => ({
       ...inputs,
       [name]: {
         ...input,
         value: value,
-        isValid: input.regex.test(value),
+        isValid: input.test(value),
       },
     }));
   };
 
-  return { inputs, onChange };
+  const initialCheck = () => {
+    Object.keys(inputs).map((name) => validate(name, inputs[name].value));
+  };
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    validate(name, value);
+  };
+
+  return { inputs, onChange, initialCheck, setInputs };
 }
 
 export default useTextInputs;
