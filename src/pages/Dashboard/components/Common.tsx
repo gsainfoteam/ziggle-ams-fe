@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 export const Section = styled.article`
+  position: relative;
   display: flex;
   flex-direction: column;
   background-color: white;
