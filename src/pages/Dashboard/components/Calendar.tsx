@@ -6,7 +6,6 @@ import weekday from "dayjs/plugin/weekday";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import calendar from "src/assets/calendarIcon.png";
 import CircularButton from "src/pages/Board/components/CircularButton";
 import {
   modalPaperPadding,
@@ -14,6 +13,7 @@ import {
 } from "src/pages/Board/components/Modal/ModalPaper";
 import styled from "styled-components";
 
+import calendar from "../assets/calander.png";
 import { Logo, Section } from "./Common";
 import {
   calendarHeight,
