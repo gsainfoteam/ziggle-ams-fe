@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface useTextInputProps {
   name: string;
@@ -22,6 +22,8 @@ function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
   if (Array.from(new Set(nameArray)).length !== nameArray.length) {
     throw new Error("Duplicate input field name!");
   }
+
+  const initial = useRef(true);
 
   const [inputs, setInputs] = useState<inputs>(
     inputFieldsSettings.reduce(
@@ -52,16 +54,18 @@ function useTextInputs(inputFieldsSettings: useTextInputProps[]) {
     }));
   };
 
-  const initialCheck = () => {
+  useEffect(() => {
+    if (!initial.current) return;
+    initial.current = false;
     Object.keys(inputs).map((name) => validate(name, inputs[name].value));
-  };
+  }, [inputs]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     validate(name, value);
   };
 
-  return { inputs, onChange, initialCheck, setInputs };
+  return { inputs, onChange, setInputs };
 }
 
 export default useTextInputs;

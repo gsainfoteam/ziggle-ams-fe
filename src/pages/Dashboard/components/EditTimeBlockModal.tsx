@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { ChangeEvent, useEffect } from "react";
+import { ChangeEvent } from "react";
 import { MdDelete } from "react-icons/md";
 import ActionButton from "src/pages/Board/components/Modal/ActionButton";
 import ButtonContainer from "src/pages/Board/components/Modal/ButtonContainer";
@@ -67,7 +67,7 @@ function EditTimeBlockModal({
   const { title, start, end } = timeBlocksData.filter(
     (timeBlockData) => timeBlockData.id === activeId,
   )[0];
-  const { inputs, onChange, initialCheck, setInputs } = useTextInputs([
+  const { inputs, onChange, setInputs } = useTextInputs([
     {
       name: "title",
       value: title,
@@ -134,8 +134,6 @@ function EditTimeBlockModal({
       }
     }
   };
-
-  useEffect(initialCheck, []); // TODO: Want it to only check on mount, but ESLint complains about the missing dependency
 
   return (
     <FloatingModalContainer xPosition={xPosition}>
