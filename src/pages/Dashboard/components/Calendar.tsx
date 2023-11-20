@@ -3,7 +3,7 @@ import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
 import minMax from "dayjs/plugin/minMax";
 import weekday from "dayjs/plugin/weekday";
-import { MutableRefObject, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import calendarIcon from "src/assets/calendarIcon.png";
@@ -12,7 +12,6 @@ import {
   modalPaperPadding,
   modalPaperWidth,
 } from "src/pages/Board/components/Modal/ModalPaper";
-import useModal from "src/pages/Board/components/Modal/useModal";
 import styled from "styled-components";
 
 import {
@@ -22,6 +21,7 @@ import {
   TimeLabelWidth,
 } from "./cssConst";
 import EditTimeBlockModal from "./EditTimeBlockModal";
+import TimeBlock from "./TimeBlock";
 
 dayjs.extend(weekday);
 dayjs.extend(duration);
@@ -163,58 +163,6 @@ interface TimeBlockColor {
   time: string;
 }
 
-interface TimeBlockProps {
-  start: Dayjs;
-  end: Dayjs;
-  backgroundColor: string;
-  outlineColor: string;
-  hover?: boolean;
-}
-
-const TimeBlock = styled.div<TimeBlockProps>`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  top: ${({ start }) =>
-    `calc(${
-      start.diff(start.startOf("day"), "minute") / 60
-    } * ${hourCellHeight})`};
-  left: 3px;
-  width: calc(100% - 6px - 10px);
-  height: ${({ start, end }) =>
-    `calc(${
-      dayjs.duration(end.diff(start)).asMinutes() / 60
-    } * ${hourCellHeight} - 2px - 10px)`};
-  min-height: calc(0.8em + 0.5em + 0.1em);
-  border-radius: 5px;
-  background-color: ${({ backgroundColor }) => backgroundColor};
-  padding: 5px;
-  /* &:hover { */
-  cursor: ${({ hover }) => hover && "pointer"};
-  outline: 0px solid ${({ outlineColor }) => outlineColor};
-  outline-width: ${({ hover }) => hover && "1px"};
-  /* } */
-`;
-
-const TimeBlockTitle = styled.div<{ color: string }>`
-  font-size: 0.8em;
-  line-height: 1.3em;
-  font-weight: 700;
-  color: ${({ color }) => color};
-  user-select: none;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-`;
-
-const TimeBlockTimeRange = styled.div<{ color: string }>`
-  color: ${({ color }) => color};
-  font-size: 0.5em;
-  line-height: 1em;
-  font-weight: 500;
-  user-select: none;
-`;
-
 interface WeekShiftButtonProps {
   direction: "right" | "left";
 }
@@ -261,8 +209,8 @@ function Calendar() {
       .fill(dayjs().weekday(0))
       .map((day, i) => day.add(i, "day")),
   );
-  const { isOpen, openModal, closeModal } = useModal();
   const [activeId, setActiveId] = useState<string>();
+  const [editingId, setEditingId] = useState<string>();
   const boundaryRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [timeBlocksData, setTimeBlocksData] = useState(
     [
@@ -339,55 +287,48 @@ function Calendar() {
           ],
       })),
   );
-  const [isEditing, setIsEditing] = useState(false);
-  const timeBlockRefs = useRef<{ id: string; ref: HTMLDivElement | null }[]>(
-    [],
+  const [, setIsEditing] = useState(false);
+  const timeBlockRefs = useRef<Record<string, Record<number, HTMLDivElement>>>(
+    {},
   );
   const calendarContainerRef = useRef<HTMLDivElement | null>(null);
 
   const editTimeBlock = (newTimeBlockData: EditTimeBlockProps) => {
     setTimeBlocksData((timeBlocksData) => {
-      const index = timeBlocksData.findIndex(({ id }) => id === activeId);
-      const timeBlockData = timeBlocksData[index];
-      const editedTimeBlocksData = [...timeBlocksData]; // toSpliced not yet supported
-      editedTimeBlocksData.splice(index, 1, {
-        ...timeBlockData,
-        ...newTimeBlockData,
-      });
-      return editedTimeBlocksData;
+      const index = timeBlocksData.findIndex(({ id }) => id === editingId);
+      console.log(timeBlocksData[index]);
+      return [
+        ...timeBlocksData.slice(0, index),
+        { ...timeBlocksData[index], ...newTimeBlockData },
+        ...timeBlocksData.slice(index + 1),
+      ];
     });
   };
 
   const deleteTimeBlock = () => {
-    closeModal();
+    setTimeBlocksData((timeBlocksData) =>
+      timeBlocksData.filter(({ id }) => id !== editingId),
+    );
+    setEditingId(undefined);
     setActiveId(undefined);
     setIsEditing(false);
-    setTimeBlocksData((timeBlocksData) =>
-      timeBlocksData.filter(({ id }) => id !== activeId),
-    );
   };
 
-  const getActiveTimeBlockXPos = (
-    timeBlockRefs: MutableRefObject<
-      {
-        id: string;
-        ref: HTMLDivElement | null;
-      }[]
-    >,
-    activeId: string | undefined,
-  ) => {
-    console.log(timeBlockRefs); // TODO: timeBlockRefs Keep Growing Bug
-    const { x, width } = timeBlockRefs.current
-      .reverse()
-      .filter((timeBlockRef) => timeBlockRef.id === activeId)[0] // Cannot use findLast
-      ?.ref?.getBoundingClientRect() ?? { x: 0, width: 0 }; // Dirty quick fix to supress type error
-    return x + width + 5 + parseInt(modalPaperWidth, 10) >
-      (calendarContainerRef.current?.getBoundingClientRect()?.right ?? 0)
-      ? x -
-          5 -
-          parseInt(modalPaperWidth, 10) -
-          parseInt(modalPaperPadding, 10) * 2
-      : x + width + 5;
+  const getActiveTimeBlockXPos = () => {
+    if (!editingId) return 0;
+    const current = timeBlockRefs.current[editingId];
+    if (Object.keys(current).length === 0) return 0;
+    const { x, width } = Object.values(current)
+      .map((v) => v.getBoundingClientRect())
+      .sort(({ x: x1 }, { x: x2 }) => x2 - x1)[0];
+    const paperWidth = Number.parseInt(modalPaperWidth, 10);
+    const paperPadding = Number.parseInt(modalPaperPadding, 10);
+    const calendarRight =
+      calendarContainerRef.current?.getBoundingClientRect().right ?? 0;
+
+    const left = x + width + 5;
+    if (left + paperWidth < calendarRight) return left;
+    return x - paperWidth - paperPadding * 2 - 5;
   };
   const nextWeek = () => {
     setDaysOfWeek((daysOfWeek) => daysOfWeek.map((day) => day.add(7, "day")));
@@ -397,6 +338,10 @@ function Calendar() {
       daysOfWeek.map((day) => day.subtract(7, "day")),
     );
   };
+
+  useEffect(() => {
+    setEditingId(undefined);
+  }, [daysOfWeek]);
 
   return (
     <CalendarContainer ref={calendarContainerRef}>
@@ -506,7 +451,7 @@ function Calendar() {
                     ) => start1.diff(start2) || end2.diff(end1),
                   ),
                 );
-                openModal();
+                setEditingId(id);
                 document.removeEventListener("mousemove", mouseMoveHandler);
               };
 
@@ -523,44 +468,43 @@ function Calendar() {
               .filter(({ start, end }) =>
                 day.isBetween(start, end, "day", "[]"),
               )
-              .map(({ id, start, end, color, title }: TimeBlockData) => (
+              .map(({ id, color, ...rest }: TimeBlockData) => (
                 <TimeBlock
                   key={id}
-                  ref={(ref) => timeBlockRefs.current.push({ id, ref })}
-                  start={dayjs.max(start, day.startOf("day")) ?? day}
-                  end={dayjs.min(end, day.endOf("day")) ?? day}
-                  backgroundColor={color.background}
-                  outlineColor={color.title}
+                  {...rest}
+                  day={day}
+                  blockColor={color}
+                  ref={(ref) => {
+                    if (!ref) return;
+                    timeBlockRefs.current[id] ??= {};
+                    timeBlockRefs.current[id][day.date()] = ref;
+                  }}
                   hover={activeId === id}
-                  onMouseMove={() => !isEditing && setActiveId(id)}
-                  onMouseLeave={() => !isEditing && setActiveId(undefined)}
+                  onMouseMove={() => setActiveId(id)}
+                  onMouseLeave={() => setActiveId(undefined)}
                   onClick={() => {
-                    openModal();
+                    setEditingId(id);
                     setIsEditing(true);
                   }}
-                >
-                  <TimeBlockTitle color={color.title}>{title}</TimeBlockTitle>
-                  <TimeBlockTimeRange color={color.time}>
-                    {start.format("H:mm")}~{end.format("H:mm")}
-                  </TimeBlockTimeRange>
-                </TimeBlock>
+                />
               ))}
           </DayContainer>
         ))}
       </WeekContainer>
-      {isOpen &&
+      {editingId &&
         createPortal(
           <EditTimeBlockModal
+            key={editingId}
             closeModal={() => {
-              closeModal();
+              setEditingId(undefined);
               setActiveId(undefined);
               setIsEditing(false);
             }}
             timeBlocksData={timeBlocksData}
             editTimeBlock={editTimeBlock}
             deleteTimeBlock={deleteTimeBlock}
-            activeId={activeId ?? ""}
-            xPosition={getActiveTimeBlockXPos(timeBlockRefs, activeId)}
+            activeId={editingId}
+            xPosition={getActiveTimeBlockXPos()}
           />,
           document.body,
         )}
