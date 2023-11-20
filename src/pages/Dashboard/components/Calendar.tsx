@@ -376,7 +376,7 @@ function Calendar() {
             onMouseDown={(
               clickEvent: React.MouseEvent<Element, MouseEvent>,
             ) => {
-              if (activeId !== undefined) return;
+              if (editingId !== undefined) return;
               const id = Math.random().toString(36).substring(2, 11);
               setActiveId(id);
               const start = day
