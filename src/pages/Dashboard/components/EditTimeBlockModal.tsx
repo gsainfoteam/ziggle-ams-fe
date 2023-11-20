@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import ActionButton from "src/pages/Board/components/Modal/ActionButton";
 import ButtonContainer from "src/pages/Board/components/Modal/ButtonContainer";
@@ -67,6 +67,7 @@ function EditTimeBlockModal({
   const { title, start, end } = timeBlocksData.filter(
     (timeBlockData) => timeBlockData.id === activeId,
   )[0];
+  const [initial] = useState({ title, start, end });
   const { inputs, onChange, setInputs } = useTextInputs([
     {
       name: "title",
@@ -169,7 +170,13 @@ function EditTimeBlockModal({
               isValid={inputs["end"].isValid}
             />
             <ButtonContainer>
-              <CancelButton onClick={closeModal}>
+              <CancelButton
+                onClick={(e) => {
+                  e.preventDefault();
+                  closeModal();
+                  editTimeBlock({ id: activeId, ...initial });
+                }}
+              >
                 {/*TODO: Refresh without posting to DB*/}
                 취소
               </CancelButton>
