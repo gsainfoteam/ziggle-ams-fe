@@ -205,9 +205,7 @@ export interface EditTimeBlockProps {
 
 function Calendar() {
   const [daysOfWeek, setDaysOfWeek] = useState(
-    Array(7)
-      .fill(dayjs().weekday(0))
-      .map((day, i) => day.add(i, "day")),
+    [...Array(7)].map((_, i) => dayjs().weekday(0).add(i, "day")),
   );
   const [activeId, setActiveId] = useState<string>();
   const [editingId, setEditingId] = useState<string>();
@@ -359,7 +357,7 @@ function Calendar() {
         {daysOfWeek.map((day) => (
           <DayContainer key={day.date()}>
             <DayLabel>
-              <Month>{day.month()}월</Month>
+              <Month>{day.month() + 1}월</Month>
               <Day isToday={day.date() === dayjs().date()}>{day.date()}</Day>
             </DayLabel>
           </DayContainer>
