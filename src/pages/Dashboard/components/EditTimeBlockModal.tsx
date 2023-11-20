@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import ActionButton from "src/pages/Board/components/Modal/ActionButton";
 import ButtonContainer from "src/pages/Board/components/Modal/ButtonContainer";
@@ -75,12 +75,10 @@ function EditTimeBlockModal({
     },
     {
       name: "start",
-      test: (input) => dayjs(input, "YYYY-MM-DD H:mm", true).isValid(),
       value: start.format("YYYY-MM-DD H:mm"),
     },
     {
       name: "end",
-      test: (input) => dayjs(input, "YYYY-MM-DD H:mm", true).isValid(),
       value: end.format("YYYY-MM-DD H:mm"),
     },
   ]);
@@ -89,52 +87,31 @@ function EditTimeBlockModal({
     onChange(e);
     const { name, value } = e.target;
 
-    // TODO: Very Dirty!!!
-    if (name === "title") {
-      editTimeBlock({
-        id: activeId,
-        title: value,
-      });
-    } else if (name === "start" || name === "end") {
+    if (name === "start" || name === "end") {
+      const newStart = dayjs(name === "start" ? value : inputs["start"].value);
+      const newEnd = dayjs(name === "end" ? value : inputs["end"].value);
       const isValid =
-        name === "start"
-          ? dayjs(value).isBefore(
-              timeBlocksData.find(({ id }) => id === activeId)?.end,
-            )
-          : dayjs(value).isAfter(
-              timeBlocksData.find(({ id }) => id === activeId)?.start,
-            );
-      if (!isValid) {
-        setInputs(({ start, end }) => ({
-          ...inputs,
-          start: {
-            ...start,
-            isValid: false,
-          },
-          end: {
-            ...end,
-            isValid: false,
-          },
-        }));
-      } else if (dayjs(value, "YYYY-MM-DD H:mm", true).isValid()) {
-        editTimeBlock({
-          id: activeId,
-          [name]: dayjs(value),
-        });
-        setInputs(({ start, end }) => ({
-          ...inputs,
-          start: {
-            ...start,
-            isValid: true,
-          },
-          end: {
-            ...end,
-            isValid: true,
-          },
-        }));
-      }
+        newStart.isValid() && newEnd.isValid() && newStart.isBefore(newEnd);
+      setInputs(({ start, end }) => ({
+        ...inputs,
+        start: { ...start, isValid },
+        end: { ...end, isValid },
+      }));
     }
   };
+
+  useEffect(() => {
+    editTimeBlock({
+      id: activeId,
+      title: inputs["title"].value,
+      ...(inputs["start"].isValid
+        ? {
+            start: dayjs(inputs["start"].value),
+            end: dayjs(inputs["end"].value),
+          }
+        : { start, end }),
+    });
+  }, [activeId, editTimeBlock, end, inputs, start]);
 
   return (
     <FloatingModalContainer xPosition={xPosition}>
