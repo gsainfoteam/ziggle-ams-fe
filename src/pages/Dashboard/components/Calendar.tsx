@@ -358,7 +358,7 @@ function Calendar() {
           <DayContainer key={day.date()}>
             <DayLabel>
               <Month>{day.month() + 1}월</Month>
-              <Day isToday={day.date() === dayjs().date()}>{day.date()}</Day>
+              <Day isToday={day.isSame(dayjs(), "day")}>{day.date()}</Day>
             </DayLabel>
           </DayContainer>
         ))}
