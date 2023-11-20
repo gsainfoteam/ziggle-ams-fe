@@ -51,22 +51,19 @@ const DeleteButton = styled(MdDelete)`
 
 function EditTimeBlockModal({
   closeModal,
-  timeBlocksData,
+  timeBlockData: { title, start, end },
   activeId,
   editTimeBlock,
   deleteTimeBlock,
   xPosition,
 }: {
   closeModal: () => void;
-  timeBlocksData: TimeBlockData[];
+  timeBlockData: TimeBlockData;
   activeId: string;
   editTimeBlock: (timeBlockData: EditTimeBlockProps) => void;
   deleteTimeBlock: () => void;
   xPosition: number;
 }) {
-  const { title, start, end } = timeBlocksData.filter(
-    (timeBlockData) => timeBlockData.id === activeId,
-  )[0];
   const [initial] = useState({ title, start, end });
   const { inputs, onChange, setInputs } = useTextInputs([
     {

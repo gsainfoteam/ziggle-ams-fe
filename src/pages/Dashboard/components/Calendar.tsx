@@ -203,14 +203,18 @@ export interface EditTimeBlockProps {
   end?: Dayjs;
 }
 
+const getColor = (index: number) =>
+  Object.values(TimeBlockColors)[index % Object.keys(TimeBlockColors).length];
+
 function Calendar() {
   const [daysOfWeek, setDaysOfWeek] = useState(
-    [...Array(7)].map((_, i) => dayjs().weekday(0).add(i, "day")),
+    [...Array(7)].map((_, i) =>
+      dayjs().weekday(0).startOf("day").add(i, "day"),
+    ),
   );
   const [activeId, setActiveId] = useState<string>();
   const [editingId, setEditingId] = useState<string>();
-  const boundaryRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [timeBlocksData, setTimeBlocksData] = useState(
+  const [serverData, setServerData] = useState(
     [
       {
         title: "으아악",
@@ -277,14 +281,19 @@ function Calendar() {
         ({ start: start1, end: end1 }, { start: start2, end: end2 }) =>
           start1.diff(start2) || end2.diff(end1),
       )
-      .map((data, index) => ({
-        ...data,
-        color:
-          Object.values(TimeBlockColors)[
-            index % Object.keys(TimeBlockColors).length
-          ],
-      })),
+      .map((data, index) => ({ ...data, color: getColor(index) })),
   );
+  const [addingData, setAddingData] = useState<(typeof serverData)[number]>();
+
+  const timeBlocksData = [
+    ...[...serverData].sort(
+      ({ start: start1, end: end1 }, { start: start2, end: end2 }) =>
+        start1.diff(start2) || end2.diff(end1),
+    ),
+    ...(addingData ? [addingData] : []),
+  ];
+  const editingBlock = timeBlocksData.find(({ id }) => id === editingId);
+
   const timeBlockRefs = useRef<Record<string, Record<number, HTMLDivElement>>>(
     {},
   );
@@ -292,7 +301,7 @@ function Calendar() {
 
   const editTimeBlock = useCallback(
     (newTimeBlockData: EditTimeBlockProps) => {
-      setTimeBlocksData((timeBlocksData) => {
+      setServerData((timeBlocksData) => {
         const index = timeBlocksData.findIndex(({ id }) => id === editingId);
         return [
           ...timeBlocksData.slice(0, index),
@@ -305,7 +314,7 @@ function Calendar() {
   );
 
   const deleteTimeBlock = () => {
-    setTimeBlocksData((timeBlocksData) =>
+    setServerData((timeBlocksData) =>
       timeBlocksData.filter(({ id }) => id !== editingId),
     );
     setEditingId(undefined);
@@ -369,85 +378,50 @@ function Calendar() {
             <TimeLabel key={hour}>{hour}:00</TimeLabel>
           ))}
         </TimeLabelsContainer>
-        {daysOfWeek.map((day, i) => (
+        {daysOfWeek.map((day) => (
           <DayContainer
             key={day.date()}
-            ref={(element) => (boundaryRefs.current[i] = element)}
-            onMouseDown={(
-              clickEvent: React.MouseEvent<Element, MouseEvent>,
-            ) => {
-              if (editingId !== undefined) return;
+            onMouseDown={(e: React.MouseEvent<Element, MouseEvent>) => {
+              if (activeId !== undefined || editingId !== undefined) return;
               const id = Math.random().toString(36).substring(2, 11);
               setActiveId(id);
-              const start = day
-                .startOf("day")
-                .add(
-                  (Math.floor(
-                    (clickEvent.clientY -
-                      (boundaryRefs.current[i]?.getBoundingClientRect().y ??
-                        0)) /
-                      (parseInt(hourCellHeight, 10) / 2),
-                  ) *
-                    60) /
-                    2,
-                  "minute",
-                );
-              setTimeBlocksData((timeBlocksData) =>
-                timeBlocksData.concat({
-                  id: id,
-                  title: "일정",
-                  start: start,
-                  end: start.add(1, "hour"),
-                  color:
-                    Object.values(TimeBlockColors)[
-                      timeBlocksData.length %
-                        Object.keys(TimeBlockColors).length
-                    ],
-                }),
-              );
+              const { x, y, width } = e.currentTarget.getBoundingClientRect();
+              const halfHeight = parseInt(hourCellHeight, 10) / 2;
+              const numberOfHalfHour = Math.floor((e.clientY - y) / halfHeight);
+              const start = day.add(numberOfHalfHour * 30, "minute");
 
-              const mouseMoveHandler = (moveEvent: MouseEvent) => {
-                setTimeBlocksData((timeBlocksData) => {
-                  const end = day
-                    .add(
-                      Math.floor(
-                        (moveEvent.clientX -
-                          (boundaryRefs.current[i]?.getBoundingClientRect().x ??
-                            0)) /
-                          (boundaryRefs.current[i]?.getBoundingClientRect()
-                            .width ?? 1),
-                      ),
-                      "day",
-                    )
-                    .startOf("day")
-                    .add(
-                      (Math.floor(
-                        (moveEvent.clientY -
-                          (boundaryRefs.current[i]?.getBoundingClientRect().y ??
-                            0)) /
-                          (parseInt(hourCellHeight, 10) / 6),
-                      ) *
-                        60) /
-                        6,
-                      "minute",
-                    );
-                  const start = timeBlocksData[timeBlocksData.length - 1].start;
-                  return timeBlocksData.slice(0, -1).concat({
-                    ...timeBlocksData[timeBlocksData.length - 1],
-                    end: end.isBefore(start) ? start : end,
-                  });
+              setAddingData({
+                id: id,
+                title: "일정",
+                start: start,
+                end: start.add(1, "hour"),
+                color: getColor(serverData.length),
+              });
+
+              const mouseMoveHandler = (me: MouseEvent) => {
+                const numberOfDay = Math.floor((me.clientX - x) / width);
+                const numberOf10min = Math.floor(
+                  (me.clientY - y) / (parseInt(hourCellHeight, 10) / 6),
+                );
+                const end = day
+                  .add(numberOfDay, "day")
+                  .add(numberOf10min * 10, "minute");
+                setAddingData((data) => {
+                  if (!data) return data;
+                  const start = data.start;
+                  return { ...data, end: end.isBefore(start) ? start : end };
                 });
               };
 
               const mouseUpHandler = () => {
-                setTimeBlocksData((timeBlocksData) =>
-                  timeBlocksData.sort(
-                    (
-                      { start: start1, end: end1 },
-                      { start: start2, end: end2 },
-                    ) => start1.diff(start2) || end2.diff(end1),
-                  ),
-                );
+                setAddingData((newData) => {
+                  setServerData((timeBlocksData) => [
+                    ...timeBlocksData,
+                    ...(newData ? [newData] : []),
+                  ]);
+                  return undefined;
+                });
+                setActiveId(id);
                 setEditingId(id);
                 document.removeEventListener("mousemove", mouseMoveHandler);
               };
@@ -476,7 +450,11 @@ function Calendar() {
                     timeBlockRefs.current[id] ??= {};
                     timeBlockRefs.current[id][day.date()] = ref;
                   }}
-                  hover={activeId === id}
+                  hover={
+                    activeId === id ||
+                    editingBlock?.id === id ||
+                    addingData?.id === id
+                  }
                   onMouseMove={() => setActiveId(id)}
                   onMouseLeave={() => setActiveId(undefined)}
                   onClick={() => setEditingId(id)}
@@ -485,18 +463,18 @@ function Calendar() {
           </DayContainer>
         ))}
       </WeekContainer>
-      {editingId &&
+      {editingBlock &&
         createPortal(
           <EditTimeBlockModal
-            key={editingId}
+            key={editingBlock.id}
             closeModal={() => {
               setEditingId(undefined);
               setActiveId(undefined);
             }}
-            timeBlocksData={timeBlocksData}
+            timeBlockData={editingBlock}
             editTimeBlock={editTimeBlock}
             deleteTimeBlock={deleteTimeBlock}
-            activeId={editingId}
+            activeId={editingBlock.id}
             xPosition={getActiveTimeBlockXPos()}
           />,
           document.body,
