@@ -6,7 +6,7 @@ import weekday from "dayjs/plugin/weekday";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
-import calendarIcon from "src/assets/calendarIcon.png";
+import calendar from "src/assets/calendarIcon.png";
 import CircularButton from "src/pages/Board/components/CircularButton";
 import {
   modalPaperPadding,
@@ -14,6 +14,7 @@ import {
 } from "src/pages/Board/components/Modal/ModalPaper";
 import styled from "styled-components";
 
+import { Logo, Section } from "./Common";
 import {
   calendarHeight,
   calendarWidth,
@@ -31,15 +32,12 @@ dayjs.extend(minMax);
 
 const CalendarContainer = styled.div`
   display: flex;
-  position: relative;
   flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
   width: ${calendarWidth};
   height: ${calendarHeight};
-  background-color: white;
-  border-radius: 10px;
-  border: 1px solid lightgray;
-  padding: 20px 40px 20px 20px;
-  justify-content: center;
+  overflow: hidden;
 `;
 
 const WeekContainer = styled.div`
@@ -172,22 +170,6 @@ const WeekShiftButton = styled(CircularButton)<WeekShiftButtonProps>`
   background-color: rgba(0, 0, 0, 0);
   position: absolute;
   ${({ direction }) => (direction === "right" ? `right: 0px` : `left: 0px`)}
-`;
-
-const CalendarTitleSection = styled.div`
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 10px;
-`;
-
-const CalendarIcon = styled.img`
-  width: 1.5em;
-`;
-
-const CalendarTitle = styled.div`
-  font-weight: 700;
-  font-size: 1.5em;
-  margin-left: 0.5em;
 `;
 
 export interface TimeBlockData {
@@ -353,136 +335,140 @@ function Calendar() {
   }, [daysOfWeek]);
 
   return (
-    <CalendarContainer ref={calendarContainerRef}>
-      <CalendarTitleSection>
-        <CalendarIcon src={calendarIcon} alt={"calendarIcon"} />
-        <CalendarTitle>일정 관리</CalendarTitle>
-      </CalendarTitleSection>
-      <WeekShiftButton direction={"left"} onClick={previousWeek}>
-        <MdChevronLeft size={50} />
-      </WeekShiftButton>
-      <WeekShiftButton direction={"right"} onClick={nextWeek}>
-        <MdChevronRight size={50} />
-      </WeekShiftButton>
-      <DayLabelContainer>
-        {daysOfWeek.map((day) => (
-          <DayContainer key={day.date()}>
-            <DayLabel>
-              <Month>{day.month() + 1}월</Month>
-              <Day isToday={day.isSame(dayjs(), "day")}>{day.date()}</Day>
-            </DayLabel>
-          </DayContainer>
-        ))}
-      </DayLabelContainer>
-      <WeekContainer>
-        <TimeLabelsContainer>
-          {[...Array(24)].map((_, hour) => (
-            <TimeLabel key={hour}>{hour}:00</TimeLabel>
+    <Section ref={calendarContainerRef}>
+      <Logo>
+        <img src={calendar} alt="calendar icon" />
+        <h3>일정 관리</h3>
+      </Logo>
+      <CalendarContainer>
+        <WeekShiftButton direction={"left"} onClick={previousWeek}>
+          <MdChevronLeft size={50} />
+        </WeekShiftButton>
+        <WeekShiftButton direction={"right"} onClick={nextWeek}>
+          <MdChevronRight size={50} />
+        </WeekShiftButton>
+        <DayLabelContainer>
+          {daysOfWeek.map((day) => (
+            <DayContainer key={day.date()}>
+              <DayLabel>
+                <Month>{day.month() + 1}월</Month>
+                <Day isToday={day.isSame(dayjs(), "day")}>{day.date()}</Day>
+              </DayLabel>
+            </DayContainer>
           ))}
-        </TimeLabelsContainer>
-        {daysOfWeek.map((day) => (
-          <DayContainer
-            key={day.date()}
-            onMouseDown={(e: React.MouseEvent<Element, MouseEvent>) => {
-              if (activeId !== undefined || editingId !== undefined) return;
-              const id = Math.random().toString(36).substring(2, 11);
-              setActiveId(id);
-              const { x, y, width } = e.currentTarget.getBoundingClientRect();
-              const halfHeight = parseInt(hourCellHeight, 10) / 2;
-              const numberOfHalfHour = Math.floor((e.clientY - y) / halfHeight);
-              const start = day.add(numberOfHalfHour * 30, "minute");
-
-              setAddingData({
-                id: id,
-                title: "일정",
-                start: start,
-                end: start.add(1, "hour"),
-                color: getColor(serverData.length),
-              });
-
-              const mouseMoveHandler = (me: MouseEvent) => {
-                const numberOfDay = Math.floor((me.clientX - x) / width);
-                const numberOf10min = Math.floor(
-                  (me.clientY - y) / (parseInt(hourCellHeight, 10) / 6),
-                );
-                const end = day
-                  .add(numberOfDay, "day")
-                  .add(numberOf10min * 10, "minute");
-                setAddingData((data) => {
-                  if (!data) return data;
-                  const start = data.start;
-                  return { ...data, end: end.isBefore(start) ? start : end };
-                });
-              };
-
-              const mouseUpHandler = () => {
-                setAddingData((newData) => {
-                  setServerData((timeBlocksData) => [
-                    ...timeBlocksData,
-                    ...(newData ? [newData] : []),
-                  ]);
-                  return undefined;
-                });
-                setActiveId(id);
-                setEditingId(id);
-                document.removeEventListener("mousemove", mouseMoveHandler);
-              };
-
-              document.addEventListener("mousemove", mouseMoveHandler);
-              document.addEventListener("mouseup", mouseUpHandler, {
-                once: true,
-              });
-            }}
-          >
+        </DayLabelContainer>
+        <WeekContainer>
+          <TimeLabelsContainer>
             {[...Array(24)].map((_, hour) => (
-              <HourCell key={hour} />
+              <TimeLabel key={hour}>{hour}:00</TimeLabel>
             ))}
-            {timeBlocksData
-              .filter(({ start, end }) =>
-                day.isBetween(start, end, "day", "[]"),
-              )
-              .map(({ id, color, ...rest }: TimeBlockData) => (
-                <TimeBlock
-                  key={id}
-                  {...rest}
-                  day={day}
-                  blockColor={color}
-                  ref={(ref) => {
-                    if (!ref) return;
-                    timeBlockRefs.current[id] ??= {};
-                    timeBlockRefs.current[id][day.date()] = ref;
-                  }}
-                  hover={
-                    activeId === id ||
-                    editingBlock?.id === id ||
-                    addingData?.id === id
-                  }
-                  onMouseMove={() => setActiveId(id)}
-                  onMouseLeave={() => setActiveId(undefined)}
-                  onClick={() => setEditingId(id)}
-                />
+          </TimeLabelsContainer>
+          {daysOfWeek.map((day) => (
+            <DayContainer
+              key={day.date()}
+              onMouseDown={(e: React.MouseEvent<Element, MouseEvent>) => {
+                if (activeId !== undefined || editingId !== undefined) return;
+                const id = Math.random().toString(36).substring(2, 11);
+                setActiveId(id);
+                const { x, y, width } = e.currentTarget.getBoundingClientRect();
+                const halfHeight = parseInt(hourCellHeight, 10) / 2;
+                const numberOfHalfHour = Math.floor(
+                  (e.clientY - y) / halfHeight,
+                );
+                const start = day.add(numberOfHalfHour * 30, "minute");
+
+                setAddingData({
+                  id: id,
+                  title: "일정",
+                  start: start,
+                  end: start.add(1, "hour"),
+                  color: getColor(serverData.length),
+                });
+
+                const mouseMoveHandler = (me: MouseEvent) => {
+                  const numberOfDay = Math.floor((me.clientX - x) / width);
+                  const numberOf10min = Math.floor(
+                    (me.clientY - y) / (parseInt(hourCellHeight, 10) / 6),
+                  );
+                  const end = day
+                    .add(numberOfDay, "day")
+                    .add(numberOf10min * 10, "minute");
+                  setAddingData((data) => {
+                    if (!data) return data;
+                    const start = data.start;
+                    return { ...data, end: end.isBefore(start) ? start : end };
+                  });
+                };
+
+                const mouseUpHandler = () => {
+                  setAddingData((newData) => {
+                    setServerData((timeBlocksData) => [
+                      ...timeBlocksData,
+                      ...(newData ? [newData] : []),
+                    ]);
+                    return undefined;
+                  });
+                  setActiveId(id);
+                  setEditingId(id);
+                  document.removeEventListener("mousemove", mouseMoveHandler);
+                };
+
+                document.addEventListener("mousemove", mouseMoveHandler);
+                document.addEventListener("mouseup", mouseUpHandler, {
+                  once: true,
+                });
+              }}
+            >
+              {[...Array(24)].map((_, hour) => (
+                <HourCell key={hour} />
               ))}
-          </DayContainer>
-        ))}
-        <TimeIndicator />
-      </WeekContainer>
-      {editingBlock &&
-        createPortal(
-          <EditTimeBlockModal
-            key={editingBlock.id}
-            closeModal={() => {
-              setEditingId(undefined);
-              setActiveId(undefined);
-            }}
-            timeBlockData={editingBlock}
-            editTimeBlock={editTimeBlock}
-            deleteTimeBlock={deleteTimeBlock}
-            activeId={editingBlock.id}
-            xPosition={getActiveTimeBlockXPos()}
-          />,
-          document.body,
-        )}
-    </CalendarContainer>
+              {timeBlocksData
+                .filter(({ start, end }) =>
+                  day.isBetween(start, end, "day", "[]"),
+                )
+                .map(({ id, color, ...rest }: TimeBlockData) => (
+                  <TimeBlock
+                    key={id}
+                    {...rest}
+                    day={day}
+                    blockColor={color}
+                    ref={(ref) => {
+                      if (!ref) return;
+                      timeBlockRefs.current[id] ??= {};
+                      timeBlockRefs.current[id][day.date()] = ref;
+                    }}
+                    hover={
+                      activeId === id ||
+                      editingBlock?.id === id ||
+                      addingData?.id === id
+                    }
+                    onMouseMove={() => setActiveId(id)}
+                    onMouseLeave={() => setActiveId(undefined)}
+                    onClick={() => setEditingId(id)}
+                  />
+                ))}
+            </DayContainer>
+          ))}
+          <TimeIndicator />
+        </WeekContainer>
+        {editingBlock &&
+          createPortal(
+            <EditTimeBlockModal
+              key={editingBlock.id}
+              closeModal={() => {
+                setEditingId(undefined);
+                setActiveId(undefined);
+              }}
+              timeBlockData={editingBlock}
+              editTimeBlock={editTimeBlock}
+              deleteTimeBlock={deleteTimeBlock}
+              activeId={editingBlock.id}
+              xPosition={getActiveTimeBlockXPos()}
+            />,
+            document.body,
+          )}
+      </CalendarContainer>
+    </Section>
   );
 }
 
