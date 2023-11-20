@@ -22,6 +22,7 @@ import {
 } from "./cssConst";
 import EditTimeBlockModal from "./EditTimeBlockModal";
 import TimeBlock from "./TimeBlock";
+import TimeIndicator from "./TimeIndicator";
 
 dayjs.extend(weekday);
 dayjs.extend(duration);
@@ -42,6 +43,7 @@ const CalendarContainer = styled.div`
 `;
 
 const WeekContainer = styled.div`
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%;
@@ -462,6 +464,7 @@ function Calendar() {
               ))}
           </DayContainer>
         ))}
+        <TimeIndicator />
       </WeekContainer>
       {editingBlock &&
         createPortal(
