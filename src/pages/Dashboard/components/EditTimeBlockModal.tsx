@@ -101,13 +101,15 @@ function EditTimeBlockModal({
   };
 
   useEffect(() => {
+    const startValue = dayjs(inputs["start"].value);
+    const endValue = dayjs(inputs["end"].value);
     editTimeBlock({
       id: activeId,
       title: inputs["title"].value,
       ...(inputs["start"].isValid
         ? {
-            start: dayjs(inputs["start"].value),
-            end: dayjs(inputs["end"].value),
+            start: startValue.isSame(start) ? start : startValue,
+            end: endValue.isSame(end) ? end : endValue,
           }
         : { start, end }),
     });

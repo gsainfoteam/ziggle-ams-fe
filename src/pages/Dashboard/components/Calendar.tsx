@@ -3,7 +3,7 @@ import duration from "dayjs/plugin/duration";
 import isBetween from "dayjs/plugin/isBetween";
 import minMax from "dayjs/plugin/minMax";
 import weekday from "dayjs/plugin/weekday";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import calendarIcon from "src/assets/calendarIcon.png";
@@ -285,23 +285,24 @@ function Calendar() {
           ],
       })),
   );
-  const [, setIsEditing] = useState(false);
   const timeBlockRefs = useRef<Record<string, Record<number, HTMLDivElement>>>(
     {},
   );
   const calendarContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const editTimeBlock = (newTimeBlockData: EditTimeBlockProps) => {
-    setTimeBlocksData((timeBlocksData) => {
-      const index = timeBlocksData.findIndex(({ id }) => id === editingId);
-      console.log(timeBlocksData[index]);
-      return [
-        ...timeBlocksData.slice(0, index),
-        { ...timeBlocksData[index], ...newTimeBlockData },
-        ...timeBlocksData.slice(index + 1),
-      ];
-    });
-  };
+  const editTimeBlock = useCallback(
+    (newTimeBlockData: EditTimeBlockProps) => {
+      setTimeBlocksData((timeBlocksData) => {
+        const index = timeBlocksData.findIndex(({ id }) => id === editingId);
+        return [
+          ...timeBlocksData.slice(0, index),
+          { ...timeBlocksData[index], ...newTimeBlockData },
+          ...timeBlocksData.slice(index + 1),
+        ];
+      });
+    },
+    [editingId],
+  );
 
   const deleteTimeBlock = () => {
     setTimeBlocksData((timeBlocksData) =>
@@ -309,7 +310,6 @@ function Calendar() {
     );
     setEditingId(undefined);
     setActiveId(undefined);
-    setIsEditing(false);
   };
 
   const getActiveTimeBlockXPos = () => {
@@ -378,7 +378,6 @@ function Calendar() {
             ) => {
               if (activeId !== undefined) return;
               const id = Math.random().toString(36).substring(2, 11);
-              setIsEditing(true);
               setActiveId(id);
               const start = day
                 .startOf("day")
@@ -480,10 +479,7 @@ function Calendar() {
                   hover={activeId === id}
                   onMouseMove={() => setActiveId(id)}
                   onMouseLeave={() => setActiveId(undefined)}
-                  onClick={() => {
-                    setEditingId(id);
-                    setIsEditing(true);
-                  }}
+                  onClick={() => setEditingId(id)}
                 />
               ))}
           </DayContainer>
@@ -496,7 +492,6 @@ function Calendar() {
             closeModal={() => {
               setEditingId(undefined);
               setActiveId(undefined);
-              setIsEditing(false);
             }}
             timeBlocksData={timeBlocksData}
             editTimeBlock={editTimeBlock}
