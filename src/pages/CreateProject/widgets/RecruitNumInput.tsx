@@ -33,10 +33,6 @@ const RadioInput = styled.input`
 const Label = styled.label`
   display: flex;
   font-weight: 700;
-`;
-
-const NoLimitSelector = styled.div`
-  display: flex;
   flex-direction: row;
   align-items: center;
   gap: 5px;
@@ -60,21 +56,24 @@ const RecruitNumInput = (
   return (
     <Container id={id}>
       <Title>모집 인원</Title>
-      <NoLimitSelector>
+      <Label>
         <RadioInput
           type="checkbox"
           id="isNoLimit"
           checked={isNoLimit}
           onChange={onChange}
         />
-        <Label>제한 없음</Label>
-      </NoLimitSelector>
-      <NumInput
-        type="number"
-        id="recruitNum"
-        value={recruitNum}
-        onChange={onChange}
-      />
+        제한 없음
+      </Label>
+      {!isNoLimit && (
+        <NumInput
+          type="number"
+          id="recruitNum"
+          min={0}
+          value={recruitNum}
+          onChange={onChange}
+        />
+      )}
     </Container>
   );
 };

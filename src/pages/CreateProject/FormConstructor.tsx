@@ -141,7 +141,7 @@ function reducer(
               ).value,
             }
           : widget,
-      ); //TODO: BROKEN!
+      );
     default:
       return state;
   }
@@ -170,7 +170,7 @@ const FormConstructor = () => {
 
   const onRecruitNumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
-      type: WidgetTypes.PeriodInput,
+      type: WidgetTypes.RecruitNumInput,
       id: "RecruitNumInput",
       edit: {
         id: e.target.id as "isNoLimit" | "recruitNum",
@@ -181,7 +181,6 @@ const FormConstructor = () => {
       },
     });
   };
-  console.log(formData[3]);
 
   return (
     <Wrapper>
