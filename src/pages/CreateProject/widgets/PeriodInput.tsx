@@ -38,6 +38,13 @@ const DatePicker = styled.input`
   border: 1px solid lightgray;
   border-radius: 5px;
   font-weight: 700;
+  &:focus {
+    border: 1px solid #eb6263;
+    outline: 1px solid #eb6263;
+  }
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const PeriodInput = (

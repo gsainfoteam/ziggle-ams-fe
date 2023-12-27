@@ -10,13 +10,33 @@ export interface NameInputProps {
   value: string;
 }
 
-export const NameInput = styled.input<NameInputProps>`
+const Container = styled.div`
+  display: flex;
+  position: relative;
+  flex-direction: column;
+`;
+
+const UnderLine = styled.div`
+  display: flex;
+  position: absolute;
+  bottom: -3px;
+  width: 100%;
+  height: 3px;
+  background-color: lightgray;
+`;
+
+const UnderLineColor = styled(UnderLine)`
+  z-index: 1;
+  background-color: #eb6263;
+  width: 0;
+  transition: width 0.5s;
+`;
+
+const Input = styled.input`
   width: 100%;
   height: fit-content;
 
   border: none;
-  border-bottom: 3px solid
-    ${({ value }) => (value === "" ? "#EB6263" : "lightgray")};
 
   font-size: 2em;
   font-weight: 700;
@@ -25,4 +45,22 @@ export const NameInput = styled.input<NameInputProps>`
   &::placeholder {
     color: gray;
   }
+
+  &:focus ~ ${UnderLineColor} {
+    width: 100%;
+  }
 `;
+
+export const NameInput = (
+  props: NameInputProps & {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  },
+) => {
+  return (
+    <Container>
+      <Input {...props} />
+      <UnderLineColor />
+      <UnderLine />
+    </Container>
+  );
+};

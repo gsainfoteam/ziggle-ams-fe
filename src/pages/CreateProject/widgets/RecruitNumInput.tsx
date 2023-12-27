@@ -23,11 +23,14 @@ const Title = styled.label`
   font-weight: 700;
 `;
 
-const RadioInput = styled.input`
+const CheckBox = styled.input`
   display: flex;
   border: 1px solid lightgray;
   border-radius: 5px;
   font-weight: 700;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Label = styled.label`
@@ -36,6 +39,9 @@ const Label = styled.label`
   flex-direction: row;
   align-items: center;
   gap: 5px;
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const NumInput = styled.input`
@@ -44,6 +50,10 @@ const NumInput = styled.input`
   border-radius: 5px;
   font-weight: 700;
   width: 3em;
+  &:focus {
+    border: 1px solid #eb6263;
+    outline: 1px solid #eb6263;
+  }
 `;
 
 const RecruitNumInput = (
@@ -57,7 +67,7 @@ const RecruitNumInput = (
     <Container id={id}>
       <Title>모집 인원</Title>
       <Label>
-        <RadioInput
+        <CheckBox
           type="checkbox"
           id="isNoLimit"
           checked={isNoLimit}
