@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import CreateForm from "./CreateForm";
+import FormConstructor from "./FormConstructor";
 
 const Layout = styled.div`
   display: flex;
@@ -14,7 +14,7 @@ const Layout = styled.div`
 const CreateProjectPage = () => {
   return (
     <Layout>
-      <CreateForm></CreateForm>
+      <FormConstructor></FormConstructor>
     </Layout>
   );
 };
