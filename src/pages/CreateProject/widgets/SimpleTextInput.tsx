@@ -2,18 +2,11 @@ import styled from "styled-components";
 
 import { WidgetTypes } from "../FormConstructor";
 
-export interface NameInputProps {
-  id: string;
-  widgetType: WidgetTypes;
-  placeholder: string;
-  required: boolean;
-  value: string;
-}
-
-const Container = styled.div`
+const Container = styled.div<{ size: string }>`
   display: flex;
   position: relative;
   flex-direction: column;
+  font-size: ${({ size }) => size};
 `;
 
 const UnderLine = styled.div`
@@ -51,16 +44,36 @@ const Input = styled.input`
   }
 `;
 
-export const NameInput = (
-  props: NameInputProps & {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  },
-) => {
+type Unit = "px" | "em" | "rem";
+
+export interface SimpleTextInputWidgetData {
+  id: string;
+  widgetType: WidgetTypes.SimpleTextInput;
+  size: `${number}${Unit}`;
+  placeholder: string;
+  value: string;
+}
+
+export interface SimpleTextInputProps extends SimpleTextInputWidgetData {
+  key: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const SimpleTextInput = (props: SimpleTextInputProps) => {
+  const { id, size, placeholder, value, onChange } = props;
+
   return (
-    <Container>
-      <Input {...props} />
+    <Container id={id} size={size}>
+      <Input
+        id={id}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+      />
       <UnderLineColor />
       <UnderLine />
     </Container>
   );
 };
+
+export default SimpleTextInput;

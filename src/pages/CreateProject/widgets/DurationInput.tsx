@@ -3,23 +3,6 @@ import styled from "styled-components";
 
 import { WidgetTypes } from "../FormConstructor";
 
-export interface PeriodInputProps {
-  id: string;
-  widgetType: WidgetTypes;
-  start: {
-    id: string;
-    placeholder: string;
-    required: boolean;
-    value: string;
-  };
-  end: {
-    id: string;
-    placeholder: string;
-    required: boolean;
-    value: string;
-  };
-}
-
 const Container = styled.div`
   display: flex;
   width: 100%;
@@ -47,21 +30,37 @@ const DatePicker = styled.input`
   }
 `;
 
-const PeriodInput = (
-  props: PeriodInputProps & {
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  },
-) => {
+export interface DurationInputWidgetData {
+  id: string;
+  widgetType: WidgetTypes.DurationInput;
+  start: {
+    name: "start";
+    placeholder: string;
+    value: string;
+  };
+  end: {
+    name: "end";
+    placeholder: string;
+    value: string;
+  };
+}
+
+export interface DurationInputProps extends DurationInputWidgetData {
+  key: number;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const DurationInput = (props: DurationInputProps) => {
   const { id, start, end, onChange } = props;
 
   return (
     <Container id={id}>
       <Title>모집 기간</Title>
-      <DatePicker type="date" {...start} onChange={onChange} />
+      <DatePicker type="date" id={id} {...start} onChange={onChange} />
       ~
-      <DatePicker type="date" {...end} onChange={onChange} />
+      <DatePicker type="date" id={id} {...end} onChange={onChange} />
     </Container>
   );
 };
 
-export default PeriodInput;
+export default DurationInput;
