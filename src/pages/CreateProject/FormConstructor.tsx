@@ -1,16 +1,16 @@
-import { useReducer } from "react";
+import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import Paper from "./Paper";
-import { AccordionInfo, AccordionInfoProps } from "./widgets/AccordionInfo";
-import DescriptionInput, {
-  DescriptionInputProps,
-} from "./widgets/DescriptionInput";
-import { NameInput, NameInputProps } from "./widgets/NameInput";
-import PeriodInput, { PeriodInputProps } from "./widgets/PeriodInput";
+import DurationInput, {
+  DurationInputWidgetData,
+} from "./widgets/DurationInput";
 import RecruitNumInput, {
-  RecruitNumInputProps,
+  RecruitNumInputWidgetData,
 } from "./widgets/RecruitNumInput";
+import SimpleTextInput, {
+  SimpleTextInputWidgetData,
+} from "./widgets/SimpleTextInput";
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,50 +18,103 @@ const Wrapper = styled.div`
 `;
 
 export enum WidgetTypes {
-  "NameInput",
-  "DescriptionInput",
-  "PeriodInput",
-  "RecruitNumInput",
-  "AccordionInfo",
+  SimpleTextInput = "SimpleTextInput",
+  DurationInput = "DurationInput",
+  RecruitNumInput = "RecruitNumInput",
 }
 
-type Widgets =
-  | NameInputProps
-  | DescriptionInputProps
-  | PeriodInputProps
-  | RecruitNumInputProps
-  | AccordionInfoProps;
+export type WidgetData =
+  | SimpleTextInputWidgetData
+  | DurationInputWidgetData
+  | RecruitNumInputWidgetData;
 
-const templates = {
+interface SimpleTextInputAction {
+  id: string;
+  widgetType: WidgetTypes.SimpleTextInput;
+  value: string;
+}
+
+interface DurationInputAction {
+  id: string;
+  widgetType: WidgetTypes.DurationInput;
+  target: "start" | "end";
+  value: string;
+}
+
+interface RecruitNumInputAction {
+  id: string;
+  widgetType: WidgetTypes.RecruitNumInput;
+  target: "isNoLimit" | "recruitNum";
+  value: boolean | string;
+}
+
+type Action =
+  | SimpleTextInputAction
+  | DurationInputAction
+  | RecruitNumInputAction;
+
+function reducer(state: WidgetData[], action: Action) {
+  return state.map((widget) => {
+    if (widget.id === action.id) {
+      switch (action.widgetType) {
+        case WidgetTypes.SimpleTextInput:
+          return {
+            ...widget,
+            value: action.value,
+          };
+        case WidgetTypes.DurationInput:
+          return {
+            ...widget,
+            [action.target]: {
+              ...(widget as DurationInputWidgetData)[action.target],
+              value: action.value,
+            },
+          };
+        case WidgetTypes.RecruitNumInput:
+          return {
+            ...widget,
+            [action.target]: action.value,
+          };
+        default:
+          console.log("No matching widget type!");
+          return widget;
+      }
+    } else return widget;
+  });
+}
+
+interface Templates {
+  [key: string]: WidgetData[];
+}
+
+const templates: Templates = {
   default: [
     {
-      id: "NameInput",
-      widgetType: WidgetTypes.NameInput,
+      id: "ProjectNameInput",
+      widgetType: WidgetTypes.SimpleTextInput,
+      size: "1em",
       placeholder: "프로젝트 이름",
-      required: true,
       value: "",
     },
     {
-      id: "DescriptionInput",
-      widgetType: WidgetTypes.DescriptionInput,
+      id: "ProjectDescriptionInput",
+      widgetType: WidgetTypes.SimpleTextInput,
+      size: "0.7em",
       placeholder: "프로젝트 설명",
-      required: false,
       value: "",
     },
     {
-      id: "ProjectPeriodInput",
-      widgetType: WidgetTypes.PeriodInput,
+      id: "DurationInput",
+      widgetType: WidgetTypes.DurationInput,
       start: {
-        id: "start",
-        placeholder: "2023-12-10",
-        required: true,
-        value: "2023-12-10",
+        name: "start",
+        placeholder: "",
+        value: "",
       },
       end: {
-        id: "end",
-        placeholder: "2023-12-11",
-        required: true,
-        value: "2023-12-11",
+        name: "end",
+        placeholder: "",
+        value: "",
       },
     },
     {
@@ -70,153 +123,72 @@ const templates = {
       recruitNum: "0",
       isNoLimit: false,
     },
-    {
-      id: "ZiggleInfo",
-      widgetType: WidgetTypes.AccordionInfo,
-    },
   ],
 };
-
-interface NameEditProps {
-  value: string;
-}
-
-interface DescriptionEditProps {
-  value: string;
-}
-
-interface PeriodEditProps {
-  id: "start" | "end";
-  value: string;
-}
-
-interface RecruitNumEditProps {
-  id: "recruitNum" | "isNoLimit";
-  value: boolean | string;
-}
-
-type WidgetEditProps =
-  | NameEditProps
-  | DescriptionEditProps
-  | PeriodEditProps
-  | RecruitNumEditProps;
-
-function reducer(
-  state: Widgets[],
-  action: { type: WidgetTypes; id: string; edit: WidgetEditProps },
-) {
-  switch (action.type) {
-    case WidgetTypes.NameInput:
-      return state.map((widget) =>
-        widget.id === action.id
-          ? {
-              ...(widget as NameInputProps),
-              value: (action.edit as NameEditProps).value,
-            }
-          : widget,
-      );
-    case WidgetTypes.DescriptionInput:
-      return state.map((widget) =>
-        widget.id === action.id
-          ? {
-              ...(widget as DescriptionInputProps),
-              value: (action.edit as DescriptionEditProps).value,
-            }
-          : widget,
-      );
-    case WidgetTypes.PeriodInput:
-      return state.map((widget) =>
-        widget.id === action.id
-          ? {
-              ...widget,
-              [(action.edit as PeriodEditProps).id]: {
-                ...(widget as PeriodInputProps)[
-                  (action.edit as PeriodEditProps).id
-                ],
-                value: action.edit.value,
-              },
-            }
-          : widget,
-      );
-    case WidgetTypes.RecruitNumInput:
-      return state.map((widget) =>
-        widget.id === action.id
-          ? {
-              ...widget,
-              [(action.edit as RecruitNumEditProps).id]: (
-                action.edit as RecruitNumEditProps
-              ).value,
-            }
-          : widget,
-      );
-    default:
-      return state;
-  }
-}
 
 const FormConstructor = () => {
   const [formData, dispatch] = useReducer(reducer, templates.default);
 
-  const onNameInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: WidgetTypes.NameInput,
-      id: e.target.id,
-      edit: { value: e.target.value },
-    });
-  };
-
-  const onDescriptionInputChange = onNameInputChange;
-
-  const onPeriodChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: WidgetTypes.PeriodInput,
-      id: "ProjectPeriodInput",
-      edit: { id: e.target.id as "start" | "end", value: e.target.value },
-    });
-  };
-
-  const onRecruitNumChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: WidgetTypes.RecruitNumInput,
-      id: "RecruitNumInput",
-      edit: {
-        id: e.target.id as "isNoLimit" | "recruitNum",
+  const onChange = {
+    [WidgetTypes.SimpleTextInput]: (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({
+        id: e.target.id,
+        widgetType: WidgetTypes.SimpleTextInput,
+        value: e.target.value,
+      });
+    },
+    [WidgetTypes.DurationInput]: (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({
+        id: e.target.id,
+        widgetType: WidgetTypes.DurationInput,
+        target: e.target.name as "start" | "end",
+        value: e.target.value,
+      });
+    },
+    [WidgetTypes.RecruitNumInput]: (e: React.ChangeEvent<HTMLInputElement>) => {
+      dispatch({
+        id: e.target.id,
+        widgetType: WidgetTypes.RecruitNumInput,
+        target: e.target.name as "isNoLimit" | "recruitNum",
         value:
-          (e.target.id as "isNoLimit" | "recruitNum") === "isNoLimit"
+          (e.target.name as "isNoLimit" | "recruitNum") === "isNoLimit"
             ? e.target.checked
             : e.target.value,
-      },
-    });
+      });
+    },
   };
-
-  // const onAccrodionInfoClose = () => {
-  //   dispatch({
-  //     type: WidgetTypes.AccordionInfo,
-  //     id: ,
-  //     edit: {  },
-  //   });
-  // };
 
   return (
     <Wrapper>
       <Paper>
-        <NameInput
-          {...(formData[0] as NameInputProps)}
-          onChange={onNameInputChange}
-        />
-        <DescriptionInput
-          {...(formData[1] as DescriptionInputProps)}
-          onChange={onDescriptionInputChange}
-        />
-        <PeriodInput
-          {...(formData[2] as PeriodInputProps)}
-          onChange={onPeriodChange}
-        />
-        <RecruitNumInput
-          {...(formData[3] as RecruitNumInputProps)}
-          onChange={onRecruitNumChange}
-        />
-        <AccordionInfo />
+        {formData.map((widgetData, i) => {
+          switch (widgetData.widgetType) {
+            case WidgetTypes.SimpleTextInput:
+              return (
+                <SimpleTextInput
+                  {...widgetData}
+                  onChange={onChange[WidgetTypes.SimpleTextInput]}
+                  key={i}
+                />
+              );
+            case WidgetTypes.DurationInput:
+              return (
+                <DurationInput
+                  {...widgetData}
+                  onChange={onChange[WidgetTypes.DurationInput]}
+                  key={i}
+                />
+              );
+            case WidgetTypes.RecruitNumInput:
+              return (
+                <RecruitNumInput
+                  {...widgetData}
+                  onChange={onChange[WidgetTypes.RecruitNumInput]}
+                  key={i}
+                />
+              );
+          }
+        })}
       </Paper>
     </Wrapper>
   );
