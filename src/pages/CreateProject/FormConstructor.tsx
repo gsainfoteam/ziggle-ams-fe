@@ -2,6 +2,7 @@ import { useReducer } from "react";
 import styled from "styled-components";
 
 import Paper from "./Paper";
+import { AccordionInfo, AccordionInfoProps } from "./widgets/AccordionInfo";
 import DescriptionInput, {
   DescriptionInputProps,
 } from "./widgets/DescriptionInput";
@@ -21,13 +22,15 @@ export enum WidgetTypes {
   "DescriptionInput",
   "PeriodInput",
   "RecruitNumInput",
+  "AccordionInfo",
 }
 
 type Widgets =
   | NameInputProps
   | DescriptionInputProps
   | PeriodInputProps
-  | RecruitNumInputProps;
+  | RecruitNumInputProps
+  | AccordionInfoProps;
 
 const templates = {
   default: [
@@ -66,6 +69,10 @@ const templates = {
       widgetType: WidgetTypes.RecruitNumInput,
       recruitNum: "0",
       isNoLimit: false,
+    },
+    {
+      id: "ZiggleInfo",
+      widgetType: WidgetTypes.AccordionInfo,
     },
   ],
 };
@@ -182,6 +189,14 @@ const FormConstructor = () => {
     });
   };
 
+  // const onAccrodionInfoClose = () => {
+  //   dispatch({
+  //     type: WidgetTypes.AccordionInfo,
+  //     id: ,
+  //     edit: {  },
+  //   });
+  // };
+
   return (
     <Wrapper>
       <Paper>
@@ -201,6 +216,7 @@ const FormConstructor = () => {
           {...(formData[3] as RecruitNumInputProps)}
           onChange={onRecruitNumChange}
         />
+        <AccordionInfo />
       </Paper>
     </Wrapper>
   );

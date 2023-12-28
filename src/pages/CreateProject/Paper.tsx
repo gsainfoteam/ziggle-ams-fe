@@ -6,7 +6,6 @@ const Paper = styled.div`
   gap: 20px;
 
   width: 100%;
-  height: 200px;
 
   padding: 70px;
 
