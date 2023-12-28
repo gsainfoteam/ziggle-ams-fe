@@ -18,6 +18,7 @@ import RecruitNumInput, {
 import SimpleTextInput, {
   SimpleTextInputWidgetData,
 } from "./widgets/SimpleTextInput";
+import TextDisplayWidget from "./widgets/TextDisplayWidget";
 
 const Wrapper = styled.div`
   display: flex;
@@ -272,6 +273,7 @@ const FormConstructor = () => {
               );
           }
         })}
+        <TextDisplayWidget />
       </Paper>
     </Wrapper>
   );
