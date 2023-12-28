@@ -2,6 +2,9 @@ import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import Paper from "./Paper";
+import AccordionInfo, {
+  AccordionInfoWidgetData,
+} from "./widgets/AccordionInfo";
 import DurationInput, {
   DurationInputWidgetData,
 } from "./widgets/DurationInput";
@@ -21,12 +24,14 @@ export enum WidgetTypes {
   SimpleTextInput = "SimpleTextInput",
   DurationInput = "DurationInput",
   RecruitNumInput = "RecruitNumInput",
+  AccordionInfo = "AccordionInfo",
 }
 
 export type WidgetData =
   | SimpleTextInputWidgetData
   | DurationInputWidgetData
-  | RecruitNumInputWidgetData;
+  | RecruitNumInputWidgetData
+  | AccordionInfoWidgetData;
 
 interface SimpleTextInputAction {
   id: string;
@@ -123,6 +128,10 @@ const templates: Templates = {
       recruitNum: "0",
       isNoLimit: false,
     },
+    {
+      id: "AccordionInfo",
+      widgetType: WidgetTypes.AccordionInfo,
+    },
   ],
 };
 
@@ -187,6 +196,8 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
+            case WidgetTypes.AccordionInfo:
+              return <AccordionInfo />;
           }
         })}
       </Paper>
