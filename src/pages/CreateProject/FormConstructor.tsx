@@ -1,7 +1,11 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
 
+import templateImage1 from "./assets/templateImage1.png";
 import Paper from "./Paper";
+import AccordionCarousel, {
+  AccordionCarouselWidgetData,
+} from "./widgets/AccordionCarousel";
 import AccordionInfo, {
   AccordionInfoWidgetData,
 } from "./widgets/AccordionInfo";
@@ -25,13 +29,15 @@ export enum WidgetTypes {
   DurationInput = "DurationInput",
   RecruitNumInput = "RecruitNumInput",
   AccordionInfo = "AccordionInfo",
+  AccordionCarousel = "AccordionCarousel",
 }
 
 export type WidgetData =
   | SimpleTextInputWidgetData
   | DurationInputWidgetData
   | RecruitNumInputWidgetData
-  | AccordionInfoWidgetData;
+  | AccordionInfoWidgetData
+  | AccordionCarouselWidgetData;
 
 interface SimpleTextInputAction {
   id: string;
@@ -53,10 +59,17 @@ interface RecruitNumInputAction {
   value: boolean | string;
 }
 
+interface AccordionCarouselAction {
+  id: string;
+  widgetType: WidgetTypes.AccordionCarousel;
+  selected: string | null;
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
-  | RecruitNumInputAction;
+  | RecruitNumInputAction
+  | AccordionCarouselAction;
 
 function reducer(state: WidgetData[], action: Action) {
   return state.map((widget) => {
@@ -79,6 +92,11 @@ function reducer(state: WidgetData[], action: Action) {
           return {
             ...widget,
             [action.target]: action.value,
+          };
+        case WidgetTypes.AccordionCarousel:
+          return {
+            ...widget,
+            selectedTemplate: action.selected,
           };
         default:
           console.log("No matching widget type!");
@@ -132,6 +150,45 @@ const templates: Templates = {
       id: "AccordionInfo",
       widgetType: WidgetTypes.AccordionInfo,
     },
+    {
+      id: "AccordionCarousel",
+      widgetType: WidgetTypes.AccordionCarousel,
+      templates: [
+        {
+          name: "코딩동아리 모집",
+          imagePath: templateImage1,
+        },
+        {
+          name: "행사 참석 여부",
+          imagePath: templateImage1,
+        },
+        {
+          name: "의견 수집",
+          imagePath: templateImage1,
+        },
+        {
+          name: "강의 후 설문",
+          imagePath: templateImage1,
+        },
+        {
+          name: "코딩동아리 모집2",
+          imagePath: templateImage1,
+        },
+        {
+          name: "행사 참석 여부2",
+          imagePath: templateImage1,
+        },
+        {
+          name: "의견 수집2",
+          imagePath: templateImage1,
+        },
+        {
+          name: "강의 후 설문2",
+          imagePath: templateImage1,
+        },
+      ],
+      selectedTemplate: null,
+    },
   ],
 };
 
@@ -163,6 +220,13 @@ const FormConstructor = () => {
           (e.target.name as "isNoLimit" | "recruitNum") === "isNoLimit"
             ? e.target.checked
             : e.target.value,
+      });
+    },
+    [WidgetTypes.AccordionCarousel]: (e: React.MouseEvent<HTMLDivElement>) => {
+      dispatch({
+        id: e.currentTarget.id,
+        widgetType: WidgetTypes.AccordionCarousel,
+        selected: e.currentTarget.title,
       });
     },
   };
@@ -197,7 +261,15 @@ const FormConstructor = () => {
                 />
               );
             case WidgetTypes.AccordionInfo:
-              return <AccordionInfo />;
+              return <AccordionInfo key={i} />;
+            case WidgetTypes.AccordionCarousel:
+              return (
+                <AccordionCarousel
+                  {...widgetData}
+                  onChange={onChange[WidgetTypes.AccordionCarousel]}
+                  key={i}
+                />
+              );
           }
         })}
       </Paper>
