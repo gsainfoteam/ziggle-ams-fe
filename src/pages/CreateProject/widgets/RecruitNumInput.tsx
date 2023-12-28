@@ -3,6 +3,13 @@ import styled from "styled-components";
 
 import { WidgetTypes } from "../FormConstructor";
 
+export interface RecruitNumInputProps {
+  id: string;
+  widgetType: WidgetTypes;
+  recruitNum: string;
+  isNoLimit: boolean;
+}
+
 const Container = styled.div`
   display: flex;
   width: 100%;
@@ -49,19 +56,11 @@ const NumInput = styled.input`
   }
 `;
 
-export interface RecruitNumInputWidgetData {
-  id: string;
-  widgetType: WidgetTypes.RecruitNumInput;
-  recruitNum: string;
-  isNoLimit: boolean;
-}
-
-export interface RecruitNumInputProps extends RecruitNumInputWidgetData {
-  key: number;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-const RecruitNumInput = (props: RecruitNumInputProps) => {
+const RecruitNumInput = (
+  props: RecruitNumInputProps & {
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  },
+) => {
   const { id, isNoLimit, recruitNum, onChange } = props;
 
   return (
@@ -70,8 +69,7 @@ const RecruitNumInput = (props: RecruitNumInputProps) => {
       <Label>
         <CheckBox
           type="checkbox"
-          id={id}
-          name="isNoLimit"
+          id="isNoLimit"
           checked={isNoLimit}
           onChange={onChange}
         />
@@ -80,8 +78,7 @@ const RecruitNumInput = (props: RecruitNumInputProps) => {
       {!isNoLimit && (
         <NumInput
           type="number"
-          id={id}
-          name="recruitNum"
+          id="recruitNum"
           min={0}
           value={recruitNum}
           onChange={onChange}

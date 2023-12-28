@@ -14,7 +14,7 @@ const Layout = styled.div`
 const CreateProjectPage = () => {
   return (
     <Layout>
-      <FormConstructor />
+      <FormConstructor></FormConstructor>
     </Layout>
   );
 };
