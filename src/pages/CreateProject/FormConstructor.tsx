@@ -76,14 +76,23 @@ interface TextDisplayAction {
   value: string;
 }
 
+interface DeleteWidgetAction {
+  id: string;
+  widgetType: null;
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
   | RecruitNumInputAction
   | AccordionCarouselAction
-  | TextDisplayAction;
+  | TextDisplayAction
+  | DeleteWidgetAction;
 
 function reducer(state: WidgetData[], action: Action) {
+  if (action.widgetType === null) {
+    return state.filter((widget) => widget.id !== action.id);
+  }
   return state.map((widget) => {
     if (widget.id === action.id) {
       switch (action.widgetType) {
@@ -263,6 +272,13 @@ const FormConstructor = () => {
     });
   };
 
+  const onDeleteWidget = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: null,
+    });
+  };
+
   return (
     <Wrapper>
       <Paper>
@@ -293,12 +309,19 @@ const FormConstructor = () => {
                 />
               );
             case WidgetTypes.AccordionInfo:
-              return <AccordionInfo key={i} />;
+              return (
+                <AccordionInfo
+                  {...widgetData}
+                  onDeleteWidget={onDeleteWidget}
+                  key={i}
+                />
+              );
             case WidgetTypes.AccordionCarousel:
               return (
                 <AccordionCarousel
                   {...widgetData}
                   onChange={onAccordionCarouselChange}
+                  onDeleteWidget={onDeleteWidget}
                   key={i}
                 />
               );

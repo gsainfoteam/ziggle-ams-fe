@@ -160,11 +160,12 @@ export interface AccordionCarouselWidgetData {
 export interface AccordionCarouselProps extends AccordionCarouselWidgetData {
   key: number;
   onChange: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onDeleteWidget: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const AccordionCarousel = (props: AccordionCarouselProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const { id, templates, selectedTemplate, onChange } = props;
+  const { id, templates, selectedTemplate, onChange, onDeleteWidget } = props;
 
   const toggle = () => {
     setIsExpanded((isExpanded) => !isExpanded);
@@ -177,7 +178,7 @@ const AccordionCarousel = (props: AccordionCarouselProps) => {
           <Arrow isExpanded={isExpanded} />
           <Title>📚 템플릿으로 빠르게 시작하기</Title>
         </Wrapper>
-        <Close />
+        <Close id={id} onClick={onDeleteWidget} />
       </HeadSection>
       {isExpanded && (
         <>

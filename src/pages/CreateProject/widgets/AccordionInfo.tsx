@@ -101,7 +101,12 @@ export interface AccordionInfoWidgetData {
   widgetType: WidgetTypes.AccordionInfo;
 }
 
-const AccordionInfo = () => {
+interface AccordionInfoProps extends AccordionInfoWidgetData {
+  onDeleteWidget: (e: React.MouseEvent<HTMLElement>) => void;
+}
+
+const AccordionInfo = (props: AccordionInfoProps) => {
+  const { id, onDeleteWidget } = props;
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggle = () => {
@@ -109,13 +114,13 @@ const AccordionInfo = () => {
   };
 
   return (
-    <Container>
+    <Container id={id}>
       <HeadSection>
         <Wrapper onClick={toggle}>
           <Arrow isExpanded={isExpanded} />
           <Title>🔥 혹시 지글(Ziggle)에 공지를 올리셨나요?</Title>
         </Wrapper>
-        <Close />
+        <Close id={id} onClick={onDeleteWidget} />
       </HeadSection>
       {isExpanded && (
         <>
