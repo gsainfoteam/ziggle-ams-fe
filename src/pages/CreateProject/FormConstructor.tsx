@@ -218,47 +218,49 @@ const templates: Templates = {
 const FormConstructor = () => {
   const [formData, dispatch] = useReducer(reducer, templates.default);
 
-  const onChange = {
-    [WidgetTypes.SimpleTextInput]: (e: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch({
-        id: e.target.id,
-        widgetType: WidgetTypes.SimpleTextInput,
-        value: e.target.value,
-      });
-    },
-    [WidgetTypes.DurationInput]: (e: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch({
-        id: e.target.id,
-        widgetType: WidgetTypes.DurationInput,
-        target: e.target.name as "start" | "end",
-        value: e.target.value,
-      });
-    },
-    [WidgetTypes.RecruitNumInput]: (e: React.ChangeEvent<HTMLInputElement>) => {
-      dispatch({
-        id: e.target.id,
-        widgetType: WidgetTypes.RecruitNumInput,
-        target: e.target.name as "isNoLimit" | "recruitNum",
-        value:
-          (e.target.name as "isNoLimit" | "recruitNum") === "isNoLimit"
-            ? e.target.checked
-            : e.target.value,
-      });
-    },
-    [WidgetTypes.AccordionCarousel]: (e: React.MouseEvent<HTMLDivElement>) => {
-      dispatch({
-        id: e.currentTarget.id,
-        widgetType: WidgetTypes.AccordionCarousel,
-        selected: e.currentTarget.title,
-      });
-    },
-    [WidgetTypes.TextDisplay]: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      dispatch({
-        id: e.target.id,
-        widgetType: WidgetTypes.TextDisplay,
-        value: e.target.value,
-      });
-    },
+  const onSimpleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: WidgetTypes.SimpleTextInput,
+      value: e.target.value,
+    });
+  };
+
+  const onDurationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: WidgetTypes.DurationInput,
+      target: e.target.name as "start" | "end",
+      value: e.target.value,
+    });
+  };
+
+  const onRecruitNumInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: WidgetTypes.RecruitNumInput,
+      target: e.target.name as "isNoLimit" | "recruitNum",
+      value:
+        (e.target.name as "isNoLimit" | "recruitNum") === "isNoLimit"
+          ? e.target.checked
+          : e.target.value,
+    });
+  };
+
+  const onAccordionCarouselChange = (e: React.MouseEvent<HTMLDivElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: WidgetTypes.AccordionCarousel,
+      selected: e.currentTarget.title,
+    });
+  };
+
+  const onTextDisplayChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: WidgetTypes.TextDisplay,
+      value: e.target.value,
+    });
   };
 
   return (
@@ -270,7 +272,7 @@ const FormConstructor = () => {
               return (
                 <SimpleTextInput
                   {...widgetData}
-                  onChange={onChange[WidgetTypes.SimpleTextInput]}
+                  onChange={onSimpleTextInputChange}
                   key={i}
                 />
               );
@@ -278,7 +280,7 @@ const FormConstructor = () => {
               return (
                 <DurationInput
                   {...widgetData}
-                  onChange={onChange[WidgetTypes.DurationInput]}
+                  onChange={onDurationInputChange}
                   key={i}
                 />
               );
@@ -286,7 +288,7 @@ const FormConstructor = () => {
               return (
                 <RecruitNumInput
                   {...widgetData}
-                  onChange={onChange[WidgetTypes.RecruitNumInput]}
+                  onChange={onRecruitNumInputChange}
                   key={i}
                 />
               );
@@ -296,7 +298,7 @@ const FormConstructor = () => {
               return (
                 <AccordionCarousel
                   {...widgetData}
-                  onChange={onChange[WidgetTypes.AccordionCarousel]}
+                  onChange={onAccordionCarouselChange}
                   key={i}
                 />
               );
@@ -304,7 +306,7 @@ const FormConstructor = () => {
               return (
                 <TextDisplayWidget
                   {...widgetData}
-                  onChange={onChange[WidgetTypes.TextDisplay]}
+                  onChange={onTextDisplayChange}
                   key={i}
                 />
               );
