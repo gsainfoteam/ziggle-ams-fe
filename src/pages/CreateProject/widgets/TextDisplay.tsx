@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import handleIcon from "../assets/handleIcon.svg";
+import { WidgetTypes } from "../FormConstructor";
 
 const Handle = styled.div`
   display: flex;
@@ -49,20 +51,10 @@ const Content = styled.textarea`
   border: none;
   border-radius: 8px;
   margin: 10px 0;
-  padding: 1em 1em 0 1em;
+  padding: 1em;
   font-size: 0.8em;
   resize: none;
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    height: 10px;
-  }
-  &::-webkit-scrollbar-track {
-    display: none;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: #eb626238;
-    border-radius: 5px;
-  }
+  overflow-y: hidden;
 
   &::placeholder {
     color: gray;
@@ -74,16 +66,37 @@ const Content = styled.textarea`
   }
 `;
 
-const TextDisplayWidget = () => {
+export interface TextDisplayWidgetData {
+  id: string;
+  widgetType: WidgetTypes.TextDisplay;
+  placeholder: string;
+  value: string;
+}
+
+export interface TextDisplayProps extends TextDisplayWidgetData {
+  key: number;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+const TextDisplay = (props: TextDisplayProps) => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    if (textAreaRef && textAreaRef.current) {
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height =
+        textAreaRef.current.scrollHeight + "px";
+    }
+  }, [props.value]);
+
   return (
-    <Container>
+    <Container id={props.id}>
       <Handle />
       <ContentSection>
         <Title>텍스트 요소</Title>
-        <Content placeholder="안내문 내용" />
+        <Content ref={textAreaRef} {...props} />
       </ContentSection>
     </Container>
   );
 };
 
-export default TextDisplayWidget;
+export default TextDisplay;

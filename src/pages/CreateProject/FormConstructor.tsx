@@ -18,7 +18,9 @@ import RecruitNumInput, {
 import SimpleTextInput, {
   SimpleTextInputWidgetData,
 } from "./widgets/SimpleTextInput";
-import TextDisplayWidget from "./widgets/TextDisplayWidget";
+import TextDisplayWidget, {
+  TextDisplayWidgetData,
+} from "./widgets/TextDisplay";
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,6 +33,7 @@ export enum WidgetTypes {
   RecruitNumInput = "RecruitNumInput",
   AccordionInfo = "AccordionInfo",
   AccordionCarousel = "AccordionCarousel",
+  TextDisplay = "TextDisplay",
 }
 
 export type WidgetData =
@@ -38,7 +41,8 @@ export type WidgetData =
   | DurationInputWidgetData
   | RecruitNumInputWidgetData
   | AccordionInfoWidgetData
-  | AccordionCarouselWidgetData;
+  | AccordionCarouselWidgetData
+  | TextDisplayWidgetData;
 
 interface SimpleTextInputAction {
   id: string;
@@ -66,11 +70,18 @@ interface AccordionCarouselAction {
   selected: string | null;
 }
 
+interface TextDisplayAction {
+  id: string;
+  widgetType: WidgetTypes.TextDisplay;
+  value: string;
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
   | RecruitNumInputAction
-  | AccordionCarouselAction;
+  | AccordionCarouselAction
+  | TextDisplayAction;
 
 function reducer(state: WidgetData[], action: Action) {
   return state.map((widget) => {
@@ -98,6 +109,11 @@ function reducer(state: WidgetData[], action: Action) {
           return {
             ...widget,
             selectedTemplate: action.selected,
+          };
+        case WidgetTypes.TextDisplay:
+          return {
+            ...widget,
+            value: action.value,
           };
         default:
           console.log("No matching widget type!");
@@ -190,6 +206,12 @@ const templates: Templates = {
       ],
       selectedTemplate: null,
     },
+    {
+      id: "TextDisplay",
+      widgetType: WidgetTypes.TextDisplay,
+      placeholder: "안내문 내용",
+      value: "",
+    },
   ],
 };
 
@@ -228,6 +250,13 @@ const FormConstructor = () => {
         id: e.currentTarget.id,
         widgetType: WidgetTypes.AccordionCarousel,
         selected: e.currentTarget.title,
+      });
+    },
+    [WidgetTypes.TextDisplay]: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      dispatch({
+        id: e.target.id,
+        widgetType: WidgetTypes.TextDisplay,
+        value: e.target.value,
       });
     },
   };
@@ -271,9 +300,16 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
+            case WidgetTypes.TextDisplay:
+              return (
+                <TextDisplayWidget
+                  {...widgetData}
+                  onChange={onChange[WidgetTypes.TextDisplay]}
+                  key={i}
+                />
+              );
           }
         })}
-        <TextDisplayWidget />
       </Paper>
     </Wrapper>
   );
