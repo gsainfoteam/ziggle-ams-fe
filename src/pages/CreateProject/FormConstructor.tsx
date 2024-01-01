@@ -2,7 +2,11 @@ import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import templateImage1 from "./assets/templateImage1.png";
-import TextDisplayWidget, {
+import {
+  customWidgets,
+  GenericWidgetData,
+} from "./customWidgets/GenericWidget";
+import TextDisplay, {
   TextDisplayWidgetData,
 } from "./customWidgets/TextDisplay";
 import AccordionCarousel, {
@@ -14,7 +18,6 @@ import AccordionInfo, {
 import DurationInput, {
   DurationInputWidgetData,
 } from "./defaultWidgets/DurationInput";
-import GenericWidget from "./defaultWidgets/GenericWidget";
 import RecruitNumInput, {
   RecruitNumInputWidgetData,
 } from "./defaultWidgets/RecruitNumInput";
@@ -71,6 +74,28 @@ interface TextDisplayAction {
 interface DeleteWidgetAction {
   id: string;
   widgetType: null;
+  actionType: "deleteWidget";
+}
+
+interface ToggleRequiredAction {
+  id: string;
+  widgetType: null;
+  actionType: "toggleRequired";
+}
+
+interface ChangeMinMaxAction {
+  id: string;
+  widgetType: null;
+  actionType: "changeMinMax";
+  minOrMax: "min" | "max";
+  value: string;
+}
+
+interface ChangeWidgetTypeAction {
+  id: string;
+  widgetType: null;
+  actionType: "changeWidgetType";
+  targetWidgetType: string;
 }
 
 type Action =
@@ -79,11 +104,53 @@ type Action =
   | RecruitNumInputAction
   | AccordionCarouselAction
   | TextDisplayAction
-  | DeleteWidgetAction;
+  | DeleteWidgetAction
+  | ToggleRequiredAction
+  | ChangeMinMaxAction
+  | ChangeWidgetTypeAction;
 
 function reducer(state: WidgetData[], action: Action) {
   if (action.widgetType === null) {
-    return state.filter((widget) => widget.id !== action.id);
+    switch (action.actionType) {
+      case "deleteWidget":
+        return state.filter((widget) => widget.id !== action.id);
+      case "toggleRequired":
+        return state.map((widget) =>
+          widget.id === action.id
+            ? { ...widget, required: !widget.required }
+            : widget,
+        );
+      case "changeMinMax":
+        return state.map((widget) => {
+          if (widget.id === action.id) {
+            const changedWidget = {
+              ...widget,
+              [action.minOrMax]: action.value,
+            };
+            if (
+              parseInt((changedWidget as GenericWidgetData).min ?? "1") <=
+              parseInt((changedWidget as GenericWidgetData).max ?? "1")
+            )
+              return changedWidget;
+            else return widget;
+          } else return widget;
+        });
+      case "changeWidgetType":
+        return action.targetWidgetType in Object.keys(customWidgets)
+          ? state.map((widget) =>
+              widget.id === action.id
+                ? ({
+                    id: "ProjectNameInput2",
+                    widgetType: "SimpleTextInput",
+                    required: true,
+                    size: "1em",
+                    placeholder: "프로젝트 이름",
+                    value: "",
+                  } as SimpleTextInputWidgetData)
+                : widget,
+            )
+          : state;
+    }
   }
   return state.map((widget) => {
     if (widget.id === action.id) {
@@ -133,6 +200,7 @@ const templates: Templates = {
     {
       id: "ProjectNameInput",
       widgetType: "SimpleTextInput",
+      required: true,
       size: "1em",
       placeholder: "프로젝트 이름",
       value: "",
@@ -140,6 +208,7 @@ const templates: Templates = {
     {
       id: "ProjectDescriptionInput",
       widgetType: "SimpleTextInput",
+      required: true,
       size: "0.7em",
       placeholder: "프로젝트 설명",
       value: "",
@@ -147,6 +216,7 @@ const templates: Templates = {
     {
       id: "DurationInput",
       widgetType: "DurationInput",
+      required: true,
       start: {
         name: "start",
         placeholder: "",
@@ -161,16 +231,19 @@ const templates: Templates = {
     {
       id: "RecruitNumInput",
       widgetType: "RecruitNumInput",
+      required: true,
       recruitNum: "0",
       isNoLimit: false,
     },
     {
       id: "AccordionInfo",
       widgetType: "AccordionInfo",
+      required: false,
     },
     {
       id: "AccordionCarousel",
       widgetType: "AccordionCarousel",
+      required: false,
       templates: [
         {
           name: "코딩동아리 모집",
@@ -212,6 +285,9 @@ const templates: Templates = {
       widgetType: "TextDisplay",
       placeholder: "안내문 내용",
       value: "",
+      required: null,
+      min: null,
+      max: null,
     },
   ],
 };
@@ -256,6 +332,14 @@ const FormConstructor = () => {
     });
   };
 
+  const onDeleteWidget = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: null,
+      actionType: "deleteWidget",
+    });
+  };
+
   const onTextDisplayChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
       id: e.target.id,
@@ -264,12 +348,34 @@ const FormConstructor = () => {
     });
   };
 
-  const onDeleteWidget = (e: React.MouseEvent<HTMLElement>) => {
+  const onToggleRequired = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       id: e.currentTarget.id,
       widgetType: null,
+      actionType: "toggleRequired",
     });
   };
+
+  const onMinMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: null,
+      actionType: "changeMinMax",
+      minOrMax: e.currentTarget.name as "min" | "max",
+      value: e.currentTarget.value,
+    });
+  };
+
+  const onWidgetTypeChange = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: null,
+      actionType: "changeWidgetType",
+      targetWidgetType: e.currentTarget.title,
+    });
+  };
+
+  console.log(formData);
 
   return (
     <Wrapper>
@@ -319,15 +425,18 @@ const FormConstructor = () => {
               );
             case "TextDisplay":
               return (
-                <TextDisplayWidget
+                <TextDisplay
                   {...widgetData}
+                  onToggleRequired={onToggleRequired}
+                  onMinMaxChange={onMinMaxChange}
+                  onWidgetTypeChange={onWidgetTypeChange}
+                  onDeleteWidget={onDeleteWidget}
                   onChange={onTextDisplayChange}
                   key={i}
                 />
               );
           }
         })}
-        <GenericWidget />
       </Paper>
     </Wrapper>
   );

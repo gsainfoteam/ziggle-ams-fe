@@ -149,6 +149,7 @@ const ActionButton = styled.button`
 export interface AccordionCarouselWidgetData {
   id: string;
   widgetType: "AccordionCarousel";
+  required: boolean;
   templates: {
     name: string;
     imagePath: string;

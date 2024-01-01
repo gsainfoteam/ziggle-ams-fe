@@ -47,6 +47,7 @@ type Unit = "px" | "em" | "rem";
 export interface SimpleTextInputWidgetData {
   id: string;
   widgetType: "SimpleTextInput";
+  required: boolean;
   size: `${number}${Unit}`;
   placeholder: string;
   value: string;

@@ -98,6 +98,7 @@ const ActionButton = styled.button`
 export interface AccordionInfoWidgetData {
   id: string;
   widgetType: "AccordionInfo";
+  required: boolean;
 }
 
 interface AccordionInfoProps extends AccordionInfoWidgetData {

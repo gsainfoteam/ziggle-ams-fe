@@ -51,6 +51,7 @@ const NumInput = styled.input`
 export interface RecruitNumInputWidgetData {
   id: string;
   widgetType: "RecruitNumInput";
+  required: boolean;
   recruitNum: string;
   isNoLimit: boolean;
 }

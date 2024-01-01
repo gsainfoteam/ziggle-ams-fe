@@ -32,6 +32,7 @@ const DatePicker = styled.input`
 export interface DurationInputWidgetData {
   id: string;
   widgetType: "DurationInput";
+  required: boolean;
   start: {
     name: "start";
     placeholder: string;
