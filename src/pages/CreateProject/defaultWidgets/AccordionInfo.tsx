@@ -4,7 +4,6 @@ import styled from "styled-components";
 import arrowDown from "../assets/arrowDown.svg";
 import close from "../assets/close.svg";
 import ziggleImage from "../assets/ziggle.png";
-import { WidgetTypes } from "../FormConstructor";
 
 const Container = styled.div`
   display: flex;
@@ -98,7 +97,7 @@ const ActionButton = styled.button`
 
 export interface AccordionInfoWidgetData {
   id: string;
-  widgetType: WidgetTypes.AccordionInfo;
+  widgetType: "AccordionInfo";
 }
 
 interface AccordionInfoProps extends AccordionInfoWidgetData {

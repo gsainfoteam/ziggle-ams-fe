@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-import { WidgetTypes } from "../FormConstructor";
-
 const Container = styled.div`
   display: flex;
   width: 100%;
@@ -28,11 +26,12 @@ const DatePicker = styled.input`
   &:hover {
     cursor: pointer;
   }
+  text-align: center;
 `;
 
 export interface DurationInputWidgetData {
   id: string;
-  widgetType: WidgetTypes.DurationInput;
+  widgetType: "DurationInput";
   start: {
     name: "start";
     placeholder: string;

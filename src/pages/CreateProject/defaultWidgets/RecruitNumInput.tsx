@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 
-import { WidgetTypes } from "../FormConstructor";
-
 const Container = styled.div`
   display: flex;
   width: 100%;
@@ -43,6 +41,7 @@ const NumInput = styled.input`
   border-radius: 5px;
   font-weight: 700;
   width: 3em;
+  text-align: center;
   &:focus {
     border: 1px solid #eb6263;
     outline: 1px solid #eb6263;
@@ -51,7 +50,7 @@ const NumInput = styled.input`
 
 export interface RecruitNumInputWidgetData {
   id: string;
-  widgetType: WidgetTypes.RecruitNumInput;
+  widgetType: "RecruitNumInput";
   recruitNum: string;
   isNoLimit: boolean;
 }

@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-import { WidgetTypes } from "../FormConstructor";
-
 const Container = styled.div<{ size: string }>`
   display: flex;
   position: relative;
@@ -48,7 +46,7 @@ type Unit = "px" | "em" | "rem";
 
 export interface SimpleTextInputWidgetData {
   id: string;
-  widgetType: WidgetTypes.SimpleTextInput;
+  widgetType: "SimpleTextInput";
   size: `${number}${Unit}`;
   placeholder: string;
   value: string;

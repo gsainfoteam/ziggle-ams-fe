@@ -2,39 +2,31 @@ import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import templateImage1 from "./assets/templateImage1.png";
-import Paper from "./Paper";
-import AccordionCarousel, {
-  AccordionCarouselWidgetData,
-} from "./widgets/AccordionCarousel";
-import AccordionInfo, {
-  AccordionInfoWidgetData,
-} from "./widgets/AccordionInfo";
-import DurationInput, {
-  DurationInputWidgetData,
-} from "./widgets/DurationInput";
-import RecruitNumInput, {
-  RecruitNumInputWidgetData,
-} from "./widgets/RecruitNumInput";
-import SimpleTextInput, {
-  SimpleTextInputWidgetData,
-} from "./widgets/SimpleTextInput";
 import TextDisplayWidget, {
   TextDisplayWidgetData,
-} from "./widgets/TextDisplay";
+} from "./customWidgets/TextDisplay";
+import AccordionCarousel, {
+  AccordionCarouselWidgetData,
+} from "./defaultWidgets/AccordionCarousel";
+import AccordionInfo, {
+  AccordionInfoWidgetData,
+} from "./defaultWidgets/AccordionInfo";
+import DurationInput, {
+  DurationInputWidgetData,
+} from "./defaultWidgets/DurationInput";
+import GenericWidget from "./defaultWidgets/GenericWidget";
+import RecruitNumInput, {
+  RecruitNumInputWidgetData,
+} from "./defaultWidgets/RecruitNumInput";
+import SimpleTextInput, {
+  SimpleTextInputWidgetData,
+} from "./defaultWidgets/SimpleTextInput";
+import Paper from "./Paper";
 
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
 `;
-
-export enum WidgetTypes {
-  SimpleTextInput = "SimpleTextInput",
-  DurationInput = "DurationInput",
-  RecruitNumInput = "RecruitNumInput",
-  AccordionInfo = "AccordionInfo",
-  AccordionCarousel = "AccordionCarousel",
-  TextDisplay = "TextDisplay",
-}
 
 export type WidgetData =
   | SimpleTextInputWidgetData
@@ -46,33 +38,33 @@ export type WidgetData =
 
 interface SimpleTextInputAction {
   id: string;
-  widgetType: WidgetTypes.SimpleTextInput;
+  widgetType: "SimpleTextInput";
   value: string;
 }
 
 interface DurationInputAction {
   id: string;
-  widgetType: WidgetTypes.DurationInput;
+  widgetType: "DurationInput";
   target: "start" | "end";
   value: string;
 }
 
 interface RecruitNumInputAction {
   id: string;
-  widgetType: WidgetTypes.RecruitNumInput;
+  widgetType: "RecruitNumInput";
   target: "isNoLimit" | "recruitNum";
   value: boolean | string;
 }
 
 interface AccordionCarouselAction {
   id: string;
-  widgetType: WidgetTypes.AccordionCarousel;
+  widgetType: "AccordionCarousel";
   selected: string | null;
 }
 
 interface TextDisplayAction {
   id: string;
-  widgetType: WidgetTypes.TextDisplay;
+  widgetType: "TextDisplay";
   value: string;
 }
 
@@ -96,12 +88,12 @@ function reducer(state: WidgetData[], action: Action) {
   return state.map((widget) => {
     if (widget.id === action.id) {
       switch (action.widgetType) {
-        case WidgetTypes.SimpleTextInput:
+        case "SimpleTextInput":
           return {
             ...widget,
             value: action.value,
           };
-        case WidgetTypes.DurationInput:
+        case "DurationInput":
           return {
             ...widget,
             [action.target]: {
@@ -109,17 +101,17 @@ function reducer(state: WidgetData[], action: Action) {
               value: action.value,
             },
           };
-        case WidgetTypes.RecruitNumInput:
+        case "RecruitNumInput":
           return {
             ...widget,
             [action.target]: action.value,
           };
-        case WidgetTypes.AccordionCarousel:
+        case "AccordionCarousel":
           return {
             ...widget,
             selectedTemplate: action.selected,
           };
-        case WidgetTypes.TextDisplay:
+        case "TextDisplay":
           return {
             ...widget,
             value: action.value,
@@ -140,21 +132,21 @@ const templates: Templates = {
   default: [
     {
       id: "ProjectNameInput",
-      widgetType: WidgetTypes.SimpleTextInput,
+      widgetType: "SimpleTextInput",
       size: "1em",
       placeholder: "프로젝트 이름",
       value: "",
     },
     {
       id: "ProjectDescriptionInput",
-      widgetType: WidgetTypes.SimpleTextInput,
+      widgetType: "SimpleTextInput",
       size: "0.7em",
       placeholder: "프로젝트 설명",
       value: "",
     },
     {
       id: "DurationInput",
-      widgetType: WidgetTypes.DurationInput,
+      widgetType: "DurationInput",
       start: {
         name: "start",
         placeholder: "",
@@ -168,17 +160,17 @@ const templates: Templates = {
     },
     {
       id: "RecruitNumInput",
-      widgetType: WidgetTypes.RecruitNumInput,
+      widgetType: "RecruitNumInput",
       recruitNum: "0",
       isNoLimit: false,
     },
     {
       id: "AccordionInfo",
-      widgetType: WidgetTypes.AccordionInfo,
+      widgetType: "AccordionInfo",
     },
     {
       id: "AccordionCarousel",
-      widgetType: WidgetTypes.AccordionCarousel,
+      widgetType: "AccordionCarousel",
       templates: [
         {
           name: "코딩동아리 모집",
@@ -217,7 +209,7 @@ const templates: Templates = {
     },
     {
       id: "TextDisplay",
-      widgetType: WidgetTypes.TextDisplay,
+      widgetType: "TextDisplay",
       placeholder: "안내문 내용",
       value: "",
     },
@@ -230,7 +222,7 @@ const FormConstructor = () => {
   const onSimpleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       id: e.target.id,
-      widgetType: WidgetTypes.SimpleTextInput,
+      widgetType: "SimpleTextInput",
       value: e.target.value,
     });
   };
@@ -238,7 +230,7 @@ const FormConstructor = () => {
   const onDurationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       id: e.target.id,
-      widgetType: WidgetTypes.DurationInput,
+      widgetType: "DurationInput",
       target: e.target.name as "start" | "end",
       value: e.target.value,
     });
@@ -247,7 +239,7 @@ const FormConstructor = () => {
   const onRecruitNumInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
       id: e.target.id,
-      widgetType: WidgetTypes.RecruitNumInput,
+      widgetType: "RecruitNumInput",
       target: e.target.name as "isNoLimit" | "recruitNum",
       value:
         (e.target.name as "isNoLimit" | "recruitNum") === "isNoLimit"
@@ -259,7 +251,7 @@ const FormConstructor = () => {
   const onAccordionCarouselChange = (e: React.MouseEvent<HTMLDivElement>) => {
     dispatch({
       id: e.currentTarget.id,
-      widgetType: WidgetTypes.AccordionCarousel,
+      widgetType: "AccordionCarousel",
       selected: e.currentTarget.title,
     });
   };
@@ -267,7 +259,7 @@ const FormConstructor = () => {
   const onTextDisplayChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
       id: e.target.id,
-      widgetType: WidgetTypes.TextDisplay,
+      widgetType: "TextDisplay",
       value: e.target.value,
     });
   };
@@ -284,7 +276,7 @@ const FormConstructor = () => {
       <Paper>
         {formData.map((widgetData, i) => {
           switch (widgetData.widgetType) {
-            case WidgetTypes.SimpleTextInput:
+            case "SimpleTextInput":
               return (
                 <SimpleTextInput
                   {...widgetData}
@@ -292,7 +284,7 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
-            case WidgetTypes.DurationInput:
+            case "DurationInput":
               return (
                 <DurationInput
                   {...widgetData}
@@ -300,7 +292,7 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
-            case WidgetTypes.RecruitNumInput:
+            case "RecruitNumInput":
               return (
                 <RecruitNumInput
                   {...widgetData}
@@ -308,7 +300,7 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
-            case WidgetTypes.AccordionInfo:
+            case "AccordionInfo":
               return (
                 <AccordionInfo
                   {...widgetData}
@@ -316,7 +308,7 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
-            case WidgetTypes.AccordionCarousel:
+            case "AccordionCarousel":
               return (
                 <AccordionCarousel
                   {...widgetData}
@@ -325,7 +317,7 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
-            case WidgetTypes.TextDisplay:
+            case "TextDisplay":
               return (
                 <TextDisplayWidget
                   {...widgetData}
@@ -335,6 +327,7 @@ const FormConstructor = () => {
               );
           }
         })}
+        <GenericWidget />
       </Paper>
     </Wrapper>
   );

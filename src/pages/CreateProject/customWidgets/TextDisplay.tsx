@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 import handleIcon from "../assets/handleIcon.svg";
-import { WidgetTypes } from "../FormConstructor";
 
 const Handle = styled.div`
   display: flex;
@@ -68,7 +67,7 @@ const Content = styled.textarea`
 
 export interface TextDisplayWidgetData {
   id: string;
-  widgetType: WidgetTypes.TextDisplay;
+  widgetType: "TextDisplay";
   placeholder: string;
   value: string;
 }

@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 import arrowDown from "../assets/arrowDown.svg";
 import close from "../assets/close.svg";
-import { WidgetTypes } from "../FormConstructor";
 
 const Container = styled.div`
   display: flex;
@@ -149,7 +148,7 @@ const ActionButton = styled.button`
 
 export interface AccordionCarouselWidgetData {
   id: string;
-  widgetType: WidgetTypes.AccordionCarousel;
+  widgetType: "AccordionCarousel";
   templates: {
     name: string;
     imagePath: string;
