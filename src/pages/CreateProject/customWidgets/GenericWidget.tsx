@@ -87,10 +87,10 @@ const WidgetSelect = styled.div`
   }
 `;
 
-const SelectWrapper = styled.div`
+const SelectWrapper = styled.div<{ isDropDownActive: boolean }>`
   display: flex;
   position: absolute;
-  z-index: 1;
+  z-index: ${({ isDropDownActive }) => (isDropDownActive ? 2 : 1)};
   top: 0;
   flex-direction: column;
   border: 1px solid lightgray;
@@ -280,7 +280,10 @@ const GenericWidget = (
         <HeadSection>
           <HeadContent>{TitleComponent}</HeadContent>
           <SelectionSection ref={selectionSectionRef}>
-            <SelectWrapper ref={widgetSelectionRef}>
+            <SelectWrapper
+              isDropDownActive={isDropDownActive}
+              ref={widgetSelectionRef}
+            >
               <WidgetSelect onClick={toggleDropDown}>
                 <WidgetIcon src={widgetIcon} />
                 {customWidgets[widgetType as keyof typeof customWidgets]}
