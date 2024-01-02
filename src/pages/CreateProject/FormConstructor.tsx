@@ -1,7 +1,6 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
 
-import templateImage1 from "./assets/templateImage1.png";
 import Caution, { CautionWidgetData } from "./customWidgets/Caution";
 import Choice, { ChoiceWidgetData } from "./customWidgets/Choice";
 import { GenericWidgetData } from "./customWidgets/GenericWidget";
@@ -25,6 +24,7 @@ import SimpleTextInput, {
   SimpleTextInputWidgetData,
 } from "./defaultWidgets/SimpleTextInput";
 import Paper from "./Paper";
+import templates from "./templates";
 
 const Wrapper = styled.div`
   display: flex;
@@ -312,15 +312,17 @@ function reducer(state: WidgetData[], action: Action) {
                 max: (
                   (widget as ChoiceWidgetData).options.length + 1
                 ).toString(),
-                options: (widget as ChoiceWidgetData).options.concat({
-                  name: `option${
-                    (widget as ChoiceWidgetData).options.length + 1
-                  }`,
-                  placeholder: `답변 ${
-                    (widget as ChoiceWidgetData).options.length + 1
-                  }`,
-                  value: "",
-                }),
+                options: (widget as ChoiceWidgetData).options
+                  .concat({
+                    name: "",
+                    placeholder: "",
+                    value: "",
+                  })
+                  .map((option, i) => ({
+                    ...option,
+                    name: `option${i + 1}`,
+                    placeholder: `답변 ${i + 1}`,
+                  })),
               };
             case "Remove":
               return {
@@ -353,146 +355,8 @@ function reducer(state: WidgetData[], action: Action) {
   });
 }
 
-interface Templates {
-  [key: string]: WidgetData[];
-}
-
-const templates: Templates = {
-  default: [
-    {
-      id: "ProjectNameInput",
-      widgetType: "SimpleTextInput",
-      required: true,
-      size: "1em",
-      placeholder: "프로젝트 이름",
-      value: "",
-    },
-    {
-      id: "ProjectDescriptionInput",
-      widgetType: "SimpleTextInput",
-      required: true,
-      size: "0.7em",
-      placeholder: "프로젝트 설명",
-      value: "",
-    },
-    {
-      id: "DurationInput",
-      widgetType: "DurationInput",
-      required: true,
-      start: {
-        name: "start",
-        placeholder: "",
-        value: "",
-      },
-      end: {
-        name: "end",
-        placeholder: "",
-        value: "",
-      },
-    },
-    {
-      id: "RecruitNumInput",
-      widgetType: "RecruitNumInput",
-      required: true,
-      recruitNum: "0",
-      isNoLimit: false,
-    },
-    {
-      id: "AccordionInfo",
-      widgetType: "AccordionInfo",
-      required: false,
-    },
-    {
-      id: "AccordionCarousel",
-      widgetType: "AccordionCarousel",
-      required: false,
-      templates: [
-        {
-          name: "코딩동아리 모집",
-          imagePath: templateImage1,
-        },
-        {
-          name: "행사 참석 여부",
-          imagePath: templateImage1,
-        },
-        {
-          name: "의견 수집",
-          imagePath: templateImage1,
-        },
-        {
-          name: "강의 후 설문",
-          imagePath: templateImage1,
-        },
-        {
-          name: "코딩동아리 모집2",
-          imagePath: templateImage1,
-        },
-        {
-          name: "행사 참석 여부2",
-          imagePath: templateImage1,
-        },
-        {
-          name: "의견 수집2",
-          imagePath: templateImage1,
-        },
-        {
-          name: "강의 후 설문2",
-          imagePath: templateImage1,
-        },
-      ],
-      selectedTemplate: null,
-    },
-    {
-      id: "TextDisplay",
-      widgetType: "TextDisplay",
-      placeholder: "안내문 내용",
-      value: "",
-      required: null,
-      min: null,
-      max: null,
-    },
-    {
-      id: "Choice",
-      widgetType: "Choice",
-      required: false,
-      min: "1",
-      max: "1",
-      question: {
-        name: "question",
-        placeholder: "질문 내용",
-        value: "",
-      },
-      options: [
-        {
-          name: "option1",
-          placeholder: "답변 1",
-          value: "",
-        },
-      ],
-    },
-    {
-      id: "TextAnswer",
-      widgetType: "TextAnswer",
-      placeholder: "주관식 질문",
-      value: "",
-      required: false,
-      min: null,
-      max: null,
-    },
-    {
-      id: "Caution",
-      widgetType: "Caution",
-      placeholder: "⚠️ 주의사항 텍스트 입력 ⚠️",
-      value: "",
-      required: null,
-      min: null,
-      max: null,
-    },
-  ],
-};
-
 const FormConstructor = () => {
-  const [formData, dispatch] = useReducer(reducer, templates.default);
+  const [formData, dispatch] = useReducer(reducer, templates.coding);
 
   const onSimpleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({

@@ -38,7 +38,7 @@ const UnderLineColor = styled(UnderLine)`
   transition: width 0.5s;
 `;
 
-const Input = styled.textarea`
+const Input = styled.textarea.attrs({ rows: 1 })`
   display: flex;
   background-color: transparent;
   border: none;
@@ -160,13 +160,9 @@ const Choice = (props: ChoiceProps) => {
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
-    const rowCount = question.value.split(/\r\n|\r|\n/).length;
     if (!titleRef.current) return;
-    if (rowCount <= 1) {
-      titleRef.current.style.height = "1.2em";
-    } else {
-      titleRef.current.style.height = `${rowCount * 1.2}em`;
-    }
+    titleRef.current.style.height = "auto";
+    titleRef.current.style.height = titleRef.current.scrollHeight + "px";
   }, [question]);
 
   const textboxRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
@@ -174,13 +170,10 @@ const Choice = (props: ChoiceProps) => {
   useEffect(() => {
     textboxRefs.current = textboxRefs.current.slice(0, options.length);
 
-    textboxRefs.current.forEach((textboxRef, i) => {
-      const rowCount = options[i].value.split(/\r\n|\r|\n/).length;
-      if (!textboxRef) return;
-      if (rowCount <= 1) {
-        textboxRef.style.height = "1.2em";
-      } else {
-        textboxRef.style.height = `${rowCount * 1.2}em`;
+    textboxRefs.current.forEach((textboxRef) => {
+      if (textboxRef) {
+        textboxRef.style.height = "auto";
+        textboxRef.style.height = textboxRef.scrollHeight + "px";
       }
     });
   }, [options]);
