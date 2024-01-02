@@ -134,6 +134,12 @@ interface CautionEditAction {
   value: string;
 }
 
+interface ApplyTemplateAction {
+  id: string;
+  widgetType: null;
+  actionType: "ApplyTemplate";
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
@@ -148,7 +154,8 @@ type Action =
   | ChoiceAddOptionAction
   | ChoiceRemoveOptionAction
   | TextAnswerEditAction
-  | CautionEditAction;
+  | CautionEditAction
+  | ApplyTemplateAction;
 
 function uniqueId(formData: WidgetData[], length = 16) {
   const generateId = () =>
@@ -184,7 +191,7 @@ function reducer(state: WidgetData[], action: Action) {
             };
             if (
               parseInt((changedWidget as GenericWidgetData).min ?? "1") <=
-              parseInt((changedWidget as GenericWidgetData).max ?? "1")
+              parseInt((changedWidget as GenericWidgetData).max ?? "9999")
             )
               return changedWidget;
             else return widget;
@@ -252,6 +259,16 @@ function reducer(state: WidgetData[], action: Action) {
             return widget;
           }
         });
+      case "ApplyTemplate":
+        return (
+          templates[
+            (
+              state.filter(
+                (widget) => widget.widgetType === "AccordionCarousel",
+              )[0] as AccordionCarouselWidgetData
+            ).selectedTemplate ?? "default"
+          ] ?? state
+        );
     }
   }
   return state.map((widget) => {
@@ -356,7 +373,7 @@ function reducer(state: WidgetData[], action: Action) {
 }
 
 const FormConstructor = () => {
-  const [formData, dispatch] = useReducer(reducer, templates.coding);
+  const [formData, dispatch] = useReducer(reducer, templates.default);
 
   const onSimpleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
@@ -481,6 +498,14 @@ const FormConstructor = () => {
     });
   };
 
+  const onApplyTemplate = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: null,
+      actionType: "ApplyTemplate",
+    });
+  };
+
   console.log(formData);
 
   return (
@@ -526,6 +551,7 @@ const FormConstructor = () => {
                   {...widgetData}
                   onChange={onAccordionCarouselChange}
                   onDeleteWidget={onDeleteWidget}
+                  onApplyTemplate={onApplyTemplate}
                   key={i}
                 />
               );

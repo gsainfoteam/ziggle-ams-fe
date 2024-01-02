@@ -139,7 +139,7 @@ const templates: Templates = {
       max: null,
     },
   ],
-  coding: [
+  "코딩동아리 모집": [
     {
       id: "ProjectNameInput",
       widgetType: "SimpleTextInput",
@@ -283,7 +283,7 @@ const templates: Templates = {
       widgetType: "Choice",
       required: true,
       min: "1",
-      max: "1",
+      max: "3",
       question: {
         name: "question",
         placeholder: "질문 내용",
@@ -311,7 +311,7 @@ const templates: Templates = {
       id: "언어",
       widgetType: "Choice",
       required: true,
-      min: "0",
+      min: "1",
       max: null,
       question: {
         name: "question",
