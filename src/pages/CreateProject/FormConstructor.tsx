@@ -2,10 +2,8 @@ import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import templateImage1 from "./assets/templateImage1.png";
-import {
-  customWidgets,
-  GenericWidgetData,
-} from "./customWidgets/GenericWidget";
+import Choice, { ChoiceWidgetData } from "./customWidgets/Choice";
+import { GenericWidgetData } from "./customWidgets/GenericWidget";
 import TextDisplay, {
   TextDisplayWidgetData,
 } from "./customWidgets/TextDisplay";
@@ -37,7 +35,8 @@ export type WidgetData =
   | RecruitNumInputWidgetData
   | AccordionInfoWidgetData
   | AccordionCarouselWidgetData
-  | TextDisplayWidgetData;
+  | TextDisplayWidgetData
+  | ChoiceWidgetData;
 
 interface SimpleTextInputAction {
   id: string;
@@ -98,6 +97,27 @@ interface ChangeWidgetTypeAction {
   targetWidgetType: string;
 }
 
+interface ChoiceEditAction {
+  id: string;
+  widgetType: "Choice";
+  actionType: "Edit";
+  targetName: string;
+  value: string;
+}
+
+interface ChoiceAddOptionAction {
+  id: string;
+  widgetType: "Choice";
+  actionType: "Add";
+}
+
+interface ChoiceRemoveOptionAction {
+  id: string;
+  widgetType: "Choice";
+  actionType: "Remove";
+  targetName: string;
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
@@ -107,7 +127,24 @@ type Action =
   | DeleteWidgetAction
   | ToggleRequiredAction
   | ChangeMinMaxAction
-  | ChangeWidgetTypeAction;
+  | ChangeWidgetTypeAction
+  | ChoiceEditAction
+  | ChoiceAddOptionAction
+  | ChoiceRemoveOptionAction;
+
+function uniqueId(formData: WidgetData[], length = 16) {
+  const generateId = () =>
+    Math.ceil(Math.random() * Date.now())
+      .toPrecision(length)
+      .toString()
+      .replace(".", "");
+  const ids = new Set(formData.map((widget) => widget.id));
+  let id = generateId();
+  while (ids.has(id)) {
+    id = generateId();
+  }
+  return id;
+}
 
 function reducer(state: WidgetData[], action: Action) {
   if (action.widgetType === null) {
@@ -136,20 +173,47 @@ function reducer(state: WidgetData[], action: Action) {
           } else return widget;
         });
       case "changeWidgetType":
-        return action.targetWidgetType in Object.keys(customWidgets)
-          ? state.map((widget) =>
-              widget.id === action.id
-                ? ({
-                    id: "ProjectNameInput2",
-                    widgetType: "SimpleTextInput",
-                    required: true,
-                    size: "1em",
-                    placeholder: "프로젝트 이름",
+        return state.map((widget) => {
+          if (widget.id === action.id) {
+            const id = uniqueId(state);
+            switch (action.targetWidgetType) {
+              case "TextDisplay":
+                return {
+                  id: id,
+                  widgetType: "TextDisplay",
+                  placeholder: "안내문 내용",
+                  value: "",
+                  required: null,
+                  min: null,
+                  max: null,
+                } as TextDisplayWidgetData;
+              case "Choice":
+                return {
+                  id: id,
+                  widgetType: "Choice",
+                  required: false,
+                  min: "1",
+                  max: "1",
+                  question: {
+                    name: "question",
+                    placeholder: "질문 내용",
                     value: "",
-                  } as SimpleTextInputWidgetData)
-                : widget,
-            )
-          : state;
+                  },
+                  options: [
+                    {
+                      name: "option1",
+                      placeholder: "답변 1",
+                      value: "",
+                    },
+                  ],
+                } as ChoiceWidgetData;
+              default:
+                return widget;
+            }
+          } else {
+            return widget;
+          }
+        });
     }
   }
   return state.map((widget) => {
@@ -183,6 +247,56 @@ function reducer(state: WidgetData[], action: Action) {
             ...widget,
             value: action.value,
           };
+        case "Choice":
+          switch (action.actionType) {
+            case "Edit":
+              if (action.targetName === "question") {
+                return {
+                  ...widget,
+                  question: {
+                    ...(widget as ChoiceWidgetData).question,
+                    value: action.value,
+                  },
+                };
+              } else {
+                return {
+                  ...widget,
+                  options: (widget as ChoiceWidgetData).options.map((option) =>
+                    option.name === action.targetName
+                      ? { ...option, value: action.value }
+                      : option,
+                  ),
+                };
+              }
+            case "Add":
+              return {
+                ...widget,
+                max: (
+                  (widget as ChoiceWidgetData).options.length + 1
+                ).toString(),
+                options: (widget as ChoiceWidgetData).options.concat({
+                  name: `option${
+                    (widget as ChoiceWidgetData).options.length + 1
+                  }`,
+                  placeholder: `답변 ${
+                    (widget as ChoiceWidgetData).options.length + 1
+                  }`,
+                  value: "",
+                }),
+              };
+            case "Remove":
+              return {
+                ...widget,
+                max: (
+                  (widget as ChoiceWidgetData).options.length - 1
+                ).toString(),
+                options: (widget as ChoiceWidgetData).options
+                  .filter(({ name }) => name !== action.targetName)
+                  .map((option, i) => ({ ...option, max: `답변 ${i + 1}` })),
+              };
+            default:
+              return widget;
+          }
         default:
           console.log("No matching widget type!");
           return widget;
@@ -289,6 +403,25 @@ const templates: Templates = {
       min: null,
       max: null,
     },
+    {
+      id: "Choice",
+      widgetType: "Choice",
+      required: false,
+      min: "1",
+      max: "1",
+      question: {
+        name: "question",
+        placeholder: "질문 내용",
+        value: "",
+      },
+      options: [
+        {
+          name: "option1",
+          placeholder: "답변 1",
+          value: "",
+        },
+      ],
+    },
   ],
 };
 
@@ -375,6 +508,33 @@ const FormConstructor = () => {
     });
   };
 
+  const onChoiceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: "Choice",
+      actionType: "Edit",
+      targetName: e.target.name,
+      value: e.target.value,
+    });
+  };
+
+  const onAddOption = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: "Choice",
+      actionType: "Add",
+    });
+  };
+
+  const onRemoveOption = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      id: e.currentTarget.id,
+      widgetType: "Choice",
+      actionType: "Remove",
+      targetName: e.currentTarget.title,
+    });
+  };
+
   console.log(formData);
 
   return (
@@ -432,6 +592,20 @@ const FormConstructor = () => {
                   onWidgetTypeChange={onWidgetTypeChange}
                   onDeleteWidget={onDeleteWidget}
                   onChange={onTextDisplayChange}
+                  key={i}
+                />
+              );
+            case "Choice":
+              return (
+                <Choice
+                  {...widgetData}
+                  onToggleRequired={onToggleRequired}
+                  onMinMaxChange={onMinMaxChange}
+                  onWidgetTypeChange={onWidgetTypeChange}
+                  onDeleteWidget={onDeleteWidget}
+                  onChange={onChoiceChange}
+                  onAddOption={onAddOption}
+                  onRemoveOption={onRemoveOption}
                   key={i}
                 />
               );

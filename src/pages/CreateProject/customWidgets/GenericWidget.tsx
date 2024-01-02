@@ -93,7 +93,7 @@ const SelectWrapper = styled.div`
   top: 0;
   flex-direction: column;
   border: 1px solid lightgray;
-  border-radius: 5px;
+  border-radius: 8px;
   overflow: hidden;
   ${WidgetSelect}:not(:first-child) {
     border-top: 1px solid lightgray;
@@ -215,8 +215,7 @@ const NumInput = styled.input.attrs({ type: "number" })`
 
 export const customWidgets = {
   TextDisplay: "안내문",
-  dlsakj: "1",
-  askdj: "2",
+  Choice: "객관식 질문",
 };
 
 export interface GenericWidgetData {
@@ -291,7 +290,7 @@ const GenericWidget = (
                     <WidgetSelect
                       key={i}
                       id={id}
-                      title={widget[1]}
+                      title={widget[0]}
                       onClick={(e: React.MouseEvent<HTMLElement>) => {
                         onWidgetTypeChange(e);
                         toggleDropDown();
@@ -348,7 +347,12 @@ const GenericWidget = (
               개
             </ControlContainer>
           )}
-          {required !== null && <VerticalDivider />}
+
+          {required !== null && (
+            <ControlContainer>
+              <VerticalDivider />
+            </ControlContainer>
+          )}
           <ControlContainer id={id} onClick={onDeleteWidget}>
             위젯 삭제
             <DeleteIcon />

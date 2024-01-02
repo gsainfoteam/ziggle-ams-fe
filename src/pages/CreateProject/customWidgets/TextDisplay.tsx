@@ -10,7 +10,7 @@ const Container = styled.div`
   display: flex;
   position: relative;
   flex-direction: column;
-  font-size: 0.8em;
+  font-size: 1em;
 `;
 
 const UnderLine = styled.div`
