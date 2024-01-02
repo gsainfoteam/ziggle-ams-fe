@@ -90,6 +90,7 @@ const WidgetSelect = styled.div`
 const SelectWrapper = styled.div`
   display: flex;
   position: absolute;
+  z-index: 1;
   top: 0;
   flex-direction: column;
   border: 1px solid lightgray;
@@ -216,6 +217,8 @@ const NumInput = styled.input.attrs({ type: "number" })`
 export const customWidgets = {
   TextDisplay: "안내문",
   Choice: "객관식 질문",
+  TextAnswer: "주관식 질문",
+  Caution: "주의 사항",
 };
 
 export interface GenericWidgetData {

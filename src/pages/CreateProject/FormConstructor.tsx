@@ -2,8 +2,10 @@ import React, { useReducer } from "react";
 import styled from "styled-components";
 
 import templateImage1 from "./assets/templateImage1.png";
+import Caution, { CautionWidgetData } from "./customWidgets/Caution";
 import Choice, { ChoiceWidgetData } from "./customWidgets/Choice";
 import { GenericWidgetData } from "./customWidgets/GenericWidget";
+import TextAnswer, { TextAnswerWidgetData } from "./customWidgets/TextAnswer";
 import TextDisplay, {
   TextDisplayWidgetData,
 } from "./customWidgets/TextDisplay";
@@ -36,7 +38,9 @@ export type WidgetData =
   | AccordionInfoWidgetData
   | AccordionCarouselWidgetData
   | TextDisplayWidgetData
-  | ChoiceWidgetData;
+  | ChoiceWidgetData
+  | TextAnswerWidgetData
+  | CautionWidgetData;
 
 interface SimpleTextInputAction {
   id: string;
@@ -118,6 +122,18 @@ interface ChoiceRemoveOptionAction {
   targetName: string;
 }
 
+interface TextAnswerEditAction {
+  id: string;
+  widgetType: "TextAnswer";
+  value: string;
+}
+
+interface CautionEditAction {
+  id: string;
+  widgetType: "Caution";
+  value: string;
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
@@ -130,7 +146,9 @@ type Action =
   | ChangeWidgetTypeAction
   | ChoiceEditAction
   | ChoiceAddOptionAction
-  | ChoiceRemoveOptionAction;
+  | ChoiceRemoveOptionAction
+  | TextAnswerEditAction
+  | CautionEditAction;
 
 function uniqueId(formData: WidgetData[], length = 16) {
   const generateId = () =>
@@ -207,6 +225,26 @@ function reducer(state: WidgetData[], action: Action) {
                     },
                   ],
                 } as ChoiceWidgetData;
+              case "TextAnswer":
+                return {
+                  id: "TextAnswer",
+                  widgetType: "TextAnswer",
+                  placeholder: "주관식 질문",
+                  value: "",
+                  required: false,
+                  min: null,
+                  max: null,
+                } as TextAnswerWidgetData;
+              case "Caution":
+                return {
+                  id: "Caution",
+                  widgetType: "Caution",
+                  placeholder: "⚠️ 주의사항 텍스트 입력 ⚠️",
+                  value: "",
+                  required: null,
+                  min: null,
+                  max: null,
+                } as CautionWidgetData;
               default:
                 return widget;
             }
@@ -297,6 +335,16 @@ function reducer(state: WidgetData[], action: Action) {
             default:
               return widget;
           }
+        case "TextAnswer":
+          return {
+            ...widget,
+            value: action.value,
+          };
+        case "Caution":
+          return {
+            ...widget,
+            value: action.value,
+          };
         default:
           console.log("No matching widget type!");
           return widget;
@@ -422,6 +470,24 @@ const templates: Templates = {
         },
       ],
     },
+    {
+      id: "TextAnswer",
+      widgetType: "TextAnswer",
+      placeholder: "주관식 질문",
+      value: "",
+      required: false,
+      min: null,
+      max: null,
+    },
+    {
+      id: "Caution",
+      widgetType: "Caution",
+      placeholder: "⚠️ 주의사항 텍스트 입력 ⚠️",
+      value: "",
+      required: null,
+      min: null,
+      max: null,
+    },
   ],
 };
 
@@ -535,6 +601,22 @@ const FormConstructor = () => {
     });
   };
 
+  const onTextAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: "TextAnswer",
+      value: e.target.value,
+    });
+  };
+
+  const onCautionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    dispatch({
+      id: e.target.id,
+      widgetType: "Caution",
+      value: e.target.value,
+    });
+  };
+
   console.log(formData);
 
   return (
@@ -606,6 +688,30 @@ const FormConstructor = () => {
                   onChange={onChoiceChange}
                   onAddOption={onAddOption}
                   onRemoveOption={onRemoveOption}
+                  key={i}
+                />
+              );
+            case "TextAnswer":
+              return (
+                <TextAnswer
+                  {...widgetData}
+                  onToggleRequired={onToggleRequired}
+                  onMinMaxChange={onMinMaxChange}
+                  onWidgetTypeChange={onWidgetTypeChange}
+                  onDeleteWidget={onDeleteWidget}
+                  onChange={onTextAnswerChange}
+                  key={i}
+                />
+              );
+            case "Caution":
+              return (
+                <Caution
+                  {...widgetData}
+                  onToggleRequired={onToggleRequired}
+                  onMinMaxChange={onMinMaxChange}
+                  onWidgetTypeChange={onWidgetTypeChange}
+                  onDeleteWidget={onDeleteWidget}
+                  onChange={onCautionChange}
                   key={i}
                 />
               );
