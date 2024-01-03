@@ -20,6 +20,7 @@ const Paper = styled.div<PaperProps>`
   height: 640px;
   border-radius: 10px;
   background-color: white;
+  color: black;
   ${({ outline = false }) => outline && "border: 1px solid darkgray"};
   transform: ${({ focused = true }) => !focused && "scale(0.8)"};
   transition: transform 0.5s ease;
