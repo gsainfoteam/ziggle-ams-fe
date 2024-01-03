@@ -92,52 +92,6 @@ const templates: Templates = {
       ],
       selectedTemplate: null,
     },
-    {
-      id: "TextDisplay",
-      widgetType: "TextDisplay",
-      placeholder: "안내문 내용",
-      value: "",
-      required: null,
-      min: null,
-      max: null,
-    },
-    {
-      id: "Choice",
-      widgetType: "Choice",
-      required: false,
-      min: "1",
-      max: "1",
-      question: {
-        name: "question",
-        placeholder: "질문 내용",
-        value: "",
-      },
-      options: [
-        {
-          name: "option1",
-          placeholder: "답변 1",
-          value: "",
-        },
-      ],
-    },
-    {
-      id: "TextAnswer",
-      widgetType: "TextAnswer",
-      placeholder: "주관식 질문",
-      value: "",
-      required: false,
-      min: null,
-      max: null,
-    },
-    {
-      id: "Caution",
-      widgetType: "Caution",
-      placeholder: "⚠️ 주의사항 텍스트 입력 ⚠️",
-      value: "",
-      required: null,
-      min: null,
-      max: null,
-    },
   ],
   "코딩동아리 모집": [
     {
