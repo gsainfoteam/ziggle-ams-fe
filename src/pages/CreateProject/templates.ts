@@ -133,51 +133,6 @@ const templates: Templates = {
       isNoLimit: false,
     },
     {
-      id: "AccordionInfo",
-      widgetType: "AccordionInfo",
-      required: false,
-    },
-    {
-      id: "AccordionCarousel",
-      widgetType: "AccordionCarousel",
-      required: false,
-      templates: [
-        {
-          name: "코딩동아리 모집",
-          imagePath: templateImage1,
-        },
-        {
-          name: "행사 참석 여부",
-          imagePath: templateImage1,
-        },
-        {
-          name: "의견 수집",
-          imagePath: templateImage1,
-        },
-        {
-          name: "강의 후 설문",
-          imagePath: templateImage1,
-        },
-        {
-          name: "코딩동아리 모집2",
-          imagePath: templateImage1,
-        },
-        {
-          name: "행사 참석 여부2",
-          imagePath: templateImage1,
-        },
-        {
-          name: "의견 수집2",
-          imagePath: templateImage1,
-        },
-        {
-          name: "강의 후 설문2",
-          imagePath: templateImage1,
-        },
-      ],
-      selectedTemplate: null,
-    },
-    {
       id: "TextDisplay",
       widgetType: "TextDisplay",
       placeholder: "안내문 내용",
