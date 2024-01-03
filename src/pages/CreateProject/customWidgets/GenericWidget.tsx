@@ -5,7 +5,10 @@ import { RxDragHandleDots2 } from "react-icons/rx";
 import { RxDividerVertical } from "react-icons/rx";
 import styled from "styled-components";
 
-import widgetIcon from "../assets/TextDisplay.png";
+import cautionWidgetIcon from "../assets/cautionWidgetIcon.png";
+import choiceWidgetIcon from "../assets/choiceWidgetIcon.png";
+import textAnswerWidgetIcon from "../assets/textAnswerWidgetIcon.png";
+import textDisplayWidgetIcon from "../assets/textDisplayWidgetIcon.png";
 
 const Handle = styled(RxDragHandleDots2)`
   display: flex;
@@ -221,6 +224,13 @@ export const customWidgets = {
   Caution: "주의 사항",
 };
 
+const widgetIcons = {
+  TextDisplay: textDisplayWidgetIcon,
+  Choice: choiceWidgetIcon,
+  TextAnswer: textAnswerWidgetIcon,
+  Caution: cautionWidgetIcon,
+};
+
 export interface GenericWidgetData {
   id: string;
   widgetType: string;
@@ -285,7 +295,9 @@ const GenericWidget = (
               ref={widgetSelectionRef}
             >
               <WidgetSelect onClick={toggleDropDown}>
-                <WidgetIcon src={widgetIcon} />
+                <WidgetIcon
+                  src={widgetIcons[widgetType as keyof typeof customWidgets]}
+                />
                 {customWidgets[widgetType as keyof typeof customWidgets]}
                 <TriangleIcon $isDropDownActive={isDropDownActive} />
               </WidgetSelect>
@@ -302,7 +314,11 @@ const GenericWidget = (
                         toggleDropDown();
                       }}
                     >
-                      <WidgetIcon src={widgetIcon} />
+                      <WidgetIcon
+                        src={
+                          widgetIcons[widget[0] as keyof typeof customWidgets]
+                        }
+                      />
                       {widget[1]}
                     </WidgetSelect>
                   ))}

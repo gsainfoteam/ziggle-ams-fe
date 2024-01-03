@@ -1,11 +1,23 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
 
-import Caution, { CautionWidgetData } from "./customWidgets/Caution";
-import Choice, { ChoiceWidgetData } from "./customWidgets/Choice";
+import Action from "./actionTypes";
+import AddElementButton from "./AddElementButton";
+import Caution, {
+  CautionWidgetData,
+  defaultCautionWidgetData,
+} from "./customWidgets/Caution";
+import Choice, {
+  ChoiceWidgetData,
+  defaultChoiceWidgetData,
+} from "./customWidgets/Choice";
 import { GenericWidgetData } from "./customWidgets/GenericWidget";
-import TextAnswer, { TextAnswerWidgetData } from "./customWidgets/TextAnswer";
+import TextAnswer, {
+  defaultTextAnswerWidgetData,
+  TextAnswerWidgetData,
+} from "./customWidgets/TextAnswer";
 import TextDisplay, {
+  defaultTextDisplayWidgetData,
   TextDisplayWidgetData,
 } from "./customWidgets/TextDisplay";
 import AccordionCarousel, {
@@ -24,11 +36,27 @@ import SimpleTextInput, {
   SimpleTextInputWidgetData,
 } from "./defaultWidgets/SimpleTextInput";
 import Paper from "./Paper";
+import SubmitButton from "./SubmitButton";
 import templates from "./templates";
 
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
+`;
+
+const ActionSection = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+`;
+
+const Divider = styled.div`
+  display: flex;
+  background-color: lightgray;
+  width: 100%;
+  height: 2px;
 `;
 
 export type WidgetData =
@@ -41,121 +69,6 @@ export type WidgetData =
   | ChoiceWidgetData
   | TextAnswerWidgetData
   | CautionWidgetData;
-
-interface SimpleTextInputAction {
-  id: string;
-  widgetType: "SimpleTextInput";
-  value: string;
-}
-
-interface DurationInputAction {
-  id: string;
-  widgetType: "DurationInput";
-  target: "start" | "end";
-  value: string;
-}
-
-interface RecruitNumInputAction {
-  id: string;
-  widgetType: "RecruitNumInput";
-  target: "isNoLimit" | "recruitNum";
-  value: boolean | string;
-}
-
-interface AccordionCarouselAction {
-  id: string;
-  widgetType: "AccordionCarousel";
-  selected: string | null;
-}
-
-interface TextDisplayAction {
-  id: string;
-  widgetType: "TextDisplay";
-  value: string;
-}
-
-interface DeleteWidgetAction {
-  id: string;
-  widgetType: null;
-  actionType: "deleteWidget";
-}
-
-interface ToggleRequiredAction {
-  id: string;
-  widgetType: null;
-  actionType: "toggleRequired";
-}
-
-interface ChangeMinMaxAction {
-  id: string;
-  widgetType: null;
-  actionType: "changeMinMax";
-  minOrMax: "min" | "max";
-  value: string;
-}
-
-interface ChangeWidgetTypeAction {
-  id: string;
-  widgetType: null;
-  actionType: "changeWidgetType";
-  targetWidgetType: string;
-}
-
-interface ChoiceEditAction {
-  id: string;
-  widgetType: "Choice";
-  actionType: "Edit";
-  targetName: string;
-  value: string;
-}
-
-interface ChoiceAddOptionAction {
-  id: string;
-  widgetType: "Choice";
-  actionType: "Add";
-}
-
-interface ChoiceRemoveOptionAction {
-  id: string;
-  widgetType: "Choice";
-  actionType: "Remove";
-  targetName: string;
-}
-
-interface TextAnswerEditAction {
-  id: string;
-  widgetType: "TextAnswer";
-  value: string;
-}
-
-interface CautionEditAction {
-  id: string;
-  widgetType: "Caution";
-  value: string;
-}
-
-interface ApplyTemplateAction {
-  id: string;
-  widgetType: null;
-  actionType: "ApplyTemplate";
-}
-
-type Action =
-  | SimpleTextInputAction
-  | DurationInputAction
-  | RecruitNumInputAction
-  | AccordionCarouselAction
-  | TextDisplayAction
-  | DeleteWidgetAction
-  | ToggleRequiredAction
-  | ChangeMinMaxAction
-  | ChangeWidgetTypeAction
-  | ChoiceEditAction
-  | ChoiceAddOptionAction
-  | ChoiceRemoveOptionAction
-  | TextAnswerEditAction
-  | CautionEditAction
-  | ApplyTemplateAction;
 
 function uniqueId(formData: WidgetData[], length = 16) {
   const generateId = () =>
@@ -172,204 +85,193 @@ function uniqueId(formData: WidgetData[], length = 16) {
 }
 
 function reducer(state: WidgetData[], action: Action) {
-  if (action.widgetType === null) {
-    switch (action.actionType) {
-      case "deleteWidget":
-        return state.filter((widget) => widget.id !== action.id);
-      case "toggleRequired":
-        return state.map((widget) =>
-          widget.id === action.id
-            ? { ...widget, required: !widget.required }
-            : widget,
-        );
-      case "changeMinMax":
-        return state.map((widget) => {
-          if (widget.id === action.id) {
-            const changedWidget = {
+  const id = uniqueId(state);
+
+  switch (action.actionType) {
+    case "SimpleTextInputAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
               ...widget,
-              [action.minOrMax]: action.value,
-            };
-            if (
-              parseInt((changedWidget as GenericWidgetData).min ?? "1") <=
-              parseInt((changedWidget as GenericWidgetData).max ?? "9999")
-            )
-              return changedWidget;
-            else return widget;
-          } else return widget;
-        });
-      case "changeWidgetType":
-        return state.map((widget) => {
-          if (widget.id === action.id) {
-            const id = uniqueId(state);
-            switch (action.targetWidgetType) {
-              case "TextDisplay":
-                return {
-                  id: id,
-                  widgetType: "TextDisplay",
-                  placeholder: "안내문 내용",
-                  value: "",
-                  required: null,
-                  min: null,
-                  max: null,
-                } as TextDisplayWidgetData;
-              case "Choice":
-                return {
-                  id: id,
-                  widgetType: "Choice",
-                  required: false,
-                  min: "1",
-                  max: "1",
-                  question: {
-                    name: "question",
-                    placeholder: "질문 내용",
-                    value: "",
-                  },
-                  options: [
-                    {
-                      name: "option1",
-                      placeholder: "답변 1",
-                      value: "",
-                    },
-                  ],
-                } as ChoiceWidgetData;
-              case "TextAnswer":
-                return {
-                  id: "TextAnswer",
-                  widgetType: "TextAnswer",
-                  placeholder: "주관식 질문",
-                  value: "",
-                  required: false,
-                  min: null,
-                  max: null,
-                } as TextAnswerWidgetData;
-              case "Caution":
-                return {
-                  id: "Caution",
-                  widgetType: "Caution",
-                  placeholder: "⚠️ 주의사항 텍스트 입력 ⚠️",
-                  value: "",
-                  required: null,
-                  min: null,
-                  max: null,
-                } as CautionWidgetData;
-              default:
-                return widget;
-            }
-          } else {
-            return widget;
-          }
-        });
-      case "ApplyTemplate":
-        return (
-          templates[
-            (
-              state.filter(
-                (widget) => widget.widgetType === "AccordionCarousel",
-              )[0] as AccordionCarouselWidgetData
-            ).selectedTemplate ?? "default"
-          ] ?? state
-        );
-    }
-  }
-  return state.map((widget) => {
-    if (widget.id === action.id) {
-      switch (action.widgetType) {
-        case "SimpleTextInput":
-          return {
-            ...widget,
-            value: action.value,
-          };
-        case "DurationInput":
-          return {
-            ...widget,
-            [action.target]: {
-              ...(widget as DurationInputWidgetData)[action.target],
               value: action.value,
-            },
-          };
-        case "RecruitNumInput":
-          return {
-            ...widget,
-            [action.target]: action.value,
-          };
-        case "AccordionCarousel":
-          return {
-            ...widget,
-            selectedTemplate: action.selected,
-          };
-        case "TextDisplay":
-          return {
-            ...widget,
-            value: action.value,
-          };
-        case "Choice":
-          switch (action.actionType) {
-            case "Edit":
-              if (action.targetName === "question") {
-                return {
-                  ...widget,
-                  question: {
-                    ...(widget as ChoiceWidgetData).question,
-                    value: action.value,
-                  },
-                };
-              } else {
-                return {
-                  ...widget,
-                  options: (widget as ChoiceWidgetData).options.map((option) =>
-                    option.name === action.targetName
-                      ? { ...option, value: action.value }
-                      : option,
-                  ),
-                };
+            }
+          : widget,
+      );
+    case "DurationInputAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              [action.target]: {
+                ...(widget as DurationInputWidgetData)[action.target],
+                value: action.value,
+              },
+            }
+          : widget,
+      );
+    case "RecruitNumInputAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              [action.target]: action.value,
+            }
+          : widget,
+      );
+    case "AccordionCarouselAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              selectedTemplate: action.selected,
+            }
+          : widget,
+      );
+    case "TextDisplayAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              value: action.value,
+            }
+          : widget,
+      );
+    case "ChoiceEditAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? action.targetName === "question"
+            ? {
+                ...widget,
+                question: {
+                  ...(widget as ChoiceWidgetData).question,
+                  value: action.value,
+                },
               }
-            case "Add":
-              return {
+            : {
                 ...widget,
-                max: (
-                  (widget as ChoiceWidgetData).options.length + 1
-                ).toString(),
-                options: (widget as ChoiceWidgetData).options
-                  .concat({
-                    name: "",
-                    placeholder: "",
-                    value: "",
-                  })
-                  .map((option, i) => ({
-                    ...option,
-                    name: `option${i + 1}`,
-                    placeholder: `답변 ${i + 1}`,
-                  })),
-              };
-            case "Remove":
-              return {
-                ...widget,
-                max: (
-                  (widget as ChoiceWidgetData).options.length - 1
-                ).toString(),
-                options: (widget as ChoiceWidgetData).options
-                  .filter(({ name }) => name !== action.targetName)
-                  .map((option, i) => ({ ...option, max: `답변 ${i + 1}` })),
-              };
+                options: (widget as ChoiceWidgetData).options.map((option) =>
+                  option.name === action.targetName
+                    ? { ...option, value: action.value }
+                    : option,
+                ),
+              }
+          : widget,
+      );
+    case "ChoiceAddOptionAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              max: ((widget as ChoiceWidgetData).options.length + 1).toString(),
+              options: (widget as ChoiceWidgetData).options
+                .concat({
+                  name: "",
+                  placeholder: "",
+                  value: "",
+                })
+                .map((option, i) => ({
+                  ...option,
+                  name: `option${i + 1}`,
+                  placeholder: `답변 ${i + 1}`,
+                })),
+            }
+          : widget,
+      );
+    case "ChoiceRemoveOptionAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              max: ((widget as ChoiceWidgetData).options.length - 1).toString(),
+              options: (widget as ChoiceWidgetData).options
+                .filter(({ name }) => name !== action.targetName)
+                .map((option, i) => ({ ...option, max: `답변 ${i + 1}` })),
+            }
+          : widget,
+      );
+    case "TextAnswerEditAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              value: action.value,
+            }
+          : widget,
+      );
+    case "CautionEditAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? {
+              ...widget,
+              value: action.value,
+            }
+          : widget,
+      );
+    case "DeleteWidgetAction":
+      return state.filter((widget) => widget.id !== action.id);
+    case "ToggleRequiredAction":
+      return state.map((widget) =>
+        widget.id === action.id
+          ? { ...widget, required: !widget.required }
+          : widget,
+      );
+    case "ChangeMinMaxAction":
+      return state.map((widget) => {
+        if (widget.id === action.id) {
+          const changedWidget = {
+            ...widget,
+            [action.minOrMax]: action.value,
+          };
+          if (
+            parseInt((changedWidget as GenericWidgetData).min ?? "1") <=
+            parseInt((changedWidget as GenericWidgetData).max ?? "9999")
+          )
+            return changedWidget;
+          else return widget;
+        } else return widget;
+      });
+    case "ChangeWidgetTypeAction":
+      return state.map((widget) => {
+        if (widget.id === action.id) {
+          switch (action.targetWidgetType) {
+            case "TextDisplay":
+              return { ...defaultTextDisplayWidgetData, id: id };
+            case "Choice":
+              return { ...defaultChoiceWidgetData, id: id };
+            case "TextAnswer":
+              return { ...defaultTextAnswerWidgetData, id: id };
+            case "Caution":
+              return { ...defaultCautionWidgetData, id: id };
             default:
               return widget;
           }
-        case "TextAnswer":
-          return {
-            ...widget,
-            value: action.value,
-          };
-        case "Caution":
-          return {
-            ...widget,
-            value: action.value,
-          };
-        default:
-          console.log("No matching widget type!");
+        } else {
           return widget;
-      }
-    } else return widget;
-  });
+        }
+      });
+    case "ApplyTemplateAction":
+      return (
+        templates[
+          (
+            state.filter(
+              (widget) => widget.widgetType === "AccordionCarousel",
+            )[0] as AccordionCarouselWidgetData
+          ).selectedTemplate ?? "default"
+        ] ?? state
+      );
+    case "AddElementAction":
+      return state.concat({
+        id: uniqueId(state),
+        widgetType: "TextAnswer",
+        placeholder: "주관식 질문",
+        value: "",
+        required: false,
+        min: null,
+        max: null,
+      } as TextAnswerWidgetData);
+    default:
+      return state;
+  }
 }
 
 const FormConstructor = () => {
@@ -377,16 +279,16 @@ const FormConstructor = () => {
 
   const onSimpleTextInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
+      actionType: "SimpleTextInputAction",
       id: e.target.id,
-      widgetType: "SimpleTextInput",
       value: e.target.value,
     });
   };
 
   const onDurationInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
+      actionType: "DurationInputAction",
       id: e.target.id,
-      widgetType: "DurationInput",
       target: e.target.name as "start" | "end",
       value: e.target.value,
     });
@@ -394,8 +296,8 @@ const FormConstructor = () => {
 
   const onRecruitNumInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
+      actionType: "RecruitNumInputAction",
       id: e.target.id,
-      widgetType: "RecruitNumInput",
       target: e.target.name as "isNoLimit" | "recruitNum",
       value:
         (e.target.name as "isNoLimit" | "recruitNum") === "isNoLimit"
@@ -406,41 +308,38 @@ const FormConstructor = () => {
 
   const onAccordionCarouselChange = (e: React.MouseEvent<HTMLDivElement>) => {
     dispatch({
+      actionType: "AccordionCarouselAction",
       id: e.currentTarget.id,
-      widgetType: "AccordionCarousel",
       selected: e.currentTarget.title,
-    });
-  };
-
-  const onDeleteWidget = (e: React.MouseEvent<HTMLElement>) => {
-    dispatch({
-      id: e.currentTarget.id,
-      widgetType: null,
-      actionType: "deleteWidget",
     });
   };
 
   const onTextDisplayChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
+      actionType: "TextDisplayAction",
       id: e.target.id,
-      widgetType: "TextDisplay",
       value: e.target.value,
+    });
+  };
+
+  const onDeleteWidget = (e: React.MouseEvent<HTMLElement>) => {
+    dispatch({
+      actionType: "DeleteWidgetAction",
+      id: e.currentTarget.id,
     });
   };
 
   const onToggleRequired = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
+      actionType: "ToggleRequiredAction",
       id: e.currentTarget.id,
-      widgetType: null,
-      actionType: "toggleRequired",
     });
   };
 
   const onMinMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({
+      actionType: "ChangeMinMaxAction",
       id: e.currentTarget.id,
-      widgetType: null,
-      actionType: "changeMinMax",
       minOrMax: e.currentTarget.name as "min" | "max",
       value: e.currentTarget.value,
     });
@@ -448,18 +347,16 @@ const FormConstructor = () => {
 
   const onWidgetTypeChange = (e: React.MouseEvent<HTMLElement>) => {
     dispatch({
+      actionType: "ChangeWidgetTypeAction",
       id: e.currentTarget.id,
-      widgetType: null,
-      actionType: "changeWidgetType",
       targetWidgetType: e.currentTarget.title,
     });
   };
 
   const onChoiceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
+      actionType: "ChoiceEditAction",
       id: e.target.id,
-      widgetType: "Choice",
-      actionType: "Edit",
       targetName: e.target.name,
       value: e.target.value,
     });
@@ -467,42 +364,44 @@ const FormConstructor = () => {
 
   const onAddOption = (e: React.MouseEvent<HTMLElement>) => {
     dispatch({
+      actionType: "ChoiceAddOptionAction",
       id: e.currentTarget.id,
-      widgetType: "Choice",
-      actionType: "Add",
     });
   };
 
   const onRemoveOption = (e: React.MouseEvent<HTMLElement>) => {
     dispatch({
+      actionType: "ChoiceRemoveOptionAction",
       id: e.currentTarget.id,
-      widgetType: "Choice",
-      actionType: "Remove",
       targetName: e.currentTarget.title,
     });
   };
 
   const onTextAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
+      actionType: "TextAnswerEditAction",
       id: e.target.id,
-      widgetType: "TextAnswer",
       value: e.target.value,
     });
   };
 
   const onCautionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
+      actionType: "CautionEditAction",
       id: e.target.id,
-      widgetType: "Caution",
       value: e.target.value,
     });
   };
 
-  const onApplyTemplate = (e: React.MouseEvent<HTMLElement>) => {
+  const onApplyTemplate = () => {
     dispatch({
-      id: e.currentTarget.id,
-      widgetType: null,
-      actionType: "ApplyTemplate",
+      actionType: "ApplyTemplateAction",
+    });
+  };
+
+  const onAddElement = () => {
+    dispatch({
+      actionType: "AddElementAction",
     });
   };
 
@@ -605,8 +504,16 @@ const FormConstructor = () => {
                   key={i}
                 />
               );
+            default:
+              return null;
           }
         })}
+        <ActionSection>
+          <Divider />
+          <AddElementButton onAddElement={onAddElement} />
+          <SubmitButton />
+          <Divider />
+        </ActionSection>
       </Paper>
     </Wrapper>
   );

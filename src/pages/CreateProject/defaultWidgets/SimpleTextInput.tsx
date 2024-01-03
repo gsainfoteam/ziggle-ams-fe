@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const Container = styled.div<{ size: string }>`
   display: flex;
+  width: 100%;
   position: relative;
   flex-direction: column;
   font-size: ${({ size }) => size};

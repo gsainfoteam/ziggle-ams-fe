@@ -60,6 +60,16 @@ export interface TextDisplayWidgetData extends GenericWidgetData {
   value: string;
 }
 
+export const defaultTextDisplayWidgetData: TextDisplayWidgetData = {
+  id: "",
+  widgetType: "TextDisplay",
+  placeholder: "안내문 내용",
+  value: "",
+  required: null,
+  min: null,
+  max: null,
+};
+
 export interface TextDisplayProps
   extends TextDisplayWidgetData,
     Omit<GenericWidgetProps, "widgetType"> {

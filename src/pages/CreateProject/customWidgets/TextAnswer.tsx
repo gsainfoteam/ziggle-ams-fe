@@ -60,6 +60,16 @@ export interface TextAnswerWidgetData extends GenericWidgetData {
   value: string;
 }
 
+export const defaultTextAnswerWidgetData: TextAnswerWidgetData = {
+  id: "",
+  widgetType: "TextAnswer",
+  placeholder: "주관식 질문",
+  value: "",
+  required: false,
+  min: null,
+  max: null,
+};
+
 export interface TextAnswerProps
   extends TextAnswerWidgetData,
     Omit<GenericWidgetProps, "widgetType"> {

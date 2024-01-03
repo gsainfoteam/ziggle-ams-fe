@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+import ActionButton from "../ActionButton";
 import arrowDown from "../assets/arrowDown.svg";
 import close from "../assets/close.svg";
 import ziggleImage from "../assets/ziggle.png";
@@ -60,6 +61,7 @@ const ContentSection = styled.div`
 const Image = styled.img`
   display: flex;
   width: 250px;
+  object-fit: contain;
   border-radius: 5px;
 `;
 
@@ -73,26 +75,6 @@ const ActionSection = styled.div`
   display: flex;
   justify-content: center;
   margin: 20px;
-`;
-
-const ActionButton = styled.button`
-  display: flex;
-  padding: 0.7em 1.5em;
-  background-color: white;
-  border: 1px solid #eb6263;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.8em;
-  color: #eb6263;
-  &:hover {
-    cursor: pointer;
-    background-color: #eb6263;
-    color: white;
-    border: 1px solid none;
-  }
-  &:active {
-    box-shadow: none;
-  }
 `;
 
 export interface AccordionInfoWidgetData {

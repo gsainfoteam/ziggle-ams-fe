@@ -137,6 +137,26 @@ export interface ChoiceWidgetData extends GenericWidgetData {
   }[];
 }
 
+export const defaultChoiceWidgetData: ChoiceWidgetData = {
+  id: "",
+  widgetType: "Choice",
+  required: false,
+  min: "1",
+  max: "1",
+  question: {
+    name: "question",
+    placeholder: "질문 내용",
+    value: "",
+  },
+  options: [
+    {
+      name: "option1",
+      placeholder: "답변 1",
+      value: "",
+    },
+  ],
+};
+
 export interface ChoiceProps
   extends ChoiceWidgetData,
     Omit<GenericWidgetProps, "widgetType"> {

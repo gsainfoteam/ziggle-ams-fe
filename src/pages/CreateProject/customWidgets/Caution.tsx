@@ -60,6 +60,15 @@ export interface CautionWidgetData extends GenericWidgetData {
   value: string;
 }
 
+export const defaultCautionWidgetData: CautionWidgetData = {
+  id: "",
+  widgetType: "Caution",
+  placeholder: "⚠️ 주의사항 텍스트 입력 ⚠️",
+  value: "",
+  required: null,
+  min: null,
+  max: null,
+};
 export interface CutionProps
   extends CautionWidgetData,
     Omit<GenericWidgetProps, "widgetType"> {
