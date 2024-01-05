@@ -405,8 +405,6 @@ const FormConstructor = () => {
     });
   };
 
-  console.log(formData);
-
   return (
     <Wrapper>
       <Paper>
