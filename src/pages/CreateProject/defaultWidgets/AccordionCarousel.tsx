@@ -134,7 +134,7 @@ export interface AccordionCarouselProps extends AccordionCarouselWidgetData {
   key: number;
   onChange: (e: React.MouseEvent<HTMLDivElement>) => void;
   onDeleteWidget: (e: React.MouseEvent<HTMLDivElement>) => void;
-  onApplyTemplate: (e: React.MouseEvent<HTMLElement>) => void;
+  onApplyTemplate: () => void;
 }
 
 const AccordionCarousel = (props: AccordionCarouselProps) => {

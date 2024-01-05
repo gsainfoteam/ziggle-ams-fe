@@ -2,11 +2,7 @@ import { TiPlus } from "react-icons/ti";
 
 import { ActionButton } from "./styles";
 
-const AddElementButton = ({
-  onAddElement,
-}: {
-  onAddElement: (e: React.MouseEvent<HTMLElement>) => void;
-}) => {
+const AddElementButton = ({ onAddElement }: { onAddElement: () => void }) => {
   return (
     <ActionButton onClick={onAddElement}>
       <TiPlus size="1.2em" />
