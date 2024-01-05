@@ -270,7 +270,7 @@ function reducer(state: WidgetData[], action: Action) {
         max: null,
       } as TextAnswerWidgetData);
     default:
-      return state;
+      throw new Error("UnImplemented action!");
   }
 }
 
@@ -503,7 +503,7 @@ const FormConstructor = () => {
                 />
               );
             default:
-              return null;
+              throw new Error("Unimplemented widget!");
           }
         })}
         <ActionSection>
