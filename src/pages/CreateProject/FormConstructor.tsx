@@ -35,7 +35,7 @@ import RecruitNumInput, {
 import SimpleTextInput, {
   SimpleTextInputWidgetData,
 } from "./defaultWidgets/SimpleTextInput";
-import Paper from "./Paper";
+import { Paper } from "./styles";
 import SubmitButton from "./SubmitButton";
 import templates from "./templates";
 

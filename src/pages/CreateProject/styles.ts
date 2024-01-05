@@ -1,5 +1,20 @@
 import styled from "styled-components";
 
+const Paper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  width: 100%;
+
+  padding: 70px;
+
+  border: 1px solid lightgray;
+  border-radius: 8px;
+  background-color: white;
+`;
+
 const ActionButton = styled.button`
   display: flex;
   justify-content: center;
@@ -32,4 +47,4 @@ const ActionButton = styled.button`
   }
 `;
 
-export default ActionButton;
+export { ActionButton, Paper };

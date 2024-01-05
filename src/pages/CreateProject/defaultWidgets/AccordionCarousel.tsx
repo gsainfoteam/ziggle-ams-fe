@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 
-import ActionButton from "../ActionButton";
 import arrowDown from "../assets/arrowDown.svg";
 import close from "../assets/close.svg";
+import { ActionButton } from "../styles";
 
 const Container = styled.div`
   display: flex;

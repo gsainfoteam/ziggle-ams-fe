@@ -1,6 +1,6 @@
 import { FaCheck } from "react-icons/fa6";
 
-import ActionButton from "./ActionButton";
+import { ActionButton } from "./styles";
 
 const AddElementButton = () => {
   return (

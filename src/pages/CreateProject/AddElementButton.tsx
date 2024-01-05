@@ -1,6 +1,6 @@
 import { TiPlus } from "react-icons/ti";
 
-import ActionButton from "./ActionButton";
+import { ActionButton } from "./styles";
 
 const AddElementButton = ({
   onAddElement,
