@@ -284,7 +284,7 @@ const GenericWidget = (
   }, [widgetSelectionRef]);
 
   return (
-    <Container id={id}>
+    <Container>
       <Handle />
       <MainContainer>
         <HeadSection>

@@ -63,7 +63,7 @@ const SimpleTextInput = (props: SimpleTextInputProps) => {
   const { id, size, placeholder, value, onChange } = props;
 
   return (
-    <Container id={id} size={size}>
+    <Container size={size}>
       <Input
         id={id}
         placeholder={placeholder}

@@ -54,7 +54,7 @@ const DurationInput = (props: DurationInputProps) => {
   const { id, start, end, onChange } = props;
 
   return (
-    <Container id={id}>
+    <Container>
       <Title>모집 기간</Title>
       <DatePicker type="date" id={id} {...start} onChange={onChange} />
       ~

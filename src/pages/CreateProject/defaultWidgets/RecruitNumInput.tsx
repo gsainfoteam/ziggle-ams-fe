@@ -65,7 +65,7 @@ const RecruitNumInput = (props: RecruitNumInputProps) => {
   const { id, isNoLimit, recruitNum, onChange } = props;
 
   return (
-    <Container id={id}>
+    <Container>
       <Title>모집 인원</Title>
       <Label>
         <CheckBox

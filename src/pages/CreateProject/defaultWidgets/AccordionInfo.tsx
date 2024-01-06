@@ -96,7 +96,7 @@ const AccordionInfo = (props: AccordionInfoProps) => {
   };
 
   return (
-    <Container id={id}>
+    <Container>
       <HeadSection>
         <Wrapper onClick={toggle}>
           <Arrow isExpanded={isExpanded} />

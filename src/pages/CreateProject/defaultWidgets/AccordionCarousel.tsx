@@ -153,7 +153,7 @@ const AccordionCarousel = (props: AccordionCarouselProps) => {
   };
 
   return (
-    <Container id={id}>
+    <Container>
       <HeadSection>
         <Wrapper onClick={toggle}>
           <Arrow isExpanded={isExpanded} />
