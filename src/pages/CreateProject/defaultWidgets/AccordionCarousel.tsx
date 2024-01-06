@@ -57,7 +57,7 @@ const ContentSection = styled.div`
   gap: 20px;
   padding: var(--padding);
   margin: 0 var(--margin-side);
-  width: ${`calc(100% - var(--margin-side) * 2 - var(--padding) * 2)`};
+  width: calc(100% - var(--margin-side) * 2 - var(--padding) * 2);
   height: 230px;
 `;
 
