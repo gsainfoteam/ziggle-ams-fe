@@ -1,5 +1,6 @@
 import React, { useReducer } from "react";
 import styled from "styled-components";
+import { v4 as uuidv4 } from "uuid";
 
 import Action from "./actionTypes";
 import AddElementButton from "./AddElementButton";
@@ -70,23 +71,7 @@ export type WidgetData =
   | TextAnswerWidgetData
   | CautionWidgetData;
 
-function uniqueId(formData: WidgetData[], length = 16) {
-  const generateId = () =>
-    Math.ceil(Math.random() * Date.now())
-      .toPrecision(length)
-      .toString()
-      .replace(".", "");
-  const ids = new Set(formData.map((widget) => widget.id));
-  let id = generateId();
-  while (ids.has(id)) {
-    id = generateId();
-  }
-  return id;
-}
-
 function reducer(state: WidgetData[], action: Action) {
-  const id = uniqueId(state);
-
   switch (action.actionType) {
     case "SimpleTextInputAction":
       return state.map((widget) =>
@@ -232,6 +217,7 @@ function reducer(state: WidgetData[], action: Action) {
       });
     case "ChangeWidgetTypeAction":
       return state.map((widget) => {
+        const id = uuidv4();
         if (widget.id === action.id) {
           switch (action.targetWidgetType) {
             case "TextDisplay":
@@ -261,7 +247,7 @@ function reducer(state: WidgetData[], action: Action) {
       );
     case "AddElementAction":
       return state.concat({
-        id: uniqueId(state),
+        id: uuidv4(),
         widgetType: "TextAnswer",
         placeholder: "주관식 질문",
         value: "",
