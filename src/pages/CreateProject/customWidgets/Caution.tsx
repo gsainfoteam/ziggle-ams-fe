@@ -79,13 +79,9 @@ export interface CutionProps
 const Caution = (props: CutionProps) => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
-    const rowCount = props.value.split(/\r\n|\r|\n/).length;
     if (!textAreaRef.current) return;
-    if (rowCount <= 1) {
-      textAreaRef.current.style.height = "1.2em";
-    } else {
-      textAreaRef.current.style.height = `${rowCount * 1.2}em`;
-    }
+    textAreaRef.current.style.height = "auto";
+    textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
   }, [props.value]);
 
   const { value, placeholder, onChange, id, ...rest } = props;
