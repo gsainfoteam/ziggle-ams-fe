@@ -126,7 +126,7 @@ const Controls = styled.div`
   width: 100%;
   gap: 10px;
   color: gray;
-  font-size: 0.7em;
+  font-size: 0.8em;
   line-height: 1em;
   font-weight: 500;
 `;
