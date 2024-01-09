@@ -71,6 +71,13 @@ interface ChoiceRemoveOptionAction {
   targetName: string;
 }
 
+interface ChoiceReorderOptionsAction {
+  actionType: "ChoiceReorderOptionsAction";
+  id: string;
+  dragIndex: number;
+  hoverIndex: number;
+}
+
 interface TextAnswerEditAction {
   actionType: "TextAnswerEditAction";
   id: string;
@@ -91,6 +98,12 @@ interface AddElementAction {
   actionType: "AddElementAction";
 }
 
+interface ReorderAction {
+  actionType: "ReorderAction";
+  dragIndex: number;
+  hoverIndex: number;
+}
+
 type Action =
   | SimpleTextInputAction
   | DurationInputAction
@@ -104,9 +117,11 @@ type Action =
   | ChoiceEditAction
   | ChoiceAddOptionAction
   | ChoiceRemoveOptionAction
+  | ChoiceReorderOptionsAction
   | TextAnswerEditAction
   | CautionEditAction
   | ApplyTemplateAction
-  | AddElementAction;
+  | AddElementAction
+  | ReorderAction;
 
 export default Action;

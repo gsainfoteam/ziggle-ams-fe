@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useDrag, useDrop, XYCoord } from "react-dnd";
 import { IoTrashOutline } from "react-icons/io5";
 import { RiTriangleFill } from "react-icons/ri";
 import { RxDragHandleDots2 } from "react-icons/rx";
@@ -9,6 +10,7 @@ import cautionWidgetIcon from "../assets/cautionWidgetIcon.png";
 import choiceWidgetIcon from "../assets/choiceWidgetIcon.png";
 import textAnswerWidgetIcon from "../assets/textAnswerWidgetIcon.png";
 import textDisplayWidgetIcon from "../assets/textDisplayWidgetIcon.png";
+import { ItemTypes } from "./ItemTypes";
 
 const Handle = styled(RxDragHandleDots2)`
   display: flex;
@@ -239,11 +241,20 @@ export interface GenericWidgetData {
   max: string | null;
 }
 
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
+
 export interface GenericWidgetProps extends GenericWidgetData {
   onToggleRequired: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onDeleteWidget: (e: React.MouseEvent<HTMLElement>) => void;
   onMinMaxChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onWidgetTypeChange: (e: React.MouseEvent<HTMLElement>) => void;
+
+  index: number;
+  reorderWidgets: (dragIndex: number, hoverIndex: number) => void;
 }
 
 const GenericWidget = (
@@ -270,6 +281,8 @@ const GenericWidget = (
     onMinMaxChange,
     onWidgetTypeChange,
     onDeleteWidget,
+    index,
+    reorderWidgets,
   } = props;
 
   const widgetSelectionRef = useRef<HTMLDivElement>(null);
@@ -283,9 +296,42 @@ const GenericWidget = (
     }
   }, [widgetSelectionRef]);
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  const [, drop] = useDrop<DragItem, void, void>({
+    accept: ItemTypes.WIDGET,
+    hover(item: DragItem, monitor) {
+      if (!ref.current) return;
+
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      const { bottom, top } = ref.current.getBoundingClientRect();
+      const { y } = monitor.getClientOffset() as XYCoord;
+      const hoverMiddleY = (bottom - top) / 2;
+      const hoverClientY = y - top;
+
+      if (dragIndex === hoverIndex) return;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
+
+      reorderWidgets(dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  const [, drag, connect] = useDrag({
+    type: ItemTypes.WIDGET,
+    item: () => ({ id, index }),
+  });
+
+  drag(drop(ref));
+
   return (
-    <Container>
-      <Handle />
+    <Container ref={(el) => connect(el)}>
+      <div ref={ref}>
+        <Handle />
+      </div>
       <MainContainer>
         <HeadSection>
           <HeadContent>{TitleComponent}</HeadContent>

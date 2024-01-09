@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useDrag, useDrop, XYCoord } from "react-dnd";
 import { IoClose } from "react-icons/io5";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import styled from "styled-components";
@@ -7,6 +8,7 @@ import GenericWidget, {
   GenericWidgetData,
   GenericWidgetProps,
 } from "./GenericWidget";
+import { ItemTypes } from "./ItemTypes";
 
 const TitleContainer = styled.div`
   display: flex;
@@ -80,8 +82,9 @@ const HandleIcon = styled(RxDragHandleDots2)`
   }
 `;
 
-const Option = styled.li`
+const OptionContainer = styled.li`
   display: flex;
+  align-items: center;
   border-radius: 3px;
   padding: 5px 0;
   gap: 10px;
@@ -157,6 +160,81 @@ export const defaultChoiceWidgetData: ChoiceWidgetData = {
   ],
 };
 
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
+}
+
+interface OptionProps {
+  index: number;
+  id: string;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  option: { name: string; placeholder: string; value: string };
+  onRemoveOption: (e: React.MouseEvent<HTMLElement>) => void;
+  reorderOptions: (id: string, dragIndex: number, hoverIndex: number) => void;
+}
+
+const Option = (props: OptionProps) => {
+  const { index, id, onChange, option, onRemoveOption, reorderOptions } = props;
+
+  const handleRef = useRef<HTMLDivElement>(null);
+
+  const textboxRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textboxRef && textboxRef.current) {
+      textboxRef.current.style.height = "auto";
+      textboxRef.current.style.height = textboxRef.current.scrollHeight + "px";
+    }
+  }, [option]);
+
+  const [, drop] = useDrop<DragItem, void, void>({
+    accept: ItemTypes.OPTION,
+    hover(item: DragItem, monitor) {
+      if (!handleRef.current) return;
+
+      const dragIndex = item.index;
+      const hoverIndex = index;
+
+      const { bottom, top } = handleRef.current.getBoundingClientRect();
+      const { y } = monitor.getClientOffset() as XYCoord;
+      const hoverMiddleY = (bottom - top) / 2;
+      const hoverClientY = y - top;
+
+      if (dragIndex === hoverIndex) return;
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
+
+      reorderOptions(id, dragIndex, hoverIndex);
+      item.index = hoverIndex;
+    },
+  });
+
+  const [, drag, connect] = useDrag({
+    type: ItemTypes.OPTION,
+    item: () => ({ id, index }),
+  });
+
+  drag(drop(handleRef));
+
+  return (
+    <OptionContainer ref={(el) => connect(el)}>
+      <div ref={handleRef}>
+        <HandleIcon />
+      </div>
+      <InputContainer>
+        <Input id={id} onChange={onChange} ref={textboxRef} {...option} />
+        <UnderLineColor />
+        <UnderLine />
+      </InputContainer>
+      <CloseContainer id={id} title={option.name} onClick={onRemoveOption}>
+        <CloseIcon />
+      </CloseContainer>
+    </OptionContainer>
+  );
+};
+
 export interface ChoiceProps
   extends ChoiceWidgetData,
     Omit<GenericWidgetProps, "widgetType"> {
@@ -164,6 +242,7 @@ export interface ChoiceProps
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   onAddOption: (e: React.MouseEvent<HTMLElement>) => void;
   onRemoveOption: (e: React.MouseEvent<HTMLElement>) => void;
+  reorderOptions: (id: string, dragIndex: number, hoverIndex: number) => void;
 }
 
 const Choice = (props: ChoiceProps) => {
@@ -174,6 +253,7 @@ const Choice = (props: ChoiceProps) => {
     onChange,
     onAddOption,
     onRemoveOption,
+    reorderOptions,
     ...rest
   } = props;
 
@@ -184,19 +264,6 @@ const Choice = (props: ChoiceProps) => {
     titleRef.current.style.height = "auto";
     titleRef.current.style.height = titleRef.current.scrollHeight + "px";
   }, [question]);
-
-  const textboxRefs = useRef<(HTMLTextAreaElement | null)[]>([]);
-
-  useEffect(() => {
-    textboxRefs.current = textboxRefs.current.slice(0, options.length);
-
-    textboxRefs.current.forEach((textboxRef) => {
-      if (textboxRef) {
-        textboxRef.style.height = "auto";
-        textboxRef.style.height = textboxRef.scrollHeight + "px";
-      }
-    });
-  }, [options]);
 
   return (
     <GenericWidget
@@ -212,26 +279,15 @@ const Choice = (props: ChoiceProps) => {
       ContentComponent={
         <OptionsList>
           {options.map((option, i) => (
-            <Option key={i}>
-              <HandleIcon />
-              <InputContainer>
-                <Input
-                  id={id}
-                  onChange={onChange}
-                  ref={(el) => (textboxRefs.current[i] = el)}
-                  {...option}
-                />
-                <UnderLineColor />
-                <UnderLine />
-              </InputContainer>
-              <CloseContainer
-                id={id}
-                title={option.name}
-                onClick={onRemoveOption}
-              >
-                <CloseIcon />
-              </CloseContainer>
-            </Option>
+            <Option
+              key={i}
+              id={id}
+              index={i}
+              option={option}
+              onChange={onChange}
+              onRemoveOption={onRemoveOption}
+              reorderOptions={reorderOptions}
+            />
           ))}
           <AddOption id={id} onClick={onAddOption}>
             옵션 추가

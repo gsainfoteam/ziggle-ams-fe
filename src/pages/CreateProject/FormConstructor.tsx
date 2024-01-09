@@ -174,6 +174,20 @@ function reducer(state: WidgetData[], action: Action) {
             }
           : widget,
       );
+    case "ChoiceReorderOptionsAction":
+      return state.map((widget) => {
+        if (widget.id === action.id) {
+          const draggedOption = (widget as ChoiceWidgetData).options[
+            action.dragIndex
+          ];
+          return {
+            ...widget,
+            options: (widget as ChoiceWidgetData).options
+              .toSpliced(action.dragIndex, 1)
+              .toSpliced(action.hoverIndex, 0, draggedOption),
+          };
+        } else return widget;
+      });
     case "TextAnswerEditAction":
       return state.map((widget) =>
         widget.id === action.id
@@ -255,6 +269,12 @@ function reducer(state: WidgetData[], action: Action) {
         min: null,
         max: null,
       } as TextAnswerWidgetData);
+    case "ReorderAction": {
+      const draggedItem = state[action.dragIndex];
+      return state
+        .toSpliced(action.dragIndex, 1)
+        .toSpliced(action.hoverIndex, 0, draggedItem);
+    }
     default:
       throw new Error("UnImplemented action!");
   }
@@ -363,6 +383,19 @@ const FormConstructor = () => {
     });
   };
 
+  const reorderOptions = (
+    id: string,
+    dragIndex: number,
+    hoverIndex: number,
+  ) => {
+    dispatch({
+      actionType: "ChoiceReorderOptionsAction",
+      id,
+      dragIndex,
+      hoverIndex,
+    });
+  };
+
   const onTextAnswerChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     dispatch({
       actionType: "TextAnswerEditAction",
@@ -388,6 +421,14 @@ const FormConstructor = () => {
   const onAddElement = () => {
     dispatch({
       actionType: "AddElementAction",
+    });
+  };
+
+  const reorderWidgets = (dragIndex: number, hoverIndex: number) => {
+    dispatch({
+      actionType: "ReorderAction",
+      dragIndex: dragIndex,
+      hoverIndex: hoverIndex,
     });
   };
 
@@ -448,6 +489,8 @@ const FormConstructor = () => {
                   onDeleteWidget={onDeleteWidget}
                   onChange={onTextDisplayChange}
                   key={i}
+                  reorderWidgets={reorderWidgets}
+                  index={i}
                 />
               );
             case "Choice":
@@ -461,7 +504,10 @@ const FormConstructor = () => {
                   onChange={onChoiceChange}
                   onAddOption={onAddOption}
                   onRemoveOption={onRemoveOption}
+                  reorderOptions={reorderOptions}
                   key={i}
+                  reorderWidgets={reorderWidgets}
+                  index={i}
                 />
               );
             case "TextAnswer":
@@ -474,6 +520,8 @@ const FormConstructor = () => {
                   onDeleteWidget={onDeleteWidget}
                   onChange={onTextAnswerChange}
                   key={i}
+                  reorderWidgets={reorderWidgets}
+                  index={i}
                 />
               );
             case "Caution":
@@ -486,6 +534,8 @@ const FormConstructor = () => {
                   onDeleteWidget={onDeleteWidget}
                   onChange={onCautionChange}
                   key={i}
+                  reorderWidgets={reorderWidgets}
+                  index={i}
                 />
               );
             default:
