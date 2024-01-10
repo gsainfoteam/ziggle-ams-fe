@@ -16,9 +16,11 @@ const Wrapper = styled.div`
   justify-content: center;
 `;
 const Main = styled.main`
+  display: flex;
   width: 100vw;
   max-width: 1340px;
   padding: 0 20px;
+  justify-content: center;
 `;
 
 const MainLayout = () => {
