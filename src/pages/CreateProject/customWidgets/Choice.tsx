@@ -84,6 +84,7 @@ const HandleIcon = styled(RxDragHandleDots2)`
 
 const OptionContainer = styled.li`
   display: flex;
+  position: relative;
   align-items: center;
   border-radius: 3px;
   padding: 5px 0;
@@ -94,8 +95,22 @@ const OptionContainer = styled.li`
   &:focus-within {
     background-color: #fce3e3;
   }
-  &:has(${HandleIcon}:active) {
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 3px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:active::after {
+    opacity: 1;
   }
 `;
 

@@ -12,6 +12,36 @@ import textAnswerWidgetIcon from "../assets/textAnswerWidgetIcon.png";
 import textDisplayWidgetIcon from "../assets/textDisplayWidgetIcon.png";
 import { ItemTypes } from "./ItemTypes";
 
+const Container = styled.div`
+  display: flex;
+  position: relative;
+  width: 100%;
+  background-color: #fffafa;
+  border: 1px solid #eb6263;
+  border-radius: 8px;
+
+  &:focus-within {
+    outline: 1px solid #eb6263;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:active::after {
+    opacity: 1;
+  }
+`;
+
 const Handle = styled(RxDragHandleDots2)`
   display: flex;
   width: 20px;
@@ -24,20 +54,6 @@ const Handle = styled(RxDragHandleDots2)`
   }
   &:active {
     cursor: grabbing;
-  }
-`;
-
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  background-color: #fffafa;
-  border: 1px solid #eb6263;
-  border-radius: 8px;
-  &:has(${Handle}:active) {
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  }
-  &:focus-within {
-    outline: 1px solid #eb6263;
   }
 `;
 
