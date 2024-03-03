@@ -1,3 +1,5 @@
+import "./input.css";
+
 import GlobalStyle from "./components/GlobalStyle";
 import Router from "./router";
 
