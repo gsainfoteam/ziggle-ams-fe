@@ -78,7 +78,7 @@ export const AddButton = ({ title, color }: AddButtonProps) => {
   return (
     <ButtonContainer color={color}>
       <Plus />
-      <div>{title} 추가하기</div>
+      <div className="bg-slate-500 text-lg">{title} 추가하기</div>
     </ButtonContainer>
   );
 };
